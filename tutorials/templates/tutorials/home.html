@@ -1,13 +1,13 @@
 <h2>Willkommen auf der OpenBIM-Plattform 👷‍♂️</h2>
 <p>Du bist eingeloggt als {{ request.user.username }}</p>
 
-
-
-
-
+<!-- Logout Button -->
 <form action="{% url 'logout' %}" method="post" style="display:inline;">
     {% csrf_token %}
     <button type="submit">Logout</button>
 </form>
 
-<a href="password_change/">Passwort ändern</a>
+<!-- Passwort ändern Button -->
+<form action="{% url 'passchange' %}" method="get" style="display:inline; margin-left: 10px;">
+    <button type="submit">Passwort ändern</button>
+</form>

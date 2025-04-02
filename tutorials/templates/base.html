@@ -20,10 +20,10 @@
             <button type="submit">Tutorials</button>
         </form>
 
-        {% if user|has_group:"BIM-Experte" %}
-        <form action="#" method="get" style="display:inline;">
-            <button type="submit">Erstellen</button>
-        </form>
+        {% if user|in_group:"BIM-Experte" %}
+            <form action="#" method="get" style="display:inline;">
+                <button type="submit">Erstellen</button>
+            </form>
         {% endif %}
     </div>
 

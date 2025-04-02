@@ -1,30 +1,24 @@
 from django.contrib.auth import login
 from django.contrib.auth.models import Group
 from .forms import UserRegisterForm
+
+from django.contrib.auth.forms import PasswordChangeForm
+from django.contrib.auth import update_session_auth_hash
 from django.shortcuts import render, redirect
+from django.contrib.auth import logout
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth import update_session_auth_hash
 from django.shortcuts import render, redirect
 from django.contrib import messages
-from django.shortcuts import render
-from django.contrib.auth.forms import PasswordChangeForm
-from django.contrib.auth import update_session_auth_hash
-from django.http import HttpResponseRedirect
-from django.urls import reverse
-
-def custom_password_change(request):
-    if request.method == 'POST':
-        form = PasswordChangeForm(request.user, request.POST)
-        if form.is_valid():
-            user = form.save()
-            update_session_auth_hash(request, user)  # Wichtig, damit die Sitzung nach Passwortänderung gültig bleibt
-            return HttpResponseRedirect(reverse('password_change_done'))  # Weiterleitung zu einer Bestätigungsseite
-    else:
-        form = PasswordChangeForm(request.user)
-
-    return render(request, 'tutorials/password_change_form.html', {'form': form})
 
 
+from django.urls import reverse_lazy
+from django.contrib.auth.views import PasswordChangeView
+from django.urls import reverse_lazy
+
+class CustomPasswordChangeView(PasswordChangeView):
+    template_name = 'password_change_form.html'   # Dein eigenes Template
+    success_url = reverse_lazy('password_change_done')
 
 
 
@@ -50,5 +44,11 @@ def register(request):
 
 def home(request):
     return render(request, 'tutorials/home.html')
+
+
+def logout_view(request):
+    logout(request)
+    return redirect('login')  # Leitet den Benutzer nach dem Logout zur Login-Seite weiter
+
 
 

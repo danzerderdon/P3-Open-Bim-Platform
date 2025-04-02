@@ -1,10 +1,16 @@
 from django.urls import path
 from . import views
 from django.contrib.auth import views as auth_views
+# tutorials/urls.py
+from .views import CustomPasswordChangeView
+
 
 urlpatterns = [
     path('', views.home, name='home'),
     path('register/', views.register, name='register'),
-    path('password_change/', views.custom_password_change, name='password_change'),
     path('accounts/logout/', auth_views.LogoutView.as_view(), name='logout'),
+    path('password_change/', CustomPasswordChangeView.as_view(), name='password_change'),
+    path('password_change/done/', auth_views.PasswordChangeDoneView.as_view(template_name='password_change_done.html'),
+         name='password_change_done'),
+
 ]

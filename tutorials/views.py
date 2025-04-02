@@ -89,7 +89,7 @@ def home(request):
 # Logout-View
 def logout_view(request):
     logout(request)
-    return redirect('login')  # Weiterleitung zur Login-Seite
+    return redirect('home')  # Weiterleitung zur home seite
 
 # Passwort ändern – eigene View
 @login_required

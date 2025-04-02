@@ -1,29 +1,41 @@
-<h2>Willkommen auf der OpenBIM-Plattform 👷‍♂️</h2>
+{% extends 'base.html' %}
 
-{% if user.is_authenticated %}
-    <p>Du bist eingeloggt als {{ request.user.username }}</p>
+{% block title %}Account{% endblock %}
 
-    <!-- Logout Button -->
-    <form action="{% url 'logout' %}?next={{ request.path }}" method="post" style="display:inline;">
-    {% csrf_token %}
-    <button type="submit">Logout</button>
+{% block content %}
+    <h2>Willkommen auf der OpenBIM-Plattform 👷‍♂️</h2>
+
+    {% if user.is_authenticated %}
+        <p>Du bist eingeloggt als {{ request.user.username }}</p>
+
+        <!-- Logout Button -->
+        <form action="{% url 'logout' %}?next={{ request.path }}" method="post" style="display:inline;">
+            {% csrf_token %}
+            <button type="submit">Logout</button>
+        </form>
+
+        <!-- Passwort ändern Button -->
+        <form action="{% url 'passchange' %}" method="get" style="display:inline; margin-left: 10px;">
+            <button type="submit">Passwort ändern</button>
+        </form>
+    <form action="{% url 'change_role' %}" method="get" style="display:inline;">
+        <button type="submit">Rolle ändern</button>
     </form>
 
-    <!-- Passwort ändern Button -->
-    <form action="{% url 'passchange' %}" method="get" style="display:inline; margin-left: 10px;">
-        <button type="submit">Passwort ändern</button>
-    </form>
 
-{% else %}
-    <p>Willkommen, bitte logge dich ein oder registriere dich:</p>
 
-    <!-- Login Button -->
-    <form action="{% url 'login' %}" method="get" style="display:inline;">
-        <button type="submit">Login</button>
-    </form>
 
-    <!-- Register Button -->
-    <form action="{% url 'register' %}" method="get" style="display:inline; margin-left: 10px;">
-        <button type="submit">Registrieren</button>
-    </form>
-{% endif %}
+    {% else %}
+        <p>Willkommen, bitte logge dich ein oder registriere dich:</p>
+
+        <!-- Login Button -->
+        <form action="{% url 'login' %}" method="get" style="display:inline;">
+            <button type="submit">Login</button>
+        </form>
+
+        <!-- Register Button -->
+        <form action="{% url 'register' %}" method="get" style="display:inline; margin-left: 10px;">
+            <button type="submit">Registrieren</button>
+        </form>
+    {% endif %}
+{% endblock %}

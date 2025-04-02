@@ -9,6 +9,8 @@ urlpatterns = [
     path('passchange/', views.change_password_view, name='passchange'),
     path('passdone/', views.password_change_done, name='passdone'),
     path('accounts/login/', auth_views.LoginView.as_view(template_name='registration/login.html'), name='login'),
+    path('change-role/', views.change_role_view, name='change_role'),
+
 ]
 
 

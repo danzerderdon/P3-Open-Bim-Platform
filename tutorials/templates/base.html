@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    {% load static %}
+    {% load group_tags %}
+    <title>{% block title %}OpenBIM-Plattform{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+
+<!-- 🔍 Navigation -->
+<nav>
+    <div>
+        <form action="{% url 'home' %}" method="get" style="display:inline;">
+            <button type="submit">Account</button>
+        </form>
+
+        <form action="#" method="get" style="display:inline;">
+            <button type="submit">Tutorials</button>
+        </form>
+
+        {% if user|has_group:"BIM-Experte" %}
+        <form action="#" method="get" style="display:inline;">
+            <button type="submit">Erstellen</button>
+        </form>
+        {% endif %}
+    </div>
+
+    <div>
+        {% if user.is_authenticated %}
+        <form action="{% url 'logout' %}?next={{ request.path }}" method="post" style="display:inline;">
+            {% csrf_token %}
+            <button type="submit">Logout</button>
+        </form>
+
+        <form action="{% url 'passchange' %}" method="get" style="display:inline;">
+            <button type="submit">Passwort ändern</button>
+        </form>
+        {% else %}
+        <form action="{% url 'login' %}" method="get" style="display:inline;">
+            <button type="submit">Login</button>
+        </form>
+
+        <form action="{% url 'register' %}" method="get" style="display:inline;">
+            <button type="submit">Registrieren</button>
+        </form>
+        {% endif %}
+    </div>
+</nav>
+
+<!-- 📄 Inhalt -->
+<main>
+    {% block content %}{% endblock %}
+</main>
+
+</body>
+</html>

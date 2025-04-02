@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Rolle ändern{% endblock %}
+
+{% block content %}
+  <h2>Rolle ändern</h2>
+
+  {% if messages %}
+    <ul>
+      {% for message in messages %}
+        <li>{{ message }}</li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+
+  <form method="post" style="max-width: 400px;">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <button type="submit">Rolle aktualisieren</button>
+  </form>
+{% endblock %}

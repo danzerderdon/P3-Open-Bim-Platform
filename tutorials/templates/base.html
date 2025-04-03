@@ -3,7 +3,6 @@
 <head>
     <meta charset="UTF-8">
     {% load static %}
-    {% load group_tags %}
     <title>{% block title %}OpenBIM-Plattform{% endblock %}</title>
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>
@@ -20,11 +19,10 @@
             <button type="submit">Tutorials</button>
         </form>
 
-        {% if user|in_group:"BIM-Experte" %}
-            <form action="#" method="get" style="display:inline;">
-                <button type="submit">Erstellen</button>
-            </form>
-        {% endif %}
+        <!-- "Erstellen" Button wird IMMER angezeigt -->
+        <form action="#" method="get" style="display:inline;">
+            <button type="submit">Erstellen</button>
+        </form>
     </div>
 
     <div>

@@ -1,14 +1,25 @@
 /* Allgemein */
-body {
+html,body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     margin: 0;
     background-color: #f5f7fa;
+    background: linear-gradient(
+        to bottom,
+        #ffffff 0%,         /* Weißer Start */
+        #ffffff 50%,        /* Erste Hälfte bleibt komplett weiß */
+        #dbeaf3 80%,        /* Untere Hälfte wird zum weichen Blau */
+        #99c8e0 100%
+    );
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: 100% 100%;
     text-align: center;
 }
 
 /* Navigation */
 nav {
     background-color: #fff;
+
     border-bottom: 1px solid #ccc;
     padding: 15px 30px;
     display: flex;
@@ -36,6 +47,9 @@ nav button:hover {
     color: #007bff;
     transform: scale(1.05); /* Vergrößerung beim Hover */
 }
+
+
+
 
 /* Tutorials Section */
 .tutorials-container {
@@ -93,3 +107,14 @@ form button:hover {
     box-shadow: 0 8px 16px rgba(0,0,0,0.1);
     transform: scale(1.075); /* sanfte Vergrößerung */
 }
+
+.fixed-footer-image {
+  position: fixed;
+  bottom: 0;
+  right: 6.33%;
+  /* Optional: Passe Größe an, falls gewünscht */
+  max-width: 350px;
+  height: auto;
+  z-index: 100; /* falls nötig, damit es über anderem Inhalt liegt */
+}
+

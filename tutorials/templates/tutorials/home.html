@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block title %}Account{% endblock %}
 
@@ -29,7 +30,6 @@
         <form action="{% url 'change_role' %}" method="get" style="display:inline;">
             <button type="submit">Rolle ändern</button>
         </form>
-
     {% else %}
         <p>Willkommen, bitte logge dich ein oder registriere dich:</p>
 
@@ -43,4 +43,11 @@
             <button type="submit">Registrieren</button>
         </form>
     {% endif %}
+
+    <!-- 👇 Dein Bild unten auf der Seite -->
+    <div style="margin-top: 50px; text-align: center;">
+        <img class="fixed-footer-image" src="{% static 'images/Max_good_Job.png' %}" alt="Max Good Job">
+
+    </div>
+
 {% endblock %}

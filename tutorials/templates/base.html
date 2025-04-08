@@ -5,45 +5,120 @@
     {% load static %}
     <title>{% block title %}OpenBIM-Plattform{% endblock %}</title>
     <link rel="stylesheet" href="{% static 'css/style2.css' %}">
+
+    <style>
+    /* Navigation */
+    nav {
+        display: flex;
+        justify-content: space-between;
+        align-items: stretch;
+        background-color: #c0c0c0;
+        height: 50px;
+        font-family: sans-serif;
+    }
+
+    nav img {
+        height: 100%;
+        padding: 0 20px;
+    }
+
+    nav .nav-buttons {
+        display: flex;
+        height: 100%;
+    }
+
+    nav form {
+        display: flex; /* Macht das Formular genauso groß wie der Button */
+        align-items: stretch;
+        margin: 0;
+        height: 100%;
+    }
+
+    nav form:not(:last-child)::after {
+        content: "";
+        display: block;
+        width: 2px;
+        background-color: #999;
+        height: 100%;
+    }
+
+    nav form button {
+        all: unset; /* Reset für alle Browser-Styles */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0 25px;
+        height: 100%;
+        background-color: #c0c0c0;
+        color: #333;
+        font-weight: bold;
+        font-size: 15px;
+        cursor: pointer;
+        transition: background-color 0.2s ease, color 0.2s ease;
+    }
+
+    nav form button:hover {
+        background-color: #3399ff;
+        color: white;
+    }
+
+    nav form button.active {
+        background-color: #3399ff;
+        color: white;
+    }
+
+    nav form button:focus {
+        outline: none;
+    }
+</style>
 </head>
 <body>
 
 <!-- 🔍 Navigation -->
 <nav>
-    <div>
-        <form action="{% url 'home' %}" method="get" style="display:inline;">
-            <button type="submit">Account</button>
+    <img src="{% static 'images/logo.png' %}" alt="Logo">
+
+    <div class="nav-buttons">
+        <form action="{% url 'home' %}" method="get">
+            <button type="submit" class="{% if active_page == 'home' %}active{% endif %}">Home</button>
         </form>
 
-        <form action="#" method="get" style="display:inline;">
-            <button type="submit">Tutorials</button>
+        <form action="{% url 'tutorials' %}" method="get">
+            <button type="submit" class="{% if active_page == 'tutorials' %}active{% endif %}">Tutorials</button>
         </form>
 
-        <!-- "Erstellen" Button wird IMMER angezeigt -->
-        <form action="#" method="get" style="display:inline;">
-            <button type="submit">Erstellen</button>
-        </form>
-    </div>
 
-    <div>
-        {% if user.is_authenticated %}
-        <form action="{% url 'logout' %}?next={{ request.path }}" method="post" style="display:inline;">
-            {% csrf_token %}
-            <button type="submit">Logout</button>
-        </form>
-
-        <form action="{% url 'passchange' %}" method="get" style="display:inline;">
-            <button type="submit">Passwort ändern</button>
-        </form>
-        {% else %}
-        <form action="{% url 'login' %}" method="get" style="display:inline;">
-            <button type="submit">Login</button>
-        </form>
-
-        <form action="{% url 'register' %}" method="get" style="display:inline;">
-            <button type="submit">Registrieren</button>
+        {% if user.is_authenticated and user.groups.first.name == "BIM Expert" %}
+        <form action="{% url 'create' %}" method="get">
+            <button type="submit" class="{% if active_page == 'create' %}active{% endif %}">Create</button>
         </form>
         {% endif %}
+
+        <form action="{% url 'files' %}" method="get">
+            <button type="submit" class="{% if active_page == 'files' %}active{% endif %}">Files</button>
+        </form>
+
+        <form action="{% url 'community' %}" method="get">
+            <button type="submit" class="{% if active_page == 'community' %}active{% endif %}">Community</button>
+        </form>
+
+        {% if user.is_authenticated %}
+        <form action="{% url 'dashboard' %}" method="get">
+            <button type="submit" class="{% if active_page == 'dashboard' %}active{% endif %}">Dashboard</button>
+        </form>
+        {% endif %}
+
+        {% if user.is_authenticated %}
+<form action="{% url 'logout' %}?next={{ request.path }}" method="post">
+    {% csrf_token %}
+    <button type="submit">Logout</button>
+</form>
+{% else %}
+<form action="{% url 'login' %}" method="get">
+    <button type="submit" class="{% if active_page == 'login' %}active{% endif %}">Login</button>
+</form>
+{% endif %}
+
     </div>
 </nav>
 

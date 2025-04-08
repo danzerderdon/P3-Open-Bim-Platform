@@ -4,19 +4,25 @@
 {% block title %}Rolle ändern{% endblock %}
 
 {% block content %}
-  <h2>Rolle ändern</h2>
+  <div style="display: flex; justify-content: center; align-items: center; flex-direction: column; padding: 40px 20px;">
+    <h2 style="text-align: center;">Rolle ändern</h2>
 
-  {% if messages %}
-    <ul>
-      {% for message in messages %}
-        <li>{{ message }}</li>
-      {% endfor %}
-    </ul>
-  {% endif %}
+    {% if messages %}
+      <ul style="list-style: none; padding: 0; color: green; margin-bottom: 20px;">
+        {% for message in messages %}
+          <li>{{ message }}</li>
+        {% endfor %}
+      </ul>
+    {% endif %}
 
-  <form method="post" style="max-width: 400px;">
+    <form method="post" style="width: 100%; max-width: 400px;">
       {% csrf_token %}
-      {{ form.as_p }}
-      <button type="submit">Rolle aktualisieren</button>
-  </form>
+      <div style="text-align: left;">
+        {{ form.as_p }}
+      </div>
+      <div style="text-align: center;">
+        <button type="submit">Rolle aktualisieren</button>
+      </div>
+    </form>
+  </div>
 {% endblock %}

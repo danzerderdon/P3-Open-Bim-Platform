@@ -30,6 +30,18 @@
         <form action="{% url 'change_role' %}" method="get" style="display:inline;">
             <button type="submit">Rolle ändern</button>
         </form>
+
+    <div style="margin-top: 50px; text-align: center;">
+        <img class="city-footer-image" src="{% static 'images/Footer.png' %}" alt="">
+
+    </div>
+
+        <!-- 👇 Dein Bild unten auf der Seite -->
+    <div style="margin-top: 50px; text-align: center;">
+        <img class="fixed-footer-image" src="{% static 'images/Max_good_Job.png' %}" alt="Max Good Job">
+
+    </div>
+
     {% else %}
         <p>Willkommen, bitte logge dich ein oder registriere dich:</p>
 
@@ -42,12 +54,13 @@
         <form action="{% url 'register' %}" method="get" style="display:inline; margin-left: 10px;">
             <button type="submit">Registrieren</button>
         </form>
-    {% endif %}
 
-    <!-- 👇 Dein Bild unten auf der Seite -->
-    <div style="margin-top: 50px; text-align: center;">
-        <img class="fixed-footer-image" src="{% static 'images/Max_good_Job.png' %}" alt="Max Good Job">
+<div style="margin-top: 50px; text-align: center;">
+        <img class="city-footer-image" src="{% static 'images/Footer.png' %}" alt="">
 
     </div>
+    {% endif %}
+
+
 
 {% endblock %}

@@ -113,8 +113,18 @@ form button:hover {
   bottom: 0;
   right: 6.33%;
   /* Optional: Passe Größe an, falls gewünscht */
-  max-width: 350px;
+  max-width: 25%;
   height: auto;
   z-index: 100; /* falls nötig, damit es über anderem Inhalt liegt */
 }
 
+.city-footer-image {
+  position: fixed;
+  bottom: 0;
+  right: 0%;
+  /* Optional: Passe Größe an, falls gewünscht */
+  max-width: 100%;
+  transparent: 30%
+  height: auto;
+  z-index: 100; /* falls nötig, damit es über anderem Inhalt liegt */
+}

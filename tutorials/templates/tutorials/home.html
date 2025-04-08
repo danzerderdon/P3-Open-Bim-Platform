@@ -6,10 +6,10 @@
     <h2>Willkommen auf der OpenBIM-Plattform 👷‍♂️</h2>
 
     {% if user.is_authenticated %}
-        <p>Du bist eingeloggt als: - {{ request.user.username }}</p>
+        <p>Sie sind eingeloggt als - {{ request.user.username }}</p>
 
         {% if user.groups.all %}
-            <p>Deine Rolle ist: - {{ user.groups.first.name }}</p>
+            <p>Ihre Rolle ist - {{ user.groups.first.name }}</p>
         {% else %}
             <p>Du hast noch keine Rolle zugewiesen.</p>
         {% endif %}

@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block title %}Tutorials erstellen{% endblock %}
+
+{% block content %}
+    <div style="text-align: center; padding: 50px;">
+        <h1>Tutorials erstellen</h1>
+        <p>Hier kannst du neue Tutorials anlegen.</p>
+        <a href="{% url 'tutorial_creator' %}">
+            <button style="padding: 10px 20px; font-size: 16px;">Neues Tutorial erstellen</button>
+        </a>
+    </div>
+{% endblock %}

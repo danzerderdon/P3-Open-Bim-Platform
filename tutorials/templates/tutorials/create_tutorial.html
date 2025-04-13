@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% block title %}Tutorial erstellen{% endblock %}
+
+{% block content %}
+<h2 style="text-align: center;">Neues Tutorial erstellen</h2>
+
+<form method="post" style="max-width: 600px; margin: auto;">
+    {% csrf_token %}
+
+    <div style="margin-bottom: 20px;">
+        <label for="{{ form.title.id_for_label }}"><strong>Titel:</strong></label><br>
+        {{ form.title }}
+    </div>
+
+    <div style="margin-bottom: 20px;">
+        <label for="{{ form.description.id_for_label }}"><strong>Beschreibung:</strong></label><br>
+        {{ form.description }}
+    </div>
+
+    <div style="margin-bottom: 20px;">
+        <label for="{{ form.difficulty.id_for_label }}"><strong>Schwierigkeitsgrad:</strong></label><br>
+        {{ form.difficulty }}
+    </div>
+
+    <div style="margin-bottom: 20px;">
+        <label for="{{ form.category.id_for_label }}"><strong>Kategorie:</strong></label><br>
+        {{ form.category }}
+    </div>
+
+    <div style="margin-bottom: 20px;">
+        <label for="{{ form.program.id_for_label }}"><strong>Programm:</strong></label><br>
+        {{ form.program }}
+    </div>
+
+    <div style="margin-bottom: 20px;">
+        <label for="{{ form.keywords.id_for_label }}"><strong>Keywords:</strong></label><br>
+        {{ form.keywords }}
+    </div>
+    <div style="margin-bottom: 20px;">
+
+        <small style="color: #555;">Kommagetrennt, z. B. IFC, Modellierung, BIM</small>
+    </div>
+
+    <div style="text-align: center;">
+        <button type="submit" class="button">Weiter zu den Schritten</button>
+    </div>
+</form>
+{% endblock %}

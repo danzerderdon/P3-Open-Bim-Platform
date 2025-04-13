@@ -2,18 +2,27 @@ from django.db import models
 from django.contrib.auth.models import User
 
 
-class Program(models.Model):
-    name = models.CharField(max_length=100)
-
-    def __str__(self):
-        return self.name
-
-
 class Tutorial(models.Model):
     title = models.CharField(max_length=200)
     description = models.TextField()
     keywords = models.CharField(max_length=200, help_text="Kommagetrennt, z. B. IFC, Modellierung, BIM")
-    program = models.ForeignKey(Program, on_delete=models.CASCADE)
+
+    # Statt ForeignKey zu Program → freies Texteingabefeld:
+    program = models.CharField(max_length=100, help_text="Z. B. Revit, ArchiCAD, Solibri")
+
+    category = models.CharField(max_length=100, default="Sonstiges")
+
+    difficulty = models.CharField(
+        max_length=20,
+        choices=[
+            ('leicht', 'Leicht'),
+            ('mittel', 'Mittel'),
+            ('schwer', 'Schwer'),
+            ('expert', 'Expertenmodus')
+        ],
+        default='mittel'
+    )
+
     created_by = models.ForeignKey(User, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
 

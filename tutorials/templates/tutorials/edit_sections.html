@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% block title %}Tutorial-Schritte bearbeiten{% endblock %}
+
+{% block content %}
+  <h2 style="text-align: center;">Schritte für: {{ tutorial.title }}</h2>
+
+  <form method="post" enctype="multipart/form-data" style="max-width: 800px; margin: auto;">
+    {% csrf_token %}
+    {{ formset.management_form }}
+
+    {% for form in formset %}
+      <div style="margin-bottom: 30px; border-bottom: 1px solid #ccc; padding-bottom: 15px;">
+        <h4>Schritt {{ forloop.counter }}</h4>
+        <div>
+          {{ form.title.label_tag }}<br>
+          {{ form.title }}
+        </div>
+        <div>
+          {{ form.content.label_tag }}<br>
+          {{ form.content }}
+        </div>
+        <div>
+          {{ form.image.label_tag }}<br>
+          {{ form.image }}
+        </div>
+        <div>
+          {{ form.order.label_tag }}<br>
+          {{ form.order }}
+        </div>
+        <div>
+          {{ form.DELETE }} <label for="{{ form.DELETE.id_for_label }}">Schritt löschen</label>
+        </div>
+      </div>
+    {% endfor %}
+
+    <div style="text-align: center;">
+      <button type="submit" class="button">Speichern</button>
+    </div>
+  </form>
+{% endblock %}

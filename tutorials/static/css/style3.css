@@ -128,3 +128,13 @@ form button:hover {
   height: auto;
   z-index: 100; /* falls nötig, damit es über anderem Inhalt liegt */
 }
+
+.card-container {
+    background-color: #fff;          /* Weißer Hintergrund */
+    border: 1px solid #ddd;         /* Dezenter Rahmen */
+    border-radius: 6px;             /* Leicht abgerundete Ecken */
+    box-shadow: 0 15px 20px rgba(0,0,0,0.1); /* Sanfter Schatten */
+    padding: 20px;                  /* Innenabstand */
+    margin: 20px auto;              /* Abstand nach außen (oben/unten) und zentrieren */
+    max-width: 600px;               /* Optionale maximale Breite */
+}

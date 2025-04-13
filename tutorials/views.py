@@ -8,6 +8,13 @@ from django.contrib import messages
 from django.contrib.auth.models import Group
 from .forms import UserRegisterForm
 from .forms import RoleChangeForm
+from django.shortcuts import render, redirect
+from django.contrib.auth.decorators import login_required
+from .forms import TutorialForm
+from .models import Tutorial, TutorialSection
+from django.forms import modelformset_factory
+
+
 # Registrierung
 def register(request):
     if request.method == 'POST':
@@ -76,3 +83,60 @@ def change_role_view(request):
         form = RoleChangeForm()
 
     return render(request, 'registration/change_role.html', {'form': form})
+
+from django.http import HttpResponse
+
+@login_required
+def create_tutorial(request):
+    if request.method == 'POST':
+        form = TutorialForm(request.POST)
+        if form.is_valid():
+            print("✅ Formular ist valide.")
+
+            tutorial = form.save(commit=False)
+            tutorial.created_by = request.user
+            tutorial.save()
+
+            # 👉 Debug-Ausgaben:
+            print(f"🎯 Tutorial wurde gespeichert mit ID: {tutorial.id}")
+            print(f"👤 Ersteller: {tutorial.created_by} | Aktueller User: {request.user}")
+
+            return redirect('edit_tutorial_sections', tutorial_id=tutorial.id)
+        else:
+            print("❌ Formular ist NICHT valide:")
+            print(form.errors.as_text())
+    else:
+        form = TutorialForm()
+
+    return render(request, 'tutorials/create_tutorial.html', {'form': form})
+
+@login_required
+def tutorial_create_landing(request):
+    return render(request, 'tutorials/create_landing.html')
+
+@login_required
+def edit_tutorial_sections(request, tutorial_id):
+    tutorial = Tutorial.objects.get(id=tutorial_id, created_by=request.user)
+
+    SectionFormSet = modelformset_factory(
+        TutorialSection,
+        fields=('title', 'content', 'image', 'order'),
+        extra=1,
+        can_delete=True
+    )
+
+    if request.method == 'POST':
+        formset = SectionFormSet(request.POST, request.FILES, queryset=TutorialSection.objects.filter(tutorial=tutorial))
+        if formset.is_valid():
+            sections = formset.save(commit=False)
+            for section in sections:
+                section.tutorial = tutorial
+                section.save()
+            # Gelöschte Schritte entfernen
+            for obj in formset.deleted_objects:
+                obj.delete()
+            return redirect('dashboard')  # Oder zu einer nächsten Seite
+    else:
+        formset = SectionFormSet(queryset=TutorialSection.objects.filter(tutorial=tutorial))
+
+    return render(request, 'tutorials/edit_sections.html', {'formset': formset, 'tutorial': tutorial})

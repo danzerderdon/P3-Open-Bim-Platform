@@ -1,7 +1,8 @@
 from django import forms
 from django.contrib.auth.models import User
 from django.contrib.auth.models import Group
-
+from .models import Tutorial
+from django.forms import Textarea, TextInput
 
 class UserRegisterForm(forms.ModelForm):
     password = forms.CharField(widget=forms.PasswordInput)
@@ -22,3 +23,16 @@ class RoleChangeForm(forms.Form):
         label="Neue Rolle auswählen",
         widget=forms.Select(attrs={'class': 'form-control'})
     )
+class TutorialForm(forms.ModelForm):
+    class Meta:
+        model = Tutorial
+        fields = ['title', 'description', 'difficulty', 'category', 'program', 'keywords']
+        widgets = {
+            'keywords': Textarea(attrs={
+                'rows': 3,
+                'placeholder': 'Gib hier deine Keywords ein, z. B.: IFC, Modellierung, Koordination'
+            }),
+            'program': TextInput(attrs={
+                'placeholder': 'Name des Programms (frei wählbar)'
+            })
+        }

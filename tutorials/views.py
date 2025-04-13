@@ -112,7 +112,9 @@ def create_tutorial(request):
 
 @login_required
 def tutorial_create_landing(request):
-    return render(request, 'tutorials/create_landing.html')
+    tutorials = Tutorial.objects.filter(created_by=request.user).order_by('-created_at')
+    return render(request, 'tutorials/create_landing.html', {'tutorials': tutorials})
+
 
 @login_required
 def edit_tutorial_sections(request, tutorial_id):
@@ -140,3 +142,14 @@ def edit_tutorial_sections(request, tutorial_id):
         formset = SectionFormSet(queryset=TutorialSection.objects.filter(tutorial=tutorial))
 
     return render(request, 'tutorials/edit_sections.html', {'formset': formset, 'tutorial': tutorial})
+
+from django.shortcuts import get_object_or_404
+
+@login_required
+def delete_tutorial(request, tutorial_id):
+    tutorial = get_object_or_404(Tutorial, id=tutorial_id, created_by=request.user)
+    if request.method == 'POST':
+        tutorial.delete()
+        messages.success(request, 'Tutorial wurde gelöscht.')
+        return redirect('create')
+    return redirect('create')

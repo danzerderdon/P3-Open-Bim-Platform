@@ -3,7 +3,7 @@
 
 {% block content %}
 <h2 style="text-align: center;">Neues Tutorial erstellen</h2>
-
+<div class="card-container">
 <form method="post" style="max-width: 600px; margin: auto;">
     {% csrf_token %}
 
@@ -44,5 +44,6 @@
     <div style="text-align: center;">
         <button type="submit" class="button">Weiter zu den Schritten</button>
     </div>
+</div>
 </form>
 {% endblock %}

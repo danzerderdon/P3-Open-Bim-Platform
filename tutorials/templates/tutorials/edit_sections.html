@@ -4,37 +4,137 @@
 {% block content %}
   <h2 style="text-align: center;">Schritte für: {{ tutorial.title }}</h2>
 
-  <form method="post" enctype="multipart/form-data" style="max-width: 800px; margin: auto;">
+  <form method="post" enctype="multipart/form-data" style="max-width: 800px; margin: auto;" id="tutorial-form">
     {% csrf_token %}
     {{ formset.management_form }}
 
-    {% for form in formset %}
-      <div style="margin-bottom: 30px; border-bottom: 1px solid #ccc; padding-bottom: 15px;">
-        <h4>Schritt {{ forloop.counter }}</h4>
-        <div>
-          {{ form.title.label_tag }}<br>
-          {{ form.title }}
+    <div id="formset-container">
+      {% for form in formset %}
+        <div class="card" style="padding: 20px; background: white; margin-bottom: 20px; border-radius: 12px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
+          <h4>Schritt {{ forloop.counter }}</h4>
+
+          <div style="width: 90%; margin: auto;">{{ form.title.label_tag }}<br>{{ form.title }}</div>
+          <div style="width: 90%; margin: auto;">{{ form.content.label_tag }}<br>{{ form.content }}</div>
+
+          <div style="width: 90%; margin: auto; text-align: center;">
+            {{ form.image.label_tag }}<br>
+            {{ form.image }}<br>
+            <img class="image-preview" style="width: 50%; margin: 10px auto; display: none;">
+            <button type="button" class="remove-image-btn" style="margin-top: 5px;">Bild entfernen</button>
+          </div>
+
+          <div style="width: 90%; margin: auto; display: none;">{{ form.order }}</div>
+
+          <div style="width: 90%; margin: auto;">
+            <button type="button" class="delete-step-btn" style="margin-top: 10px; background-color: #ff5555; color: white; border: none; padding: 6px 10px; border-radius: 5px;">
+              Schritt löschen
+            </button>
+            <input type="hidden" name="{{ form.prefix }}-DELETE" id="id_{{ form.prefix }}-DELETE">
+          </div>
         </div>
-        <div>
-          {{ form.content.label_tag }}<br>
-          {{ form.content }}
-        </div>
-        <div>
-          {{ form.image.label_tag }}<br>
-          {{ form.image }}
-        </div>
-        <div>
-          {{ form.order.label_tag }}<br>
-          {{ form.order }}
-        </div>
-        <div>
-          {{ form.DELETE }} <label for="{{ form.DELETE.id_for_label }}">Schritt löschen</label>
-        </div>
-      </div>
-    {% endfor %}
+      {% endfor %}
+    </div>
+
+    <div style="text-align: center; margin-bottom: 20px;">
+      <button type="button" id="add-step-btn" class="button">+ Schritt hinzufügen</button>
+    </div>
 
     <div style="text-align: center;">
       <button type="submit" class="button">Speichern</button>
     </div>
   </form>
+
+  <template id="empty-form-template">
+    <div class="card" style="padding: 20px; background: white; margin-bottom: 20px; border-radius: 12px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
+      <h4>Schritt</h4>
+      <div style="width: 90%; margin: auto;"><label for="id_form-__prefix__-title">Title:</label><br><input type="text" name="form-__prefix__-title" id="id_form-__prefix__-title"></div>
+      <div style="width: 90%; margin: auto;"><label for="id_form-__prefix__-content">Content:</label><br><textarea name="form-__prefix__-content" id="id_form-__prefix__-content"></textarea></div>
+      <div style="width: 90%; margin: auto; text-align: center;">
+        <label for="id_form-__prefix__-image">Image:</label><br>
+        <input type="file" name="form-__prefix__-image" id="id_form-__prefix__-image">
+        <br><img class="image-preview" style="width: 50%; margin: 10px auto; display: none;">
+        <button type="button" class="remove-image-btn" style="margin-top: 5px;">Bild entfernen</button>
+      </div>
+      <div style="width: 90%; margin: auto; display: none;">
+        <input type="number" name="form-__prefix__-order" id="id_form-__prefix__-order" value="1">
+      </div>
+      <div style="width: 90%; margin: auto;">
+        <button type="button" class="delete-step-btn" style="margin-top: 10px; background-color: #ff5555; color: white; border: none; padding: 6px 10px; border-radius: 5px;">
+          Schritt löschen
+        </button>
+        <input type="hidden" name="form-__prefix__-DELETE" id="id_form-__prefix__-DELETE">
+      </div>
+    </div>
+  </template>
+
+  <script>
+    function initImagePreviewHandlers(scope) {
+      scope.querySelectorAll('input[type="file"]').forEach(input => {
+        const preview = input.closest('div').querySelector('.image-preview');
+        const removeBtn = input.closest('div').querySelector('.remove-image-btn');
+
+        input.addEventListener('change', e => {
+          const file = e.target.files[0];
+          if (file) {
+            preview.src = URL.createObjectURL(file);
+            preview.style.display = 'block';
+          } else {
+            preview.style.display = 'none';
+          }
+        });
+
+        removeBtn.addEventListener('click', () => {
+          input.value = '';
+          preview.src = '';
+          preview.style.display = 'none';
+        });
+      });
+    }
+
+    function initDeleteButtonHandlers(scope) {
+      scope.querySelectorAll('.delete-step-btn').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          const formDiv = btn.closest('.card');
+          const deleteInput = formDiv.querySelector('input[name$="-DELETE"]');
+          deleteInput.value = 'on';
+          formDiv.style.display = 'none';
+        });
+      });
+    }
+
+    function updateOrderFields() {
+      document.querySelectorAll('#formset-container .card').forEach((card, index) => {
+        const orderInput = card.querySelector('input[name$="-order"]');
+        if (orderInput) {
+          orderInput.value = index + 1;
+        }
+        const heading = card.querySelector('h4');
+        if (heading) {
+          heading.textContent = `Schritt ${index + 1}`;
+        }
+      });
+    }
+
+    initImagePreviewHandlers(document);
+    initDeleteButtonHandlers(document);
+    updateOrderFields();
+
+    document.getElementById('add-step-btn').addEventListener('click', () => {
+      const container = document.getElementById('formset-container');
+      const totalForms = document.getElementById('id_form-TOTAL_FORMS');
+      const newIndex = parseInt(totalForms.value);
+      const templateHtml = document.getElementById('empty-form-template').innerHTML.replace(/__prefix__/g, newIndex);
+
+      const tempDiv = document.createElement('div');
+      tempDiv.innerHTML = templateHtml;
+      const newForm = tempDiv.firstElementChild;
+
+      container.appendChild(newForm);
+      totalForms.value = newIndex + 1;
+
+      initImagePreviewHandlers(newForm);
+      initDeleteButtonHandlers(newForm);
+      updateOrderFields();
+    });
+  </script>
 {% endblock %}

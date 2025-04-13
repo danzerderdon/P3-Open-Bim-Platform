@@ -1,13 +1,55 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block title %}Tutorials erstellen{% endblock %}
 
 {% block content %}
-    <div style="text-align: center; padding: 50px;">
-        <h1>Tutorials erstellen</h1>
-        <p>Hier kannst du neue Tutorials anlegen.</p>
-        <a href="{% url 'tutorial_creator' %}">
-            <button style="padding: 10px 20px; font-size: 16px;">Neues Tutorial erstellen</button>
-        </a>
+<div style="position: relative; min-height: 100vh; overflow: hidden;">
+    <!-- Hintergrundbild -->
+    <div style="
+        background-image: url('{% static 'images/Footer.png' %}');
+        background-repeat: no-repeat;
+        background-position: bottom center;
+        background-size: cover;
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 300px;
+        z-index: 0;
+    "></div>
+
+    <!-- Inhalt -->
+    <div class="card-container" style="position: relative; z-index: 1;">
+        <div style="text-align: center; padding: 50px;">
+            <h1>Tutorials erstellen</h1>
+            <p>Hier kannst du neue Tutorials anlegen.</p>
+            <a href="{% url 'tutorial_creator' %}">
+                <button style="padding: 10px 20px; font-size: 16px;">Neues Tutorial erstellen</button>
+            </a>
+        </div>
+
+        {% for tutorial in tutorials %}
+        <div style="background-color: #b3d9ff; padding: 30px; border-radius: 15px; margin: 20px auto; max-width: 500px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); text-align: center;">
+            <h3><strong>{{ tutorial.title }}</strong></h3>
+            <p>{{ tutorial.description }}</p>
+            <p style="color: #555; font-size: 14px;">Erstellt am: {{ tutorial.created_at|date:"d.m.Y H:i" }}</p>
+
+            {% if request.user.groups.all.0.name == "BIM Expert" %}
+            <div style="margin-top: 20px;">
+                <a href="{% url 'edit_tutorial_sections' tutorial.id %}">
+                    <button style="background-color: #0d5c75; color: white; border: none; padding: 10px 15px; border-radius: 5px;">Bearbeiten</button>
+                </a>
+                <form action="{% url 'delete_tutorial' tutorial.id %}" method="post" style="display: inline;">
+                    {% csrf_token %}
+                    <button type="submit" style="background-color: #e74c3c; color: white; border: none; padding: 10px 15px; border-radius: 5px;">Löschen</button>
+                </form>
+            </div>
+            {% endif %}
+        </div>
+        {% empty %}
+        <p style="text-align: center;">Du hast noch keine Tutorials erstellt.</p>
+        {% endfor %}
     </div>
+</div>
 {% endblock %}

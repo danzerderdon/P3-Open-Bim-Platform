@@ -18,6 +18,8 @@ urlpatterns = [
     path('dashboard/', views.home, name='dashboard'),     # Dummy-URL für dashboard
     path('create/new/', create_tutorial, name='tutorial_creator'),
     path('tutorial/<int:tutorial_id>/edit-steps/', views.edit_tutorial_sections, name='edit_tutorial_sections'),
+    path('tutorial/<int:tutorial_id>/delete/', views.delete_tutorial, name='delete_tutorial'),
+
 ]
 
 

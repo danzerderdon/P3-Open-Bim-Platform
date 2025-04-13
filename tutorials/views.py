@@ -86,12 +86,17 @@ def change_role_view(request):
 
     return render(request, 'registration/change_role.html', {'form': form})
 
-from django.http import HttpResponse
+
+
+
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render, redirect
+from .forms import TutorialForm
 
 @login_required
 def create_tutorial(request):
     if request.method == 'POST':
-        form = TutorialForm(request.POST)
+        form = TutorialForm(request.POST, request.FILES)  # ✅ FILES hinzugefügt!
         if form.is_valid():
             print("✅ Formular ist valide.")
 
@@ -112,48 +117,87 @@ def create_tutorial(request):
 
     return render(request, 'tutorials/create_tutorial.html', {'form': form})
 
+
+
+
 @login_required
 def tutorial_create_landing(request):
     tutorials = Tutorial.objects.filter(created_by=request.user).order_by('-created_at')
     return render(request, 'tutorials/create_landing.html', {'tutorials': tutorials})
 
 
+
+
+#hate this part )=
+from django.shortcuts import get_object_or_404
+
+
+
+
+
+
+from django.contrib import messages  # falls du später im Template Feedback willst
+
 @login_required
 def edit_tutorial_sections(request, tutorial_id):
     tutorial = get_object_or_404(Tutorial, id=tutorial_id, created_by=request.user)
 
-    # extra=0 verhindert leere Schritt-Form beim Laden
     SectionFormSet = modelformset_factory(
         TutorialSection,
-        fields=('title', 'content', 'image'),
+        fields=('title', 'content', 'image', 'order'),
         extra=0,
         can_delete=True
     )
 
     if request.method == 'POST':
-        formset = SectionFormSet(
-            request.POST,
-            request.FILES,  # <- wichtig für Bilder
-            queryset=TutorialSection.objects.filter(tutorial=tutorial)
-        )
+        formset = SectionFormSet(request.POST, request.FILES, queryset=TutorialSection.objects.filter(tutorial=tutorial))
+
         if formset.is_valid():
-            sections = formset.save(commit=False)
-            for section in sections:
-                section.tutorial = tutorial
-                section.save()
+            instances = formset.save(commit=False)
+            handled_ids = []
+
+            for form in formset.forms:
+                if form.cleaned_data.get('DELETE'):
+                    continue
+
+                instance = form.save(commit=False)
+                instance.tutorial = tutorial
+
+                if 'image' in form.cleaned_data and not form.cleaned_data.get('image'):
+                    if form.instance.pk:
+                        old_instance = TutorialSection.objects.get(pk=form.instance.pk)
+                        instance.image = old_instance.image
+
+                instance.save()
+                handled_ids.append(instance.id)
+
             for obj in formset.deleted_objects:
                 obj.delete()
-            return redirect('dashboard')  # oder wohin du möchtest
+
+            return redirect('create')  # redirect nur bei Erfolg
+        else:
+            # 👉 Fehlerausgabe in der Konsole
+            print("❌ Formset ist NICHT valide:")
+            for i, form in enumerate(formset.forms):
+                if form.errors:
+                    print(f"Formular {i} Fehler: {form.errors}")
+
+            # 👉 Optional Feedback für User im Template (wenn du messages nutzt)
+            messages.error(request, "Es gab ein Problem beim Speichern. Bitte überprüfe deine Eingaben.")
     else:
-        formset = SectionFormSet(
-            queryset=TutorialSection.objects.filter(tutorial=tutorial)
-        )
+        formset = SectionFormSet(queryset=TutorialSection.objects.filter(tutorial=tutorial))
 
     return render(request, 'tutorials/edit_sections.html', {
         'formset': formset,
         'tutorial': tutorial
     })
-from django.shortcuts import get_object_or_404
+
+
+
+
+
+
+
 
 @login_required
 def delete_tutorial(request, tutorial_id):
@@ -163,3 +207,29 @@ def delete_tutorial(request, tutorial_id):
         messages.success(request, 'Tutorial wurde gelöscht.')
         return redirect('create')
     return redirect('create')
+
+
+
+
+
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render, redirect, get_object_or_404
+from .forms import TutorialForm
+from .models import Tutorial
+
+@login_required
+def edit_tutorial_attributes(request, tutorial_id):
+    tutorial = get_object_or_404(Tutorial, id=tutorial_id, created_by=request.user)
+
+    if request.method == 'POST':
+        form = TutorialForm(request.POST, request.FILES, instance=tutorial)  # ✅ FIX HIER
+        if form.is_valid():
+            form.save()
+            return redirect('create')  # oder wohin du willst
+    else:
+        form = TutorialForm(instance=tutorial)
+
+    return render(request, 'tutorials/edit_tutorial_attributes.html', {
+        'form': form,
+        'tutorial': tutorial
+    })

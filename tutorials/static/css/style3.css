@@ -1,13 +1,17 @@
-/* Allgemein */
-html,body {
+
+
+html, body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     margin: 0;
-    background-color: #f5f7fa;
+    padding: 0;
+    min-height: 100vh;
+    position: relative;
+    z-index: 0;
     background: linear-gradient(
         to bottom,
-        #ffffff 0%,         /* Weißer Start */
-        #ffffff 50%,        /* Erste Hälfte bleibt komplett weiß */
-        #dbeaf3 80%,        /* Untere Hälfte wird zum weichen Blau */
+        #ffffff 0%,
+        #ffffff 50%,
+        #dbeaf3 80%,
         #99c8e0 100%
     );
     background-repeat: no-repeat;
@@ -16,21 +20,30 @@ html,body {
     text-align: center;
 }
 
-/* Navigation */
+.card-container {
+    position: relative;
+    z-index: 3; /* Über dem Footer */
+}
+
+/* Fixiertes Footer-Bild */
+.city-footer-image {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: auto;
+    z-index: -1; /* Hinter allen Inhalten */
+}
+
+/* Rest wie gehabt */
 nav {
     background-color: #fff;
-
     border-bottom: 1px solid #ccc;
     padding: 15px 30px;
     display: flex;
     align-items: center;
     justify-content: space-between;
     flex-wrap: wrap;
-}
-
-nav form {
-    display: inline;
-    margin: 0 10px;
 }
 
 nav button {
@@ -45,22 +58,9 @@ nav button {
 
 nav button:hover {
     color: #007bff;
-    transform: scale(1.05); /* Vergrößerung beim Hover */
+    transform: scale(1.05);
 }
 
-
-
-
-/* Tutorials Section */
-.tutorials-container {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 20px;
-    padding: 40px;
-    justify-items: center;
-}
-
-/* Karten */
 .tutorial-card {
     background-color: #fff;
     border: 1px solid #ddd;
@@ -69,26 +69,16 @@ nav button:hover {
     box-shadow: 0 2px 5px rgba(0,0,0,0.05);
     transition: box-shadow 0.3s;
     max-width: 300px;
+    margin-bottom: 20px;
+    position: relative;
+    z-index: 1; /* Damit sie über dem Footer liegen */
 }
 
 .tutorial-card:hover {
     box-shadow: 0 4px 12px rgba(0,0,0,0.1);
 }
 
-.tutorial-card h3 {
-    margin-top: 0;
-    font-size: 18px;
-    color: #333;
-}
-
-.tutorial-card p {
-    font-size: 14px;
-    color: #666;
-}
-
-/* Buttons – hellblau und modern */
-.button,
-form button {
+.button, form button {
     display: inline-block;
     background-color: #1c627c;
     color: white;
@@ -101,40 +91,28 @@ form button {
     transition: background-color 0.2s, box-shadow 0.2s, transform 0.2s ease;
 }
 
-.button:hover,
-form button:hover {
+.button:hover, form button:hover {
     background-color: #2b9bc4;
     box-shadow: 0 8px 16px rgba(0,0,0,0.1);
-    transform: scale(1.075); /* sanfte Vergrößerung */
+    transform: scale(1.075);
 }
 
-.fixed-footer-image {
+/* Seiten-Transition Effekt */
+body.fade-transition {
+    transition: background-color 3s ease, opacity 3s ease;
+    background-color: #1c627c !important; /* Logo-Farbe */
+    opacity: 0;
+}
+
+#fade-overlay {
   position: fixed;
-  bottom: 0;
-  right: 6.33%;
-  /* Optional: Passe Größe an, falls gewünscht */
-  max-width: 25%;
-  height: auto;
-  z-index: 100; /* falls nötig, damit es über anderem Inhalt liegt */
-}
-
-.city-footer-image {
-  position: fixed;
-  bottom: 0;
-  right: 0%;
-  /* Optional: Passe Größe an, falls gewünscht */
-  max-width: 100%;
-  transparent: 30%
-  height: auto;
-  z-index: 100; /* falls nötig, damit es über anderem Inhalt liegt */
-}
-
-.card-container {
-    background-color: #fff;          /* Weißer Hintergrund */
-    border: 1px solid #ddd;         /* Dezenter Rahmen */
-    border-radius: 6px;             /* Leicht abgerundete Ecken */
-    box-shadow: 0 15px 20px rgba(0,0,0,0.1); /* Sanfter Schatten */
-    padding: 20px;                  /* Innenabstand */
-    margin: 20px auto;              /* Abstand nach außen (oben/unten) und zentrieren */
-    max-width: 600px;               /* Optionale maximale Breite */
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #0d5c75; /* Farbe deines Logos */
+  opacity: 0;
+  z-index: 9999;
+  pointer-events: none;
+  transition: opacity 1.5s ease-in-out;
 }

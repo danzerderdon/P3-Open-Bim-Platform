@@ -4,52 +4,85 @@
 {% block title %}Tutorials erstellen{% endblock %}
 
 {% block content %}
-<div style="position: relative; min-height: 100vh; overflow: hidden;">
-    <!-- Hintergrundbild -->
-    <div style="
-        background-image: url('{% static 'images/Footer.png' %}');
-        background-repeat: no-repeat;
-        background-position: bottom center;
-        background-size: cover;
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        width: 100%;
-        height: 300px;
-        z-index: 0;
-    "></div>
+<!-- Fixiertes Footer-Bild ganz unten -->
+<img src="{% static 'images/Footer.png' %}" alt="Stadt-Footer"
+     style="position: fixed; bottom: 0; left: 0; width: 100%; z-index: 0;">
 
-    <!-- Inhalt -->
-    <div class="card-container" style="position: relative; z-index: 1;">
-        <div style="text-align: center; padding: 50px;">
-            <h1>Tutorials erstellen</h1>
-            <p>Hier kannst du neue Tutorials anlegen.</p>
-            <a href="{% url 'tutorial_creator' %}">
-                <button style="padding: 10px 20px; font-size: 16px;">Neues Tutorial erstellen</button>
-            </a>
-        </div>
-
-        {% for tutorial in tutorials %}
-        <div style="background-color: #b3d9ff; padding: 30px; border-radius: 15px; margin: 20px auto; max-width: 500px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); text-align: center;">
-            <h3><strong>{{ tutorial.title }}</strong></h3>
-            <p>{{ tutorial.description }}</p>
-            <p style="color: #555; font-size: 14px;">Erstellt am: {{ tutorial.created_at|date:"d.m.Y H:i" }}</p>
-
-            {% if request.user.groups.all.0.name == "BIM Expert" %}
-            <div style="margin-top: 20px;">
-                <a href="{% url 'edit_tutorial_sections' tutorial.id %}">
-                    <button style="background-color: #0d5c75; color: white; border: none; padding: 10px 15px; border-radius: 5px;">Bearbeiten</button>
-                </a>
-                <form action="{% url 'delete_tutorial' tutorial.id %}" method="post" style="display: inline;">
-                    {% csrf_token %}
-                    <button type="submit" style="background-color: #e74c3c; color: white; border: none; padding: 10px 15px; border-radius: 5px;">Löschen</button>
-                </form>
-            </div>
-            {% endif %}
-        </div>
-        {% empty %}
-        <p style="text-align: center;">Du hast noch keine Tutorials erstellt.</p>
-        {% endfor %}
+<!-- Hauptinhalt mit Überlappung -->
+<div class="card-container" style="position: relative; z-index: 1; margin-bottom: -150px; padding-bottom: 200px;">
+    <div style="text-align: center; padding: 50px;">
+        <h1>Tutorials erstellen</h1>
+        <p>Hier kannst du neue Tutorials anlegen.</p>
+        <a href="{% url 'tutorial_creator' %}">
+            <button style="padding: 10px 20px; font-size: 16px;">Neues Tutorial erstellen</button>
+        </a>
     </div>
+
+    <h1>Meine Tutorials:</h1>
+
+    {% for tutorial in tutorials %}
+    <div style="background-color: #b3d9ff; padding: 30px; border-radius: 15px; margin: 20px auto; max-width: 500px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); text-align: center;">
+        {% if tutorial.thumbnail %}
+            <img src="{{ tutorial.thumbnail.url }}" alt="Vorschaubild"
+                 style="max-width: 100%; border-radius: 10px; margin-bottom: 15px;">
+        {% endif %}
+        <h3><strong>{{ tutorial.title }}</strong></h3>
+        <p>{{ tutorial.description }}</p>
+        <p style="color: #555; font-size: 14px;">Erstellt am: {{ tutorial.created_at|date:"d.m.Y H:i" }}</p>
+
+        {% if request.user.groups.all.0.name == "BIM Expert" %}
+        <div style="margin-top: 20px;">
+            <a href="{% url 'edit_tutorial_sections' tutorial.id %}">
+                <button style="background-color: #0d5c75; color: white; border: none; padding: 10px 15px; border-radius: 5px;">Bearbeiten</button>
+            </a>
+            <a href="{% url 'edit_tutorial_attributes' tutorial.id %}">
+                <button style="background-color: #f39c12; color: white; border: none; padding: 10px 15px; border-radius: 5px;">Attribute</button>
+            </a>
+            <form class="delete-form" action="{% url 'delete_tutorial' tutorial.id %}" method="post" style="display: inline;">
+                {% csrf_token %}
+                <button type="submit" style="background-color: #e74c3c; color: white; border: none; padding: 10px 15px; border-radius: 5px;">Löschen</button>
+            </form>
+        </div>
+        {% endif %}
+    </div>
+    {% empty %}
+    <p style="text-align: center;">Du hast noch keine Tutorials erstellt.</p>
+    {% endfor %}
 </div>
+
+<!-- JS für Übergang + Löschbestätigung -->
+<script>
+    // Fade beim Laden
+    document.body.style.opacity = 0;
+    window.addEventListener('load', () => {
+        document.body.style.transition = "opacity 0.6s ease";
+        document.body.style.opacity = 1;
+    });
+
+    // Fade-Out bei Navigation
+    document.querySelectorAll('a[href]').forEach(link => {
+        link.addEventListener('click', function (e) {
+            const url = link.getAttribute('href');
+            if (!url.startsWith('#') && !link.hasAttribute('download')) {
+                e.preventDefault();
+                document.body.style.opacity = 0;
+                setTimeout(() => {
+                    window.location.href = url;
+                }, 300);
+            }
+        });
+    });
+
+    // 🔴 Bestätigung beim Löschen
+    document.querySelectorAll("form.delete-form").forEach(form => {
+        form.addEventListener("submit", function (e) {
+            const confirmed = confirm("❗ Willst du dieses Tutorial wirklich löschen?");
+            if (!confirmed) {
+                e.preventDefault();
+            }
+        });
+    });
+</script>
+
+<div id="fade-overlay"></div>
 {% endblock %}

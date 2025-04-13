@@ -10,7 +10,7 @@ class Tutorial(models.Model):
     # Statt ForeignKey zu Program → freies Texteingabefeld:
     program = models.CharField(max_length=100, help_text="Z. B. Revit, ArchiCAD, Solibri")
 
-    category = models.CharField(max_length=100, default="Sonstiges")
+
 
     difficulty = models.CharField(
         max_length=20,
@@ -25,6 +25,7 @@ class Tutorial(models.Model):
 
     created_by = models.ForeignKey(User, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
+    thumbnail = models.ImageField(upload_to='thumbnails/', null=True, blank=True)
 
     def __str__(self):
         return self.title
@@ -74,3 +75,7 @@ class UserProgress(models.Model):
 
     def __str__(self):
         return f"{self.user.username} – {self.tutorial.title} ({'Fertig' if self.completed else 'Nicht fertig'})"
+
+from django.db import models
+
+

@@ -25,4 +25,27 @@
       </div>
     </form>
   </div>
+<script>
+    // Fade beim Laden
+    document.body.style.opacity = 0;
+    window.addEventListener('load', () => {
+        document.body.style.transition = "opacity 0.6s ease";
+        document.body.style.opacity = 1;
+    });
+
+    // Fade-Out bei Navigation
+    document.querySelectorAll('a[href]').forEach(link => {
+        link.addEventListener('click', function (e) {
+            const url = link.getAttribute('href');
+            if (!url.startsWith('#') && !link.hasAttribute('download')) {
+                e.preventDefault();
+                document.body.style.opacity = 0;
+                setTimeout(() => {
+                    window.location.href = url;
+                }, 300);
+            }
+        });
+    });
+</script>
+<div id="fade-overlay"></div>
 {% endblock %}

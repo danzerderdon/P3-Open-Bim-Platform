@@ -11,12 +11,11 @@
     <div id="formset-container">
       {% for form in formset %}
         {% if not form.instance.pk and forloop.last and not form.has_changed %}
-          {# Leeres letztes Formular nicht anzeigen #}
         {% else %}
         <div class="card" style="padding: 20px; background: white; margin-bottom: 20px; border-radius: 12px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
           <h4>Schritt {{ forloop.counter }}</h4>
 
-          <div style="width: 90%; margin: auto;">{{ form.title.label_tag }}<br>{{ form.title }}</div>
+          <div style="width: 90%; margin: auto;">{{ form.title.label_tag }}<br>{{ form.title }}{{ form.id }}</div>
           <div style="width: 90%; margin: auto;">{{ form.content.label_tag }}<br>{{ form.content }}</div>
 
           <div style="width: 90%; margin: auto; text-align: center;">
@@ -37,18 +36,29 @@
           <div style="width: 90%; margin: auto; display: none;">{{ form.order }}</div>
 
           <div style="width: 90%; margin: auto;">
-            <button type="button" class="delete-step-btn" style="margin-top: 10px; background-color: #ff5555; color: white; border: none; padding: 6px 10px; border-radius: 5px;">
-              Schritt löschen
-            </button>
             <input type="hidden" name="{{ form.prefix }}-DELETE" id="id_{{ form.prefix }}-DELETE">
+          </div>
+
+          <div style="text-align: center; margin-top: 20px;">
+            <button type="button" class="delete-step-btn"
+                    style="width: 60px; height: 60px; border-radius: 50%; background-color: #dc3545; color: white;
+                           font-size: 30px; border: none; box-shadow: 0 4px 8px rgba(0,0,0,0.2); cursor: pointer;"
+                    title="Diesen Schritt entfernen">
+              &minus;
+            </button>
           </div>
         </div>
         {% endif %}
       {% endfor %}
     </div>
 
-    <div style="text-align: center; margin-bottom: 20px;">
-      <button type="button" id="add-step-btn" class="button">+ Schritt hinzufügen</button>
+    <div style="text-align: center; margin: 40px 0;">
+      <button type="button" id="add-step-btn"
+              style="width: 70px; height: 70px; border-radius: 50%; background-color: #0d6efd; color: white;
+                     font-size: 36px; border: none; box-shadow: 0 4px 8px rgba(0,0,0,0.2); cursor: pointer;"
+              title="Schritt hinzufügen">
+        +
+      </button>
     </div>
 
     <div style="text-align: center;">
@@ -57,10 +67,10 @@
   </form>
 
   <template id="empty-form-template">
-    <div class="card" style="padding: 20px; background: white; margin-bottom: 20px; border-radius: 12px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
+    <div class="card new-step" style="padding: 20px; background: white; margin-bottom: 20px; border-radius: 12px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
       <h4>Schritt</h4>
-      <div style="width: 90%; margin: auto;"><label for="id_form-__prefix__-title">Title:</label><br><input type="text" name="form-__prefix__-title" id="id_form-__prefix__-title"></div>
-      <div style="width: 90%; margin: auto;"><label for="id_form-__prefix__-content">Content:</label><br><textarea name="form-__prefix__-content" id="id_form-__prefix__-content"></textarea></div>
+      <div style="width: 90%; margin: auto;"><label for="id_form-__prefix__-title">Title:</label><br><input type="text" name="form-__prefix__-title" id="id_form-__prefix__-title" placeholder="Text..."><input type="hidden" name="form-__prefix__-id" id="id_form-__prefix__-id"></div>
+      <div style="width: 90%; margin: auto;"><label for="id_form-__prefix__-content">Content:</label><br><textarea name="form-__prefix__-content" id="id_form-__prefix__-content" placeholder="Text..."></textarea></div>
       <div style="width: 90%; margin: auto; text-align: center;">
         <label for="id_form-__prefix__-image">Image:</label><br>
         <input type="file" name="form-__prefix__-image" id="id_form-__prefix__-image">
@@ -71,13 +81,33 @@
         <input type="number" name="form-__prefix__-order" id="id_form-__prefix__-order" value="1">
       </div>
       <div style="width: 90%; margin: auto;">
-        <button type="button" class="delete-step-btn" style="margin-top: 10px; background-color: #ff5555; color: white; border: none; padding: 6px 10px; border-radius: 5px;">
-          Schritt löschen
-        </button>
         <input type="hidden" name="form-__prefix__-DELETE" id="id_form-__prefix__-DELETE">
+      </div>
+      <div style="text-align: center; margin-top: 20px;">
+        <button type="button" class="delete-step-btn"
+                style="width: 60px; height: 60px; border-radius: 50%; background-color: #dc3545; color: white;
+                       font-size: 30px; border: none; box-shadow: 0 4px 8px rgba(0,0,0,0.2); cursor: pointer;"
+                title="Diesen Schritt entfernen">
+          &minus;
+        </button>
       </div>
     </div>
   </template>
+
+  <style>
+    .card.new-step {
+      background-color: #0d6efd;
+      transform-origin: top;
+      transform: rotateX(-90deg);
+      opacity: 0;
+      transition: transform 0.5s ease, background-color 0.5s ease, opacity 0.5s ease;
+    }
+    .card.new-step.show {
+      transform: rotateX(0deg);
+      background-color: white;
+      opacity: 1;
+    }
+  </style>
 
   <script>
     function initImagePreviewHandlers(scope) {
@@ -103,19 +133,9 @@
       });
     }
 
-    function initDeleteButtonHandlers(scope) {
-      scope.querySelectorAll('.delete-step-btn').forEach((btn) => {
-        btn.addEventListener('click', () => {
-          const formDiv = btn.closest('.card');
-          const deleteInput = formDiv.querySelector('input[name$="-DELETE"]');
-          deleteInput.value = 'on';
-          formDiv.style.display = 'none';
-        });
-      });
-    }
-
     function updateOrderFields() {
-      document.querySelectorAll('#formset-container .card').forEach((card, index) => {
+      const cards = document.querySelectorAll('#formset-container .card');
+      cards.forEach((card, index) => {
         const orderInput = card.querySelector('input[name$="-order"]');
         if (orderInput) {
           orderInput.value = index + 1;
@@ -127,8 +147,22 @@
       });
     }
 
+    document.addEventListener('click', function (e) {
+      if (e.target.classList.contains('delete-step-btn')) {
+        const card = e.target.closest('.card');
+        card.style.transition = 'transform 0.4s ease, opacity 0.4s ease';
+        card.style.transform = 'rotateX(-90deg)';
+        card.style.opacity = '0';
+        setTimeout(() => {
+          const deleteInput = card.querySelector('input[name$="-DELETE"]');
+          deleteInput.value = 'on';
+          card.style.display = 'none';
+          updateOrderFields();
+        }, 400);
+      }
+    });
+
     initImagePreviewHandlers(document);
-    initDeleteButtonHandlers(document);
     updateOrderFields();
 
     document.getElementById('add-step-btn').addEventListener('click', () => {
@@ -142,11 +176,38 @@
       const newForm = tempDiv.firstElementChild;
 
       container.appendChild(newForm);
+
+      requestAnimationFrame(() => {
+        newForm.classList.add('show');
+      });
+
       totalForms.value = newIndex + 1;
 
       initImagePreviewHandlers(newForm);
-      initDeleteButtonHandlers(newForm);
       updateOrderFields();
     });
   </script>
+<script>
+    // Fade beim Laden
+    document.body.style.opacity = 0;
+    window.addEventListener('load', () => {
+        document.body.style.transition = "opacity 0.6s ease";
+        document.body.style.opacity = 1;
+    });
+
+    // Fade-Out bei Navigation
+    document.querySelectorAll('a[href]').forEach(link => {
+        link.addEventListener('click', function (e) {
+            const url = link.getAttribute('href');
+            if (!url.startsWith('#') && !link.hasAttribute('download')) {
+                e.preventDefault();
+                document.body.style.opacity = 0;
+                setTimeout(() => {
+                    window.location.href = url;
+                }, 300);
+            }
+        });
+    });
+</script>
+<div id="fade-overlay"></div>
 {% endblock %}

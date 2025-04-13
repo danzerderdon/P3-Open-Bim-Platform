@@ -1,39 +1,41 @@
 {% extends 'base.html' %}
-{% block title %}Tutorial erstellen{% endblock %}
+{% block title %}Tutorial bearbeiten{% endblock %}
 
 {% block content %}
-<h2 style="text-align: center;">Neues Tutorial erstellen</h2>
+<h2 style="text-align: center;">Tutorial bearbeiten</h2>
 <div class="card-container">
-<form method="post" enctype="multipart/form-data" style="max-width: 600px; margin: auto;">
+  <form method="post" enctype="multipart/form-data" style="max-width: 600px; margin: auto;">
     {% csrf_token %}
 
     <div style="margin-bottom: 20px;">
-        <label for="{{ form.title.id_for_label }}"><strong>Titel:</strong></label><br>
-        {{ form.title }}
+      <label for="{{ form.title.id_for_label }}"><strong>Titel:</strong></label><br>
+      {{ form.title }}
     </div>
 
     <div style="margin-bottom: 20px;">
-        <label for="{{ form.description.id_for_label }}"><strong>Beschreibung:</strong></label><br>
-        {{ form.description }}
+      <label for="{{ form.description.id_for_label }}"><strong>Beschreibung:</strong></label><br>
+      {{ form.description }}
     </div>
 
     <div style="margin-bottom: 20px;">
-        <label for="{{ form.difficulty.id_for_label }}"><strong>Schwierigkeitsgrad:</strong></label><br>
-        {{ form.difficulty }}
+      <label for="{{ form.difficulty.id_for_label }}"><strong>Schwierigkeitsgrad:</strong></label><br>
+      {{ form.difficulty }}
     </div>
 
 
 
     <div style="margin-bottom: 20px;">
-        <label for="{{ form.program.id_for_label }}"><strong>Programm:</strong></label><br>
-        {{ form.program }}
+      <label for="{{ form.program.id_for_label }}"><strong>Programm:</strong></label><br>
+      {{ form.program }}
     </div>
 
     <div style="margin-bottom: 20px;">
-        <label for="{{ form.keywords.id_for_label }}"><strong>Keywords:</strong></label><br>
-        {{ form.keywords }}
+      <label for="{{ form.keywords.id_for_label }}"><strong>Keywords:</strong></label><br>
+      {{ form.keywords }}
 
     </div>
+
+
 
 
         <small style="color: #555;">Kommagetrennt, z.B. IFC, Modellierung, BIM</small>
@@ -41,15 +43,20 @@
     <small style="color: white;">.</small>
     </div>
 
-    <div style="margin-bottom: 30px;">
-        <label for="{{ form.thumbnail.id_for_label }}"><strong>Vorschaubild:</strong></label><br>
-        {{ form.thumbnail }}
+    <div style="margin-bottom: 20px;">
+      <label for="{{ form.thumbnail.id_for_label }}"><strong>Vorschaubild:</strong></label><br>
+      {{ form.thumbnail }}
+      {% if tutorial.thumbnail %}
+        <div style="margin-top: 10px;">
+          <img src="{{ tutorial.thumbnail.url }}" style="max-width: 100%; border-radius: 8px;">
+        </div>
+      {% endif %}
     </div>
 
     <div style="text-align: center;">
-        <button type="submit" class="button">Weiter zu den Schritten</button>
+      <button type="submit" class="button">Speichern</button>
     </div>
-</form>
+  </form>
 </div>
 <script>
     // Fade beim Laden
@@ -72,6 +79,6 @@
             }
         });
     });
-</script>
+</script>#
 <div id="fade-overlay"></div>
 {% endblock %}

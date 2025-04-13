@@ -10,6 +10,9 @@
 
     <div id="formset-container">
       {% for form in formset %}
+        {% if not form.instance.pk and forloop.last and not form.has_changed %}
+          {# Leeres letztes Formular nicht anzeigen #}
+        {% else %}
         <div class="card" style="padding: 20px; background: white; margin-bottom: 20px; border-radius: 12px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
           <h4>Schritt {{ forloop.counter }}</h4>
 
@@ -18,8 +21,16 @@
 
           <div style="width: 90%; margin: auto; text-align: center;">
             {{ form.image.label_tag }}<br>
-            {{ form.image }}<br>
-            <img class="image-preview" style="width: 50%; margin: 10px auto; display: none;">
+            {{ form.image }}
+
+            {% if form.instance.image %}
+              <div>
+                <img src="{{ form.instance.image.url }}" class="image-preview" style="width: 50%; margin: 10px auto; display: block; border-radius: 10px;">
+              </div>
+            {% else %}
+              <img class="image-preview" style="width: 50%; margin: 10px auto; display: none;">
+            {% endif %}
+
             <button type="button" class="remove-image-btn" style="margin-top: 5px;">Bild entfernen</button>
           </div>
 
@@ -32,6 +43,7 @@
             <input type="hidden" name="{{ form.prefix }}-DELETE" id="id_{{ form.prefix }}-DELETE">
           </div>
         </div>
+        {% endif %}
       {% endfor %}
     </div>
 

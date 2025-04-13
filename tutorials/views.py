@@ -13,6 +13,8 @@ from django.contrib.auth.decorators import login_required
 from .forms import TutorialForm
 from .models import Tutorial, TutorialSection
 from django.forms import modelformset_factory
+from django.forms import modelformset_factory
+from .models import Tutorial, TutorialSection
 
 
 # Registrierung
@@ -118,31 +120,39 @@ def tutorial_create_landing(request):
 
 @login_required
 def edit_tutorial_sections(request, tutorial_id):
-    tutorial = Tutorial.objects.get(id=tutorial_id, created_by=request.user)
+    tutorial = get_object_or_404(Tutorial, id=tutorial_id, created_by=request.user)
 
+    # extra=0 verhindert leere Schritt-Form beim Laden
     SectionFormSet = modelformset_factory(
         TutorialSection,
-        fields=('title', 'content', 'image', 'order'),
-        extra=1,
+        fields=('title', 'content', 'image'),
+        extra=0,
         can_delete=True
     )
 
     if request.method == 'POST':
-        formset = SectionFormSet(request.POST, request.FILES, queryset=TutorialSection.objects.filter(tutorial=tutorial))
+        formset = SectionFormSet(
+            request.POST,
+            request.FILES,  # <- wichtig für Bilder
+            queryset=TutorialSection.objects.filter(tutorial=tutorial)
+        )
         if formset.is_valid():
             sections = formset.save(commit=False)
             for section in sections:
                 section.tutorial = tutorial
                 section.save()
-            # Gelöschte Schritte entfernen
             for obj in formset.deleted_objects:
                 obj.delete()
-            return redirect('dashboard')  # Oder zu einer nächsten Seite
+            return redirect('dashboard')  # oder wohin du möchtest
     else:
-        formset = SectionFormSet(queryset=TutorialSection.objects.filter(tutorial=tutorial))
+        formset = SectionFormSet(
+            queryset=TutorialSection.objects.filter(tutorial=tutorial)
+        )
 
-    return render(request, 'tutorials/edit_sections.html', {'formset': formset, 'tutorial': tutorial})
-
+    return render(request, 'tutorials/edit_sections.html', {
+        'formset': formset,
+        'tutorial': tutorial
+    })
 from django.shortcuts import get_object_or_404
 
 @login_required

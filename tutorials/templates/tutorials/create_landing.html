@@ -4,6 +4,7 @@
 {% block title %}Tutorials erstellen{% endblock %}
 
 {% block content %}
+
 <!-- Fixiertes Footer-Bild ganz unten -->
 <img src="{% static 'images/Footer.png' %}" alt="Stadt-Footer"
      style="position: fixed; bottom: 0; left: 0; width: 100%; z-index: 0;">
@@ -14,7 +15,7 @@
         <h1>Tutorials erstellen</h1>
         <p>Hier kannst du neue Tutorials anlegen.</p>
         <a href="{% url 'tutorial_creator' %}">
-            <button style="padding: 10px 20px; font-size: 16px;">Neues Tutorial erstellen</button>
+            <button class="action-button grey">Neues Tutorial erstellen</button>
         </a>
     </div>
 
@@ -33,14 +34,14 @@
         {% if request.user.groups.all.0.name == "BIM Expert" %}
         <div style="margin-top: 20px;">
             <a href="{% url 'edit_tutorial_sections' tutorial.id %}">
-                <button style="background-color: #0d5c75; color: white; border: none; padding: 10px 15px; border-radius: 5px;">Bearbeiten</button>
+                <button class="action-button blue">Bearbeiten</button>
             </a>
             <a href="{% url 'edit_tutorial_attributes' tutorial.id %}">
-                <button style="background-color: #f39c12; color: white; border: none; padding: 10px 15px; border-radius: 5px;">Attribute</button>
+                <button class="action-button orange">Attribute</button>
             </a>
             <form class="delete-form" action="{% url 'delete_tutorial' tutorial.id %}" method="post" style="display: inline;">
                 {% csrf_token %}
-                <button type="submit" style="background-color: #e74c3c; color: white; border: none; padding: 10px 15px; border-radius: 5px;">Löschen</button>
+                <button type="submit" class="action-button red">Löschen</button>
             </form>
         </div>
         {% endif %}
@@ -49,6 +50,58 @@
     <p style="text-align: center;">Du hast noch keine Tutorials erstellt.</p>
     {% endfor %}
 </div>
+
+<!-- Stile für Buttons -->
+<style>
+.action-button {
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 6px;
+    margin: 5px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    outline: none;
+    box-shadow: none;
+}
+
+.action-button:focus {
+    outline: none;
+}
+
+.action-button.blue {
+    background-color: #0d5c75;
+}
+
+.action-button.blue:hover {
+    background-color: #2b9bc4;
+}
+
+.action-button.orange {
+    background-color: #f39c12;
+}
+
+.action-button.orange:hover {
+    background-color: #f5b041;
+}
+
+.action-button.red {
+    background-color: #e74c3c;
+}
+
+.action-button.red:hover {
+    background-color: #ff6f61;
+}
+
+.action-button.grey {
+    background-color: #7f8c8d;
+}
+
+.action-button.grey:hover {
+    background-color: #95a5a6;
+}
+</style>
 
 <!-- JS für Übergang + Löschbestätigung -->
 <script>

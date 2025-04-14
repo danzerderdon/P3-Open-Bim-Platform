@@ -203,3 +203,20 @@ body.fade-transition {
 .action-button:focus {
     outline: none;
 }
+.action-button.blue:hover {
+    background-color: #2b9bc4;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+    transform: scale(1.075);
+}
+
+.action-button.orange:hover {
+    background-color: #f5b041;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+    transform: scale(1.075);
+}
+
+.action-button.red:hover {
+    background-color: #ff6f61;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+    transform: scale(1.075);
+}

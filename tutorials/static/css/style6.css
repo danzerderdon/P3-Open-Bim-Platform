@@ -116,6 +116,7 @@ form button:hover {
   max-width: 25%;
   height: auto;
   z-index: 100; /* falls nötig, damit es über anderem Inhalt liegt */
+  display: none;
 }
 
 .city-footer-image {
@@ -219,4 +220,58 @@ body.fade-transition {
     background-color: #ff6f61;
     box-shadow: 0 8px 16px rgba(0,0,0,0.1);
     transform: scale(1.075);
+}
+
+input[type="text"],
+textarea,
+select {
+    width: 80%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 14px;
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+input[type="text"]:focus,
+textarea:focus,
+select:focus {
+    border-color: #2b9bc4;
+    box-shadow: 0 0 5px rgba(43, 155, 196, 0.5);
+    outline: none;
+}
+
+input[type="file"] {
+    padding: 8px;
+    font-size: 14px;
+    border: none;
+    background-color: #0d5c75;
+    color: white;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+input[type="file"]::file-selector-button {
+    background-color: #0d5c75;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+input[type="file"]::file-selector-button:hover {
+    background-color: #2b9bc4;
+}
+
+.form-group {
+    margin-bottom: 20px;
+    text-align: left;
+}
+.form-group label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 6px;
 }

@@ -3,6 +3,7 @@
 {% block title %}Login{% endblock %}
 
 {% block content %}
+<div class="card-container">
   <h2>Login</h2>
   <form method="post">
     {% csrf_token %}
@@ -32,4 +33,5 @@
     });
 </script>
 <div id="fade-overlay"></div>
+</div>
 {% endblock %}

@@ -8,43 +8,39 @@
     {% csrf_token %}
 
     <div style="margin-bottom: 20px;">
-      <label for="{{ form.title.id_for_label }}"><strong>Titel:</strong></label><br>
+      <label><strong>Titel:</strong></label><br>
       {{ form.title }}
     </div>
 
     <div style="margin-bottom: 20px;">
-      <label for="{{ form.description.id_for_label }}"><strong>Beschreibung:</strong></label><br>
+      <label><strong>Beschreibung:</strong></label><br>
       {{ form.description }}
     </div>
 
     <div style="margin-bottom: 20px;">
-      <label for="{{ form.difficulty.id_for_label }}"><strong>Schwierigkeitsgrad:</strong></label><br>
+      <label><strong>Schwierigkeitsgrad:</strong></label><br>
       {{ form.difficulty }}
     </div>
 
-
-
     <div style="margin-bottom: 20px;">
-      <label for="{{ form.program.id_for_label }}"><strong>Programm:</strong></label><br>
+      <label><strong>Programm:</strong></label><br>
       {{ form.program }}
     </div>
 
     <div style="margin-bottom: 20px;">
-      <label for="{{ form.keywords.id_for_label }}"><strong>Keywords:</strong></label><br>
-      {{ form.keywords }}
-
-    </div>
-
-
-
-
-        <small style="color: #555;">Kommagetrennt, z.B. IFC, Modellierung, BIM</small>
-    <div>
-    <small style="color: white;">.</small>
+      <label><strong>Version(en) des Programms:</strong></label><br>
+      {{ form.program_versions }}
+      <small style="color: #555;">z. B. 2021, 2023</small>
     </div>
 
     <div style="margin-bottom: 20px;">
-      <label for="{{ form.thumbnail.id_for_label }}"><strong>Vorschaubild:</strong></label><br>
+      <label><strong>Keywords:</strong></label><br>
+      {{ form.keywords }}
+      <small style="color: #555;">Kommagetrennt, z.B. IFC, Modellierung, BIM</small>
+    </div>
+
+    <div style="margin-bottom: 20px;">
+      <label><strong>Vorschaubild:</strong></label><br>
       {{ form.thumbnail }}
       {% if tutorial.thumbnail %}
         <div style="margin-top: 10px;">
@@ -53,11 +49,34 @@
       {% endif %}
     </div>
 
+    <div style="margin-bottom: 20px;">
+      <label><strong>Screenshot (Prozessdiagramm):</strong></label><br>
+      {{ form.screenshot }}
+      {% if tutorial.screenshot %}
+        <div style="margin-top: 10px;">
+          <img src="{{ tutorial.screenshot.url }}" style="max-width: 100%; border-radius: 8px;">
+        </div>
+      {% endif %}
+    </div>
+
+    <div style="margin-bottom: 20px;">
+      <label><strong>Dateien anhängen:</strong></label><br>
+      {{ form.attachments }}
+      <small style="color: #555;">z. B. PDFs, Arbeitsmaterial, IFC-Dateien etc.</small>
+    </div>
+
+    <div style="margin-bottom: 30px;">
+      <label><strong>Tutorial-Serie:</strong></label><br>
+      {{ form.series }}
+      <small style="color: #555;">z. B. "Solibri Basics" (optional)</small>
+    </div>
+
     <div style="text-align: center;">
       <button type="submit" class="button">Speichern</button>
     </div>
   </form>
 </div>
+
 <script>
     // Fade beim Laden
     document.body.style.opacity = 0;
@@ -79,6 +98,6 @@
             }
         });
     });
-</script>#
+</script>
 <div id="fade-overlay"></div>
 {% endblock %}

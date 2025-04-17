@@ -8,42 +8,57 @@
     {% csrf_token %}
 
     <div style="margin-bottom: 20px;">
-        <label for="{{ form.title.id_for_label }}"><strong>Titel:</strong></label><br>
+        <label><strong>Titel:</strong></label><br>
         {{ form.title }}
     </div>
 
     <div style="margin-bottom: 20px;">
-        <label for="{{ form.description.id_for_label }}"><strong>Beschreibung:</strong></label><br>
+        <label><strong>Beschreibung:</strong></label><br>
         {{ form.description }}
     </div>
 
     <div style="margin-bottom: 20px;">
-        <label for="{{ form.difficulty.id_for_label }}"><strong>Schwierigkeitsgrad:</strong></label><br>
+        <label><strong>Schwierigkeitsgrad:</strong></label><br>
         {{ form.difficulty }}
     </div>
 
-
-
     <div style="margin-bottom: 20px;">
-        <label for="{{ form.program.id_for_label }}"><strong>Programm:</strong></label><br>
+        <label><strong>Programm:</strong></label><br>
         {{ form.program }}
     </div>
 
     <div style="margin-bottom: 20px;">
-        <label for="{{ form.keywords.id_for_label }}"><strong>Keywords:</strong></label><br>
-        {{ form.keywords }}
-
+        <label><strong>Version(en) des Programms:</strong></label><br>
+        <small>z. B. 2021, 2023</small><br>
+        {{ form.program_versions }}
     </div>
 
+    <div style="margin-bottom: 20px;">
+        <label><strong>Keywords:</strong></label><br>
+        {{ form.keywords }}
+        <small>Kommagetrennt, z.B. IFC, Modellierung, BIM</small>
+    </div>
 
-        <small style="color: #555;">Kommagetrennt, z.B. IFC, Modellierung, BIM</small>
-    <div>
-    <small style="color: white;">.</small>
+    <div style="margin-bottom: 20px;">
+        <label><strong>Vorschaubild:</strong></label><br>
+        {{ form.thumbnail }}
+    </div>
+
+    <div style="margin-bottom: 20px;">
+        <label><strong>Screenshot (Prozessdiagramm):</strong></label><br>
+        {{ form.screenshot }}
+    </div>
+
+    <div style="margin-bottom: 20px;">
+        <label><strong>Dateien anhängen:</strong></label><br>
+        <small>z.B. PDFs, Arbeitsmaterial, IFC-Dateien etc.</small><br>
+        {{ form.attachments }}
     </div>
 
     <div style="margin-bottom: 30px;">
-        <label for="{{ form.thumbnail.id_for_label }}"><strong>Vorschaubild:</strong></label><br>
-        {{ form.thumbnail }}
+        <label><strong>Tutorial-Serie:</strong></label><br>
+        <small>z.B. "Solibri Basics" (optional)</small><br>
+        {{ form.series }}
     </div>
 
     <div style="text-align: center;">
@@ -51,27 +66,4 @@
     </div>
 </form>
 </div>
-<script>
-    // Fade beim Laden
-    document.body.style.opacity = 0;
-    window.addEventListener('load', () => {
-        document.body.style.transition = "opacity 0.6s ease";
-        document.body.style.opacity = 1;
-    });
-
-    // Fade-Out bei Navigation
-    document.querySelectorAll('a[href]').forEach(link => {
-        link.addEventListener('click', function (e) {
-            const url = link.getAttribute('href');
-            if (!url.startsWith('#') && !link.hasAttribute('download')) {
-                e.preventDefault();
-                document.body.style.opacity = 0;
-                setTimeout(() => {
-                    window.location.href = url;
-                }, 300);
-            }
-        });
-    });
-</script>
-<div id="fade-overlay"></div>
 {% endblock %}

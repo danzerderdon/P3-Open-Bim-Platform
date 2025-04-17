@@ -1,9 +1,10 @@
 from django import forms
-from django.contrib.auth.models import User
-from django.contrib.auth.models import Group
-from .models import Tutorial
-from django.forms import Textarea, TextInput
+from django.contrib.auth.models import User, Group
+from .models import Tutorial, TutorialScreenshot, ProgramVersion
+from django.forms import Textarea, TextInput, ClearableFileInput, Select, CheckboxSelectMultiple
 
+
+# Registrierung
 class UserRegisterForm(forms.ModelForm):
     password = forms.CharField(widget=forms.PasswordInput)
     ROLE_CHOICES = [
@@ -17,20 +18,16 @@ class UserRegisterForm(forms.ModelForm):
         fields = ['username', 'email', 'password', 'role']
 
 
+# Rollenwechsel
 class RoleChangeForm(forms.Form):
     role = forms.ModelChoiceField(
         queryset=Group.objects.all(),
         label="Neue Rolle auswählen",
         widget=forms.Select(attrs={'class': 'form-control'})
     )
-from django import forms
-from .models import Tutorial
-from django.forms import Textarea, TextInput
 
-from django import forms
-from django.forms import Textarea, TextInput, ClearableFileInput
-from .models import Tutorial
 
+# Tutorial-Formular
 class TutorialForm(forms.ModelForm):
     class Meta:
         model = Tutorial
@@ -38,32 +35,37 @@ class TutorialForm(forms.ModelForm):
             'title',
             'description',
             'difficulty',
-
             'program',
+            'program_versions',
             'keywords',
-            'thumbnail'
+            'thumbnail',
+            'screenshot',
+            'attachments',
+            'series',
         ]
         widgets = {
-            'title': TextInput(attrs={
-                'placeholder': 'Titel des Tutorials'
-            }),
-            'description': Textarea(attrs={
-                'placeholder': 'Kurze Beschreibung des Tutorials'
-            }),
-            'difficulty': forms.Select(attrs={
-                'placeholder': 'Schwierigkeitsgrad wählen'
-            }),
-            'category': forms.Select(attrs={
-                'placeholder': 'Kategorie wählen'
-            }),
-            'program': TextInput(attrs={
-                'placeholder': 'Name des Programms (frei wählbar)'
-            }),
+            'title': TextInput(attrs={'placeholder': 'Titel des Tutorials'}),
+            'description': Textarea(attrs={'placeholder': 'Kurze Beschreibung des Tutorials'}),
+            'difficulty': Select(),
+            'program': TextInput(attrs={'placeholder': 'Name des Programms'}),
+            'program_versions': CheckboxSelectMultiple(),
             'keywords': Textarea(attrs={
                 'rows': 3,
                 'placeholder': 'Gib hier deine Keywords ein, z. B.: IFC, Modellierung, Koordination'
             }),
-            'thumbnail': ClearableFileInput(attrs={
-                'accept': 'image/*'
-            })
+            'thumbnail': ClearableFileInput(attrs={'accept': 'image/*'}),
+            'screenshot': ClearableFileInput(attrs={'accept': 'image/*'}),
+            'attachments': ClearableFileInput(attrs={'multiple': False}),
+            'series': TextInput(attrs={'placeholder': 'Optional: Serie wie "Solibri Basics"'}),
+        }
+
+
+# Zusätzliche Screenshots für Prozessdiagramme
+class TutorialScreenshotForm(forms.ModelForm):
+    class Meta:
+        model = TutorialScreenshot
+        fields = ['image', 'caption']
+        widgets = {
+            'image': ClearableFileInput(attrs={'accept': 'image/*'}),
+            'caption': TextInput(attrs={'placeholder': 'Beschreibung (optional)'})
         }

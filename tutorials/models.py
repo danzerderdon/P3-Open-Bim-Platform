@@ -2,15 +2,26 @@ from django.db import models
 from django.contrib.auth.models import User
 
 
+class ProgramVersion(models.Model):
+    name = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.name
+
+
 class Tutorial(models.Model):
     title = models.CharField(max_length=200)
     description = models.TextField()
-    keywords = models.CharField(max_length=200, help_text="Kommagetrennt, z. B. IFC, Modellierung, BIM")
+    keywords = models.CharField(
+        max_length=200,
+        help_text="Kommagetrennt, z. B. IFC, Modellierung, BIM"
+    )
 
-    # Statt ForeignKey zu Program → freies Texteingabefeld:
-    program = models.CharField(max_length=100, help_text="Z. B. Revit, ArchiCAD, Solibri")
-
-
+    program = models.CharField(
+        max_length=100,
+        help_text="Z. B. Revit, ArchiCAD, Solibri"
+    )
+    program_versions = models.ManyToManyField(ProgramVersion, blank=True)
 
     difficulty = models.CharField(
         max_length=20,
@@ -23,12 +34,31 @@ class Tutorial(models.Model):
         default='mittel'
     )
 
+    thumbnail = models.ImageField(upload_to='thumbnails/', null=True, blank=True)
+    screenshot = models.ImageField(upload_to='screenshots/', null=True, blank=True)
+    attachments = models.FileField(upload_to='attachments/', null=True, blank=True)
+
+    series = models.CharField(
+        max_length=100,
+        null=True,
+        blank=True,
+        help_text="Optional: Titel der Tutorial-Serie"
+    )
+
     created_by = models.ForeignKey(User, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
-    thumbnail = models.ImageField(upload_to='thumbnails/', null=True, blank=True)
 
     def __str__(self):
         return self.title
+
+
+class TutorialScreenshot(models.Model):
+    tutorial = models.ForeignKey(Tutorial, on_delete=models.CASCADE, related_name="screenshots")
+    image = models.ImageField(upload_to='screenshots/')
+    caption = models.CharField(max_length=255, blank=True)
+
+    def __str__(self):
+        return f"Screenshot für: {self.tutorial.title}"
 
 
 class TutorialSection(models.Model):
@@ -75,7 +105,3 @@ class UserProgress(models.Model):
 
     def __str__(self):
         return f"{self.user.username} – {self.tutorial.title} ({'Fertig' if self.completed else 'Nicht fertig'})"
-
-from django.db import models
-
-

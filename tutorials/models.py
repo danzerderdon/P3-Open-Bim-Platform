@@ -21,7 +21,11 @@ class Tutorial(models.Model):
         max_length=100,
         help_text="Z. B. Revit, ArchiCAD, Solibri"
     )
-    program_versions = models.ManyToManyField(ProgramVersion, blank=True)
+    program_versions = models.CharField(
+        max_length=200,
+        blank=True,
+        help_text="Mehrere Versionen kommagetrennt angeben, z. B. 2021, 2022"
+    )
 
     difficulty = models.CharField(
         max_length=20,

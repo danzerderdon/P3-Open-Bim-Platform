@@ -28,10 +28,11 @@
     </div>
 
     <div style="margin-bottom: 20px;">
-        <label><strong>Version(en) des Programms:</strong></label><br>
-        <small>z. B. 2021, 2023</small><br>
-        {{ form.program_versions }}
-    </div>
+  <label for="{{ form.program_versions.id_for_label }}"><strong>Programmversion(en):</strong></label><br>
+  {{ form.program_versions }}
+  <small style="color: #555;">z. B. 2021, 2022, 2023</small>
+</div>
+
 
     <div style="margin-bottom: 20px;">
         <label><strong>Keywords:</strong></label><br>

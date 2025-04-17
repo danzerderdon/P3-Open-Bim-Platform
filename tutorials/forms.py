@@ -48,7 +48,10 @@ class TutorialForm(forms.ModelForm):
             'description': Textarea(attrs={'placeholder': 'Kurze Beschreibung des Tutorials'}),
             'difficulty': Select(),
             'program': TextInput(attrs={'placeholder': 'Name des Programms'}),
-            'program_versions': CheckboxSelectMultiple(),
+            'program_versions': TextInput(attrs={
+    'placeholder': 'z. B. 2021, 2022, 2023'
+}),
+
             'keywords': Textarea(attrs={
                 'rows': 3,
                 'placeholder': 'Gib hier deine Keywords ein, z. B.: IFC, Modellierung, Koordination'

@@ -3,17 +3,14 @@ html,body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     margin: 0;
     background-color: #f5f7fa;
-    background: linear-gradient(
-        to bottom,
-        #ffffff 0%,         /* Weißer Start */
-        #ffffff 50%,        /* Erste Hälfte bleibt komplett weiß */
-        #dbeaf3 80%,        /* Untere Hälfte wird zum weichen Blau */
-        #99c8e0 100%
-    );
-    background-repeat: no-repeat;
-    background-attachment: fixed;
-    background-size: 100% 100%;
+    background:
+              url('/static/images/Footer.png') bottom center no-repeat,
+              linear-gradient(to bottom, #ffffff 0%, #ffffff 50%, #dbeaf3 80%, #99c8e0 100%);
+  background-size: contain,  100% 100% ;
+
+  background-attachment: fixed;
     text-align: center;
+    z-index: 0;
 }
 
 /* Navigation */
@@ -127,7 +124,7 @@ form button:hover {
   max-width: 100%;
   transparent: 30%
   height: auto;
-  z-index: 100; /* falls nötig, damit es über anderem Inhalt liegt */
+  z-index: 0; /* falls nötig, damit es über anderem Inhalt liegt */
 }
 
 .card-container {

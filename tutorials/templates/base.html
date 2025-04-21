@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     {% load static %}
     <title>{% block title %}Open BIM-Education Plattform{% endblock %}</title>
-    <link rel="stylesheet" href="{% static 'css/style6.css' %}">
+    <link rel="stylesheet" href="{% static 'css/style5.css' %}">
 
     <style>
 
@@ -130,5 +130,75 @@
     {% block content %}{% endblock %}
 </main>
 
+
+
+<div class="user-panel">
+  <div class="user-header" onclick="toggleUserMenu()">
+    <img src="{% static 'images/user_icon.png' %}" alt="User Icon">
+    {% if user.is_authenticated %}
+      <span>Willkommen zurück, {{ user.username }}!</span>
+    {% else %}
+      <span>Sie sind nicht eingeloggt</span>
+    {% endif %}
+  </div>
+  <div class="user-menu" id="userMenu">
+  {% if user.is_authenticated %}
+
+      <p>Sie sind eingeloggt als - {{ request.user.username }}</p>
+
+      {% if user.groups.all %}
+            <p>Ihre Rolle ist - {{ user.groups.first.name }}</p>
+        {% else %}
+            <p>Du hast noch keine Rolle zugewiesen.</p>
+        {% endif %}
+
+    <a href="{% url 'passchange' %}">🔒 Passwort ändern</a>
+    <a href="{% url 'change_role' %}">🧑‍🎓 Rolle ändern</a>
+    <a href="{% url 'logout' %}">🚪 Logout</a>
+  {% else %}
+
+      <p>Sie haben noch keinen Account.</p>
+      <p>Erstellen sie einen neuen Account oder loggen sie sich ein.</p>
+
+    <a href="{% url 'login' %}">🔐 Login</a>
+    <a href="{% url 'register' %}">📝 Registrieren</a>
+  {% endif %}
+</div>
+
+</div>
+
+
+ <!-- Skript für Sidebar-Animation -->
+
+<script>
+  function toggleUserMenu() {
+  const menu = document.getElementById("userMenu");
+
+  if (menu.classList.contains("open")) {
+    // ZUKLAPPEN
+    menu.style.maxHeight = menu.scrollHeight + "px"; // Startwert
+    requestAnimationFrame(() => {
+      menu.style.maxHeight = "0px";
+      menu.classList.remove("open");
+    });
+  } else {
+    // AUFKLAPPEN
+    menu.classList.add("opening");
+    menu.style.maxHeight = menu.scrollHeight + "px";
+
+    menu.addEventListener('transitionend', function handler() {
+      menu.classList.remove("opening");
+      menu.classList.add("open");
+      menu.style.maxHeight = "none"; // Begrenzung entfernen
+      menu.removeEventListener('transitionend', handler);
+    });
+  }
+}
+
+</script>
+
+
+
 </body>
 </html>
+

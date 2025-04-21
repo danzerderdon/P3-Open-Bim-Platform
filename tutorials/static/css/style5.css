@@ -275,3 +275,64 @@ input[type="file"]::file-selector-button:hover {
     font-weight: bold;
     margin-bottom: 6px;
 }
+
+
+
+
+
+.user-panel {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 20%;
+  font-family: 'Segoe UI', sans-serif;
+  z-index: 9999;
+}
+
+.user-header {
+  background-color: #1c627c;
+  color: white;
+  padding: 12px;
+  border-top-right-radius: 12px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.user-header img {
+  height: 24px;
+  width: 24px;
+}
+
+.user-menu {
+  background-color: white;
+  padding: 0 16px;
+  overflow: hidden;
+  max-height: 0;
+  transition: max-height 0.4s ease-in-out, padding 0.4s ease-in-out;
+  border-bottom-right-radius: 12px;
+  border-top: 1px solid #ccc;
+}
+
+.user-menu.opening,
+.user-menu.open {
+  padding: 16px;
+}
+
+.user-menu a {
+  display: block;
+  margin: 12px 0;
+  color: #023b43;
+  font-weight: bold;
+  text-decoration: none;
+  opacity: 0;
+  transform: translateY(-10px);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.user-menu.open a,
+.user-menu.opening a {
+  opacity: 1;
+  transform: translateY(0);
+}

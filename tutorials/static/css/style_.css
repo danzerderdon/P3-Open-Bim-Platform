@@ -4,7 +4,7 @@ html,body {
     margin: 0;
     background-color: #f5f7fa;
     background:
-              url('/static/images/Footer.png') bottom center no-repeat,
+              url('/static/images/Footer3.png') bottom center no-repeat,
               linear-gradient(to bottom, #ffffff 0%, #ffffff 50%, #dbeaf3 80%, #99c8e0 100%);
   background-size: contain,  100% 100% ;
 
@@ -136,6 +136,20 @@ form button:hover {
     margin: 20px auto;              /* Abstand nach außen (oben/unten) und zentrieren */
     max-width: 600px;               /* Optionale maximale Breite */
 }
+
+.section-container {
+    background-color: #d6d4d4  ;          /* graueer Hintergrund */
+    border: 1px solid #ddd;         /* Dezenter Rahmen */
+    border-radius: 6px;             /* Leicht abgerundete Ecken */
+    box-shadow: 0 15px 20px rgba(0,0,0,0.1); /* Sanfter Schatten */
+    padding: 20px;                  /* Innenabstand */
+    margin: 20px auto;              /* Abstand nach außen (oben/unten) und zentrieren */
+    max-width: 600px;               /* Optionale maximale Breite */
+}
+
+
+
+
 /* Seiten-Transition Effekt */
 body.fade-transition {
     transition: background-color 3s ease, opacity 3s ease;

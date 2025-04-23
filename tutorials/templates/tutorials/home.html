@@ -8,31 +8,12 @@
 
 
     <h2>Willkommen auf der Open BIM-Education Plattform 🏢</h2>
-<div class="card-container">
+<div class="home-container" >
     {% if user.is_authenticated %}
-        <p>Sie sind eingeloggt als - {{ request.user.username }}</p>
+        <p style="text-align: center;">Wilkommen zurück auf der Open BIM-Education Plattform,</p>
+    <h2 style="text-align: center;"><strong style="color: orange;">{{ request.user.username }}</strong></h2>
 
-        {% if user.groups.all %}
-            <p>Ihre Rolle ist - {{ user.groups.first.name }}</p>
-        {% else %}
-            <p>Du hast noch keine Rolle zugewiesen.</p>
-        {% endif %}
 
-        <!-- Logout Button -->
-        <form action="{% url 'logout' %}?next={{ request.path }}" method="post" style="display:inline;">
-            {% csrf_token %}
-            <button type="submit">Logout</button>
-        </form>
-
-        <!-- Passwort ändern Button -->
-        <form action="{% url 'passchange' %}" method="get" style="display:inline; margin-left: 10px;">
-            <button type="submit">Passwort ändern</button>
-        </form>
-
-        <!-- Rolle ändern Button -->
-        <form action="{% url 'change_role' %}" method="get" style="display:inline;">
-            <button type="submit">Rolle ändern</button>
-        </form>
 
 
         <!-- 👇 Dein Bild unten auf der Seite -->
@@ -42,9 +23,9 @@
     </div>
 
 
-</div>
+
     {% else %}
-        <p>Willkommen, bitte logge dich ein oder registriere dich:</p>
+        <p style="text-align: center;">Willkommen , bitte logge dich ein oder registriere dich, um alle Funktionen nutzen zu können.</p>
 
         <!-- Login Button -->
         <form action="{% url 'login' %}" method="get" style="display:inline;">
@@ -58,6 +39,57 @@
 
 
     {% endif %}
+
+</head>
+<body>
+  <h2>Über uns – BIM Education</h2>
+  <p>BIM Education ist die Plattform, auf der du BIM-Tutorials erstellen, teilen und abrufen kannst – ganz einfach und direkt.</p>
+  <p>Von Attribut bis Zonenmodell: Hier findest du alles, was du brauchst, um dich in der BIM-Branche zurechtzufinden – oder dein Wissen weiterzugeben.</p>
+  <p>Die Tutorials beinhalten Tests und Zertifikate, damit dein Lernfortschritt nicht nur messbar, sondern auch nachvollziehbar ist.</p>
+  <p>Weil uns der Austausch besonders wichtig ist, gibt’s auch eine Community-Sektion, in der du Fragen stellen, beantworten oder dich einfach mit anderen austauschen kannst.</p>
+  <p>Auf deinem persönlichen Dashboard behältst du jederzeit den Überblick: dein Fortschritt, deine Zertifikate, alles an einem Ort.</p>
+
+  <br>
+  <h2>Funktionen im Detail</h2>
+
+  <br>
+
+  <h3 style="color: #156082;">Tutorials: finden und bearbeiten von Anleitungen</h3>
+  <p>Egal, ob du gerade erst anfängst oder schon tief in IFC-Strukturen steckst – bei uns findest du Tutorials für jedes Level.</p>
+  <p>Filter nach Thema, Schwierigkeitsgrad oder Format, und finde genau das, was dich weiterbringt.</p>
+  <p>Viele Tutorials beinhalten praktische Tests – für echtes Verständnis statt bloßem Durchklicken.</p>
+<br>
+
+
+  {% if user.groups.first.name == "BIM Expert" %}
+
+  <h3 style="color: orange;">Create: Tutorials und Wissensabfragen erstellen</h3>
+  <p>Deine Rolle ist BIM Experte.</p>
+  <p>Du hast BIM-Wissen, das du teilen willst? Dann erstelle deine eigenen Tutorials – direkt über unsere Plattform.</p>
+  <p>Mit Texten, Bildern, Videos, Quizfragen und optionalen Zertifikaten kannst du Inhalte genau so aufbauen, wie du es brauchst.</p>
+  <p><em>(Tutorial-Erstellung ist aktuell nur für freigeschaltete Accounts – z. B. „BIM Experte“ – verfügbar.)</em></p>
+<br>
+    {% endif %}
+
+
+  <h3 style="color: #156082;">Dashboard: Eignenen Fortschritt tracken</h3>
+
+  <p>Dein persönlicher BIM-Hub: Im Dashboard siehst du, welche Tutorials du schon abgeschlossen hast, wo du noch dran bist und welche Zertifikate du bereits erhalten hast.</p>
+  <p>Dein persönlicher BIM-Hub: Im Dashboard siehst du, welche Tutorials du schon abgeschlossen hast, wo du noch dran bist und welche Zertifikate du bereits erhalten hast.</p>
+  <p>Auch deine eigenen erstellten Inhalte (falls du welche veröffentlichst) findest du hier auf einen Blick – inklusive Zugriffszahlen, Bewertungen und Feedback.</p>
+<br>
+
+  <h3 style="color: #156082;">User menu: Login, Passwort ändern & Rollen</h3>
+  <p>Das User Menu befindet sich immer in der Ecke unten links.</p> <br>
+  <p>Beim Login kannst du zwischen verschiedenen Rollen wählen – je nachdem, wo du gerade stehst:</p>
+  <ul>
+
+    <li><strong>Lernender:</strong> Zugriff auf zusätzliche Inhalte, Quizfunktionen, Zertifikate</li>
+    <li><strong>BIM Experte:</strong> Tutorials erstellen, Feedback geben, als Mentor in der Community aktiv werden</li>
+  </ul>
+  <p>Deine Rolle beeinflusst nicht nur, was du sehen kannst – sondern auch, wie du dich einbringen kannst. So bleibt die Plattform dynamisch, und jeder lernt von jedem.</p>
+</div>
+</body>
 
 
 <script>

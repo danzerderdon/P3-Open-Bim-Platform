@@ -1,0 +1,152 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Fragen bearbeiten{% endblock %}
+
+{% block content %}
+<h2 style="text-align: center;">Fragen für: {{ tutorial.title }}</h2>
+
+<form method="post" id="question-form">
+  {% csrf_token %}
+  {{ formset.management_form }}
+
+  <div id="formset-container">
+    {% for form in formset %}
+      <div class="card question-card" style="max-width: 800px; margin: 20px auto;">
+        <h4>Frage {{ forloop.counter }}</h4>
+        {{ form.id }}  {# wichtig: verstecktes ID-Feld #}
+        <div style="width: 90%; margin: auto;">
+          {{ form.question_text.label_tag }}<br>
+          {{ form.question_text }}
+        </div>
+
+        <div class="answers" style="margin-top: 15px;">
+          {% for answer in form.instance.answers.all %}
+            <div class="answer-row">
+              <input type="checkbox" name="existing-correct-{{ answer.pk }}" {% if answer.is_correct %}checked{% endif %}>
+              <input type="text" name="existing-answer-{{ answer.pk }}" value="{{ answer.answer_text }}" placeholder="Antworttext">
+              <button type="button" class="remove-answer-btn">–</button>
+            </div>
+          {% endfor %}
+        </div>
+
+        <div style="margin-top: 10px;">
+          <button type="button" class="add-answer-btn action-button blue">+ Antwort</button>
+          <button type="button" class="delete-question-btn action-button red">– Frage löschen</button>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+
+  <div style="text-align:center; margin-top:30px;">
+    <button type="button" id="add-question-btn" class="action-button blue">+ Neue Frage</button>
+    <button type="submit" class="action-button blue">Speichern</button>
+  </div>
+</form>
+
+<!-- Vorlage für neue Fragen -->
+<template id="empty-question-template">
+  <div class="card question-card" style="max-width: 800px; margin: 20px auto;">
+    <h4>Frage</h4>
+    <input type="hidden" name="form-__prefix__-id" id="id_form-__prefix__-id">
+    <div style="width: 90%; margin: auto;">
+      <label for="id_form-__prefix__-question_text">Fragetext:</label><br>
+      <input type="text" name="form-__prefix__-question_text" id="id_form-__prefix__-question_text" style="width: 100%;" placeholder="Fragetext">
+    </div>
+    <div class="answers" style="margin-top: 10px;"></div>
+    <div style="margin-top: 10px;">
+      <button type="button" class="add-answer-btn action-button blue">+ Antwort</button>
+      <button type="button" class="delete-question-btn action-button red">– Frage löschen</button>
+    </div>
+  </div>
+</template>
+
+<!-- Vorlage für neue Antworten -->
+<template id="empty-answer-template">
+  <div class="answer-row">
+    <input type="checkbox" name="new-correct-__qprefix__-__aprefix__">
+    <input type="text" name="new-answer-__qprefix__-__aprefix__" placeholder="Antworttext">
+    <button type="button" class="remove-answer-btn">–</button>
+  </div>
+</template>
+
+<script>
+let questionCounter = {{ formset.total_form_count }};
+let answerCounters = {};
+
+document.getElementById('add-question-btn').addEventListener('click', () => {
+  const container = document.getElementById('formset-container');
+  const tmpl = document.getElementById('empty-question-template').innerHTML.replace(/__prefix__/g, questionCounter);
+  const div = document.createElement('div');
+  div.innerHTML = tmpl;
+  const newCard = div.firstElementChild;
+  container.appendChild(newCard);
+  answerCounters[questionCounter] = 0;
+  questionCounter++;
+
+  // Update Total Forms
+  const totalForms = document.getElementById('id_form-TOTAL_FORMS');
+  totalForms.value = questionCounter;
+
+  updateQuestionHeadings();
+});
+
+document.addEventListener('click', function (e) {
+  if (e.target.classList.contains('add-answer-btn')) {
+    const questionCard = e.target.closest('.question-card');
+    const answersDiv = questionCard.querySelector('.answers');
+    const qIndex = [...document.querySelectorAll('.question-card')].indexOf(questionCard);
+    const aIndex = answerCounters[qIndex] || 0;
+
+    let answerHTML = document.getElementById('empty-answer-template').innerHTML
+      .replace(/__qprefix__/g, qIndex)
+      .replace(/__aprefix__/g, aIndex);
+
+    const div = document.createElement('div');
+    div.innerHTML = answerHTML;
+    answersDiv.appendChild(div.firstElementChild);
+
+    answerCounters[qIndex] = aIndex + 1;
+  }
+
+  if (e.target.classList.contains('remove-answer-btn')) {
+    e.target.closest('.answer-row').remove();
+  }
+
+  if (e.target.classList.contains('delete-question-btn')) {
+    const card = e.target.closest('.question-card');
+    card.remove();
+    updateQuestionHeadings();
+  }
+});
+
+function updateQuestionHeadings() {
+  const cards = document.querySelectorAll('.question-card');
+  cards.forEach((card, index) => {
+    const h4 = card.querySelector('h4');
+    if (h4) h4.textContent = `Frage ${index + 1}`;
+  });
+}
+</script>
+
+<style>
+  .question-card {
+    padding: 20px;
+    background: white;
+    margin-bottom: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  }
+
+  .answer-row {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    margin: 5px 0;
+  }
+
+  .answer-row input[type="text"] {
+    flex: 1;
+  }
+</style>
+{% endblock %}

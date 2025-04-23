@@ -233,3 +233,49 @@ def edit_tutorial_attributes(request, tutorial_id):
         'form': form,
         'tutorial': tutorial
     })
+
+
+from django.forms import modelformset_factory
+from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib.auth.decorators import login_required
+from .models import Tutorial
+from .forms import QuestionFormSet
+
+@login_required
+def edit_quiz(request, tutorial_id):
+    tutorial = get_object_or_404(Tutorial, id=tutorial_id, created_by=request.user)
+
+    # DEBUG: Gebe POST-Daten aus
+    if request.method == 'POST':
+        print("=== DEBUG: edit_quiz POST data ===")
+        for key, values in request.POST.lists():
+            print(f"{key}: {values}")
+
+    # Formset für Fragen
+    qfs = QuestionFormSet(
+        request.POST or None,
+        instance=tutorial,
+        prefix='questions'
+    )
+
+    # DEBUG: ManagementForm-Felder prüfen
+    if request.method == 'POST':
+        total = request.POST.get('questions-TOTAL_FORMS')
+        initial = request.POST.get('questions-INITIAL_FORMS')
+        print(f"questions-TOTAL_FORMS: {total}")
+        print(f"questions-INITIAL_FORMS: {initial}")
+        print("QuestionFormSet is_valid():", qfs.is_valid())
+        print("QuestionFormSet errors:", qfs.errors)
+        print("QuestionFormSet non_form_errors:", qfs.non_form_errors())
+
+    if request.method == 'POST' and qfs.is_valid():
+        # Speichere oder lösche Fragen
+        saved = qfs.save()
+        print(f"Gespeicherte Fragen: {saved}")
+        return redirect('edit_quiz', tutorial_id=tutorial.id)
+
+    return render(request, 'tutorials/edit_quiz.html', {
+        'tutorial': tutorial,
+        'question_formset': qfs,
+    })
+

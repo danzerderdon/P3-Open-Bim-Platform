@@ -20,6 +20,8 @@ urlpatterns = [
     path('tutorial/<int:tutorial_id>/edit-steps/', views.edit_tutorial_sections, name='edit_tutorial_sections'),
     path('tutorial/<int:tutorial_id>/delete/', views.delete_tutorial, name='delete_tutorial'),
     path('tutorial/<int:tutorial_id>/edit-attributes/', views.edit_tutorial_attributes, name='edit_tutorial_attributes'),
+    path('tutorial/<int:tutorial_id>/quiz/', views.edit_quiz, name='edit_quiz'),
+
 
 
 ]

@@ -79,27 +79,6 @@ class TutorialSection(models.Model):
         return f"{self.tutorial.title} – Schritt {self.order}: {self.title}"
 
 
-class Question(models.Model):
-    tutorial = models.ForeignKey(Tutorial, on_delete=models.CASCADE)
-    section = models.ForeignKey(TutorialSection, on_delete=models.CASCADE, null=True, blank=True)
-    question_text = models.TextField()
-    question_type = models.CharField(
-        max_length=10,
-        choices=[('mc', 'Multiple Choice'), ('dropdown', 'Dropdown')]
-    )
-
-    def __str__(self):
-        return f"Frage: {self.question_text[:50]}"
-
-
-class Answer(models.Model):
-    question = models.ForeignKey(Question, on_delete=models.CASCADE, related_name="answers")
-    answer_text = models.CharField(max_length=200)
-    is_correct = models.BooleanField(default=False)
-
-    def __str__(self):
-        return f"{self.answer_text} ({'✔' if self.is_correct else '❌'})"
-
 
 class UserProgress(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -109,3 +88,25 @@ class UserProgress(models.Model):
 
     def __str__(self):
         return f"{self.user.username} – {self.tutorial.title} ({'Fertig' if self.completed else 'Nicht fertig'})"
+
+# tutorials/models.py
+
+from django.db import models
+
+class Question(models.Model):
+    tutorial = models.ForeignKey(Tutorial, on_delete=models.CASCADE)
+    text     = models.CharField(max_length=300)
+
+    answer1_text       = models.CharField(max_length=200, blank=True)
+    answer1_is_correct = models.BooleanField(default=False)
+    answer2_text       = models.CharField(max_length=200, blank=True)
+    answer2_is_correct = models.BooleanField(default=False)
+    answer3_text       = models.CharField(max_length=200, blank=True)
+    answer3_is_correct = models.BooleanField(default=False)
+    answer4_text       = models.CharField(max_length=200, blank=True)
+    answer4_is_correct = models.BooleanField(default=False)
+    answer5_text       = models.CharField(max_length=200, blank=True)
+    answer5_is_correct = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.text

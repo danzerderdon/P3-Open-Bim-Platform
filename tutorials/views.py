@@ -14,7 +14,7 @@ from .forms import TutorialForm
 from .models import Tutorial, TutorialSection
 from django.forms import modelformset_factory
 from django.forms import modelformset_factory
-from .models import Tutorial, TutorialSection
+from .models import Tutorial, TutorialSection, Quiz
 
 
 # Registrierung
@@ -242,40 +242,74 @@ from .models import Tutorial
 from .forms import QuestionFormSet
 
 @login_required
-def edit_quiz(request, tutorial_id):
+def add_questions(request, tutorial_id):
     tutorial = get_object_or_404(Tutorial, id=tutorial_id, created_by=request.user)
+    formset = QuestionFormSet(request.POST or None, instance=tutorial)
 
-    # DEBUG: Gebe POST-Daten aus
-    if request.method == 'POST':
-        print("=== DEBUG: edit_quiz POST data ===")
-        for key, values in request.POST.lists():
-            print(f"{key}: {values}")
+    if request.method == 'POST' and formset.is_valid():
+        formset.save()
+        return redirect('tutorial_detail', pk=tutorial.pk)
 
-    # Formset für Fragen
-    qfs = QuestionFormSet(
-        request.POST or None,
-        instance=tutorial,
-        prefix='questions'
-    )
-
-    # DEBUG: ManagementForm-Felder prüfen
-    if request.method == 'POST':
-        total = request.POST.get('questions-TOTAL_FORMS')
-        initial = request.POST.get('questions-INITIAL_FORMS')
-        print(f"questions-TOTAL_FORMS: {total}")
-        print(f"questions-INITIAL_FORMS: {initial}")
-        print("QuestionFormSet is_valid():", qfs.is_valid())
-        print("QuestionFormSet errors:", qfs.errors)
-        print("QuestionFormSet non_form_errors:", qfs.non_form_errors())
-
-    if request.method == 'POST' and qfs.is_valid():
-        # Speichere oder lösche Fragen
-        saved = qfs.save()
-        print(f"Gespeicherte Fragen: {saved}")
-        return redirect('edit_quiz', tutorial_id=tutorial.id)
-
-    return render(request, 'tutorials/edit_quiz.html', {
-        'tutorial': tutorial,
-        'question_formset': qfs,
+    return render(request, 'tutorials/add_questions.html', {
+        'formset': formset,
+        'tutorial': tutorial
     })
 
+
+from django.contrib import messages  # falls du später im Template Feedback willst
+
+@login_required
+def edit_tutorial_quiz(request, tutorial_id):
+    tutorial = get_object_or_404(Tutorial, id=tutorial_id, created_by=request.user)
+
+    QuizFormSet = modelformset_factory(
+        Quiz,
+        fields=('title', 'content', 'order', 'image',
+                'answer_1', 'is_correct_1',
+                'answer_2', 'is_correct_2',
+                'answer_3', 'is_correct_3',
+                'answer_4', 'is_correct_4',
+                'answer_5', 'is_correct_5',
+                ),
+        extra=0,
+        can_delete=True
+    )
+
+    if request.method == 'POST':
+        formset = QuizFormSet(request.POST, request.FILES, queryset=Quiz.objects.filter(tutorial=tutorial))
+
+        if formset.is_valid():
+            instances = formset.save(commit=False)
+            handled_ids = []
+
+            for form in formset.forms:
+                if form.cleaned_data.get('DELETE'):
+                    continue
+
+                instance = form.save(commit=False)
+                instance.tutorial = tutorial
+
+
+                instance.save()
+                handled_ids.append(instance.id)
+
+            for obj in formset.deleted_objects:
+                obj.delete()
+
+            return redirect('create')  # redirect nur bei Erfolg
+        else:
+            # 👉 Fehlerausgabe in der Konsole
+            print("❌ Formset ist NICHT valide:")
+            for i, form in enumerate(formset.forms):
+                if form.errors:
+                    print(f"Formular {i} Fehler: {form.errors}")
+
+            # 👉 Optional Feedback für User im Template (wenn du messages nutzt)
+            messages.error(request, "Es gab ein Problem beim Speichern. Bitte überprüfe deine Eingaben.")
+    else:
+        formset = QuizFormSet(queryset=Quiz.objects.filter(tutorial=tutorial))
+
+    return render(request, 'tutorials/edit_questions.html', {
+        'formset': formset,
+        'tutorial': tutorial
+    })

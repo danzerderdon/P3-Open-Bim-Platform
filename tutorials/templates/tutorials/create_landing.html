@@ -28,9 +28,13 @@
         <p style="color: #555; font-size: 14px;">Erstellt am: {{ tutorial.created_at|date:"d.m.Y H:i" }}</p>
 
         {% if request.user.groups.all.0.name == "BIM Expert" %}
+        <h3>Tutorial Bearbeiten:</h3>
         <div style="margin-top: 20px;">
             <a href="{% url 'edit_tutorial_sections' tutorial.id %}">
-                <button class="action-button blue">Bearbeiten</button>
+                <button class="action-button blue">Scrhitte</button>
+            </a>
+            <a href="{% url 'edit_quiz' tutorial.id %}">
+                <button class="action-button blue">Fragen</button>
             </a>
             <a href="{% url 'edit_tutorial_attributes' tutorial.id %}">
                 <button class="action-button orange">Attribute</button>

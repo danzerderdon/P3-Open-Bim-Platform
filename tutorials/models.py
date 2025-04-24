@@ -91,22 +91,45 @@ class UserProgress(models.Model):
 
 # tutorials/models.py
 
-from django.db import models
-
 class Question(models.Model):
-    tutorial = models.ForeignKey(Tutorial, on_delete=models.CASCADE)
-    text     = models.CharField(max_length=300)
-
-    answer1_text       = models.CharField(max_length=200, blank=True)
+    tutorial = models.ForeignKey(Tutorial, on_delete=models.CASCADE, related_name="questions")
+    text = models.TextField()
+    answer1_text = models.CharField(max_length=255)
     answer1_is_correct = models.BooleanField(default=False)
-    answer2_text       = models.CharField(max_length=200, blank=True)
+    answer2_text = models.CharField(max_length=255)
     answer2_is_correct = models.BooleanField(default=False)
-    answer3_text       = models.CharField(max_length=200, blank=True)
+    answer3_text = models.CharField(max_length=255)
     answer3_is_correct = models.BooleanField(default=False)
-    answer4_text       = models.CharField(max_length=200, blank=True)
+    answer4_text = models.CharField(max_length=255)
     answer4_is_correct = models.BooleanField(default=False)
-    answer5_text       = models.CharField(max_length=200, blank=True)
+    answer5_text = models.CharField(max_length=255)
     answer5_is_correct = models.BooleanField(default=False)
 
+class Quiz(models.Model):
+    tutorial = models.ForeignKey(Tutorial, on_delete=models.CASCADE, related_name="quiz")
+    title = models.CharField(max_length=200, default="Schritt")
+    content = models.TextField()
+    image = models.ImageField(upload_to='tutorial_images/', blank=True, null=True)
+    order = models.PositiveIntegerField(default=1)
+
+    # Antwortmöglichkeiten
+    answer_1 = models.CharField(max_length=255, blank=True)
+    is_correct_1 = models.BooleanField(default=False)
+
+    answer_2 = models.CharField(max_length=255, blank=True)
+    is_correct_2 = models.BooleanField(default=False)
+
+    answer_3 = models.CharField(max_length=255, blank=True)
+    is_correct_3 = models.BooleanField(default=False)
+
+    answer_4 = models.CharField(max_length=255, blank=True)
+    is_correct_4 = models.BooleanField(default=False)
+
+    answer_5 = models.CharField(max_length=255, blank=True)
+    is_correct_5 = models.BooleanField(default=False)
+
+    class Meta:
+        ordering = ['order']
+
     def __str__(self):
-        return self.text
+        return f"{self.tutorial.title} – Frage {self.order}: {self.title}"

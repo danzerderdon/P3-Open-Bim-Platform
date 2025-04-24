@@ -1,0 +1,158 @@
+{% extends 'base.html' %}
+{% block title %}Fragen hinzufügen{% endblock %}
+
+{% block content %}
+<h1 style="color:red;">👋 DEBUG: ICH BIN DAS RICHTIGE TEMPLATE!</h1>
+<h2 style="text-align: center;">Fragen zum Tutorial hinzufügen</h2>
+
+<form method="post">
+  {% csrf_token %}
+  {{ formset.management_form }}
+
+  <div id="question-container">
+    {% for form in formset %}
+      <div class="card question-card">
+        <h4>Frage {{ forloop.counter }}</h4>
+        {{ form.text.label_tag }}<br>
+        {{ form.text }}
+
+        <div style="margin-top: 10px;">
+          {{ form.answer1_text.label_tag }}<br>
+          {{ form.answer1_text }}
+          {{ form.answer1_is_correct }} Richtige Antwort?
+        </div>
+        <div style="margin-top: 10px;">
+          {{ form.answer2_text.label_tag }}<br>
+          {{ form.answer2_text }}
+          {{ form.answer2_is_correct }} Richtige Antwort?
+        </div>
+        <div style="margin-top: 10px;">
+          {{ form.answer3_text.label_tag }}<br>
+          {{ form.answer3_text }}
+          {{ form.answer3_is_correct }} Richtige Antwort?
+        </div>
+        <div style="margin-top: 10px;">
+          {{ form.answer4_text.label_tag }}<br>
+          {{ form.answer4_text }}
+          {{ form.answer4_is_correct }} Richtige Antwort?
+        </div>
+        <div style="margin-top: 10px;">
+          {{ form.answer5_text.label_tag }}<br>
+          {{ form.answer5_text }}
+          {{ form.answer5_is_correct }} Richtige Antwort?
+        </div>
+
+        <input type="hidden" name="{{ form.prefix }}-DELETE" id="id_{{ form.prefix }}-DELETE">
+        <button type="button" class="delete-question-btn">Frage löschen</button>
+      </div>
+    {% endfor %}
+  </div>
+
+  <div style="text-align: center; margin: 30px;">
+    <button type="button" id="add-question-btn">Frage hinzufügen</button>
+  </div>
+
+  <div style="text-align: center;">
+    <button type="submit" class="button">Speichern</button>
+  </div>
+</form>
+
+<template id="empty-question-template">
+  <div class="card question-card new-question">
+    <h4>Frage</h4>
+    <label for="id_form-__prefix__-text">Fragetext:</label><br>
+    <textarea name="form-__prefix__-text" id="id_form-__prefix__-text"></textarea>
+
+    {% for i in "12345" %}
+    <div style="margin-top: 10px;">
+      <label for="id_form-__prefix__-answer{{ i }}_text">Antwort {{ i }}:</label><br>
+      <input type="text" name="form-__prefix__-answer{{ i }}_text" id="id_form-__prefix__-answer{{ i }}_text">
+      <label>
+        <input type="checkbox" name="form-__prefix__-answer{{ i }}_is_correct" id="id_form-__prefix__-answer{{ i }}_is_correct">
+        Richtig?
+      </label>
+    </div>
+    {% endfor %}
+
+    <input type="hidden" name="form-__prefix__-DELETE" id="id_form-__prefix__-DELETE">
+    <button type="button" class="delete-question-btn">Frage löschen</button>
+  </div>
+</template>
+
+<style>
+  .card.new-question {
+    background-color: #0d6efd;
+    transform-origin: top;
+    transform: rotateX(-90deg);
+    opacity: 0;
+    transition: transform 0.5s ease, background-color 0.5s ease, opacity 0.5s ease;
+  }
+  .card.new-question.show {
+    transform: rotateX(0deg);
+    background-color: white;
+    opacity: 1;
+  }
+</style>
+<div style="padding: 10px; color: red; font-weight: bold;">
+  TOTAL_FORMS ist:
+  {{ formset.management_form.TOTAL_FORMS }}
+</div>
+
+{% endblock %}
+{% block extra_js %}
+<script>
+  alert("🔥 JS läuft!"); // Damit du's wirklich siehst!
+
+  document.addEventListener('DOMContentLoaded', function () {
+    console.log("✅ JS läuft (DOM fully loaded)");
+
+    const addBtn = document.getElementById('add-question-btn');
+    const container = document.getElementById('question-container');
+    const totalForms = document.getElementById('id_form-TOTAL_FORMS');
+    const template = document.getElementById('empty-question-template');
+
+    if (!addBtn || !container || !totalForms || !template) {
+      console.error("❌ Etwas fehlt. Abbruch.");
+      return;
+    }
+
+    function updateQuestionOrder() {
+      const cards = container.querySelectorAll('.question-card');
+      cards.forEach((card, i) => {
+        const heading = card.querySelector('h4');
+        if (heading) heading.textContent = `Frage ${i + 1}`;
+      });
+    }
+
+    addBtn.addEventListener('click', () => {
+      console.log("➕ Neue Frage");
+
+      const newIndex = parseInt(totalForms.value);
+      const html = template.innerHTML.replace(/__prefix__/g, newIndex);
+
+      const tempDiv = document.createElement('div');
+      tempDiv.innerHTML = html;
+      const newForm = tempDiv.firstElementChild;
+
+      container.appendChild(newForm);
+      totalForms.value = newIndex + 1;
+      updateQuestionOrder();
+    });
+
+    container.addEventListener('click', (e) => {
+      if (e.target.classList.contains('delete-question-btn')) {
+        const card = e.target.closest('.question-card');
+        const deleteInput = card.querySelector('input[name$="-DELETE"]');
+        if (deleteInput) {
+          deleteInput.value = 'on';
+          card.style.display = 'none';
+          console.log("🗑️ Frage gelöscht");
+          updateQuestionOrder();
+        }
+      }
+    });
+
+    updateQuestionOrder();
+  });
+</script>
+{% endblock %}

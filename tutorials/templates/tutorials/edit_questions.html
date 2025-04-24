@@ -1,152 +1,375 @@
 {% extends 'base.html' %}
-{% load static %}
-
-{% block title %}Fragen bearbeiten{% endblock %}
+{% block title %}Tutorial-Schritte bearbeiten{% endblock %}
 
 {% block content %}
-<h2 style="text-align: center;">Fragen für: {{ tutorial.title }}</h2>
+<div class="section-container">
+  <div class="card-container">
+  <h2 style="text-align: center;">Fragen für: {{ tutorial.title }}</h2>
+  </div>
 
-<form method="post" id="question-form">
-  {% csrf_token %}
-  {{ formset.management_form }}
+  <form method="post" enctype="multipart/form-data" style="max-width: 800px; margin: auto;" id="tutorial-form">
+    {% csrf_token %}
+    {{ formset.management_form }}
 
-  <div id="formset-container">
-    {% for form in formset %}
-      <div class="card question-card" style="max-width: 800px; margin: 20px auto;">
-        <h4>Frage {{ forloop.counter }}</h4>
-        {{ form.id }}  {# wichtig: verstecktes ID-Feld #}
-        <div style="width: 90%; margin: auto;">
-          {{ form.question_text.label_tag }}<br>
-          {{ form.question_text }}
+    <div id="formset-container">
+      {% for form in formset %}
+        {% if not form.instance.pk and forloop.last and not form.has_changed %}
+        {% else %}
+        <div class="card" style="padding: 20px; background: white; margin-bottom: 20px; border-radius: 12px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
+          <h4>Schritt {{ forloop.counter }}</h4>
+
+          <div style="width: 90%; margin: auto;">{{ form.title.label_tag }}<br>{{ form.title }}{{ form.id }}</div>
+          <div style="width: 90%; margin: auto;">{{ form.content.label_tag }}<br>{{ form.content }}</div>
+
+        <div style="width: 90%; margin: auto; margin-top: 15px;">
+
+
+          <div style="width: 90%; margin: auto; text-align: center;">
+            {{ form.image.label_tag }}<br>
+            {{ form.image }}
+
+            {% if form.instance.image %}
+              <div>
+                <img src="{{ form.instance.image.url }}" class="image-preview" style="width: 50%; margin: 10px auto; display: block; border-radius: 10px;">
+              </div>
+            {% else %}
+              <img class="image-preview" style="width: 50%; margin: 10px auto; display: none;">
+            {% endif %}
+
+            <button type="button" class="remove-image-btn" style="margin-top: 5px;">Bild entfernen</button>
+          </div>
+
+
+
+  <label><strong>Antwortmöglichkeiten:</strong></label>
+
+  <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+    <div style="flex-grow: 1;">
+      {{ form.answer_1.label_tag }}<br>
+      {{ form.answer_1 }}
+    </div>
+    <div>
+      <label style="display: flex; align-items: center; gap: 5px;">
+        {{ form.is_correct_1 }} <span>Richtig</span>
+      </label>
+    </div>
+  </div>
+
+  <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+    <div style="flex-grow: 1;">
+      {{ form.answer_2.label_tag }}<br>
+      {{ form.answer_2 }}
+    </div>
+    <div>
+      <label style="display: flex; align-items: center; gap: 5px;">
+        {{ form.is_correct_2 }} <span>Richtig</span>
+      </label>
+    </div>
+  </div>
+
+  <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+    <div style="flex-grow: 1;">
+      {{ form.answer_3.label_tag }}<br>
+      {{ form.answer_3 }}
+    </div>
+    <div>
+      <label style="display: flex; align-items: center; gap: 5px;">
+        {{ form.is_correct_3 }} <span>Richtig</span>
+      </label>
+    </div>
+  </div>
+
+  <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+    <div style="flex-grow: 1;">
+      {{ form.answer_4.label_tag }}<br>
+      {{ form.answer_4 }}
+    </div>
+    <div>
+      <label style="display: flex; align-items: center; gap: 5px;">
+        {{ form.is_correct_4 }} <span>Richtig</span>
+      </label>
+    </div>
+  </div>
+
+  <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+    <div style="flex-grow: 1;">
+      {{ form.answer_5.label_tag }}<br>
+      {{ form.answer_5 }}
+    </div>
+    <div>
+      <label style="display: flex; align-items: center; gap: 5px;">
+        {{ form.is_correct_5 }} <span>Richtig</span>
+      </label>
+    </div>
+  </div>
+</div>
+
+
+
+          <div style="width: 90%; margin: auto; display: none;">{{ form.order }}</div>
+
+          <div style="width: 90%; margin: auto;">
+            <input type="hidden" name="{{ form.prefix }}-DELETE" id="id_{{ form.prefix }}-DELETE">
+          </div>
+
+          <div style="text-align: center; margin-top: 20px;">
+            <button type="button" class="delete-step-btn"
+                    style="width: 60px; height: 60px; border-radius: 50%; background-color: #dc3545; color: white;
+                           font-size: 30px; border: none; box-shadow: 0 4px 8px rgba(0,0,0,0.2); cursor: pointer;"
+                    title="Diese Frage entfernen">
+              &minus;
+            </button>
+          </div>
         </div>
+        {% endif %}
+      {% endfor %}
+    </div>
 
-        <div class="answers" style="margin-top: 15px;">
-          {% for answer in form.instance.answers.all %}
-            <div class="answer-row">
-              <input type="checkbox" name="existing-correct-{{ answer.pk }}" {% if answer.is_correct %}checked{% endif %}>
-              <input type="text" name="existing-answer-{{ answer.pk }}" value="{{ answer.answer_text }}" placeholder="Antworttext">
-              <button type="button" class="remove-answer-btn">–</button>
-            </div>
-          {% endfor %}
+    <div style="text-align: center; margin: 40px 0;">
+      <button type="button" id="add-step-btn"
+              style="width: 70px; height: 70px; border-radius: 50%; background-color: #0d6efd; color: white;
+                     font-size: 36px; border: none; box-shadow: 0 4px 8px rgba(0,0,0,0.2); cursor: pointer;"
+              title="Frage hinzufügen">
+        +
+      </button>
+    </div>
+
+    <div style="text-align: center;">
+      <button type="submit" class="button">Speichern</button>
+    </div>
+  </form>
+
+
+
+
+  <template id="empty-form-template">
+    <div class="card new-step" style="padding: 20px; background: white; margin-bottom: 20px; border-radius: 12px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
+      <h4>Frage</h4>
+      <div style="width: 90%; margin: auto;"><label for="id_form-__prefix__-title">Title:</label><br><input type="text" name="form-__prefix__-title" id="id_form-__prefix__-title" placeholder="Text..."><input type="hidden" name="form-__prefix__-id" id="id_form-__prefix__-id"></div>
+      <div style="width: 90%; margin: auto;"><label for="id_form-__prefix__-content">Content:</label><br><textarea name="form-__prefix__-content" id="id_form-__prefix__-content" placeholder="Text..."></textarea></div>
+
+
+
+          <div style="width: 90%; margin: auto; text-align: center;">
+            {{ form.image.label_tag }}<br>
+            {{ form.image }}
+
+            {% if form.instance.image %}
+              <div>
+                <img src="{{ form.instance.image.url }}" class="image-preview" style="width: 50%; margin: 10px auto; display: block; border-radius: 10px;">
+              </div>
+            {% else %}
+              <img class="image-preview" style="width: 50%; margin: 10px auto; display: none;">
+            {% endif %}
+
+            <button type="button" class="remove-image-btn" style="margin-top: 5px;">Bild entfernen</button>
+          </div>
+
+
+
+    <!-- 🔽 NEU: Antwortmöglichkeiten -->
+    <div style="width: 90%; margin: auto; margin-top: 15px;">
+      <label><strong>Antwortmöglichkeiten:</strong></label>
+
+      <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+        <div style="flex-grow: 1;">
+          <label for="id_form-__prefix__-answer_1">Answer 1:</label><br>
+          <input type="text" name="form-__prefix__-answer_1" id="id_form-__prefix__-answer_1">
         </div>
-
-        <div style="margin-top: 10px;">
-          <button type="button" class="add-answer-btn action-button blue">+ Antwort</button>
-          <button type="button" class="delete-question-btn action-button red">– Frage löschen</button>
+        <div>
+          <label style="display: flex; align-items: center; gap: 5px;">
+            <input type="checkbox" name="form-__prefix__-is_correct_1" id="id_form-__prefix__-is_correct_1"> Richtig
+          </label>
         </div>
       </div>
-    {% endfor %}
-  </div>
 
-  <div style="text-align:center; margin-top:30px;">
-    <button type="button" id="add-question-btn" class="action-button blue">+ Neue Frage</button>
-    <button type="submit" class="action-button blue">Speichern</button>
-  </div>
-</form>
+      <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+        <div style="flex-grow: 1;">
+          <label for="id_form-__prefix__-answer_2">Answer 2:</label><br>
+          <input type="text" name="form-__prefix__-answer_2" id="id_form-__prefix__-answer_2">
+        </div>
+        <div>
+          <label style="display: flex; align-items: center; gap: 5px;">
+            <input type="checkbox" name="form-__prefix__-is_correct_2" id="id_form-__prefix__-is_correct_2"> Richtig
+          </label>
+        </div>
+      </div>
 
-<!-- Vorlage für neue Fragen -->
-<template id="empty-question-template">
-  <div class="card question-card" style="max-width: 800px; margin: 20px auto;">
-    <h4>Frage</h4>
-    <input type="hidden" name="form-__prefix__-id" id="id_form-__prefix__-id">
-    <div style="width: 90%; margin: auto;">
-      <label for="id_form-__prefix__-question_text">Fragetext:</label><br>
-      <input type="text" name="form-__prefix__-question_text" id="id_form-__prefix__-question_text" style="width: 100%;" placeholder="Fragetext">
+      <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+        <div style="flex-grow: 1;">
+          <label for="id_form-__prefix__-answer_3">Answer 3:</label><br>
+          <input type="text" name="form-__prefix__-answer_3" id="id_form-__prefix__-answer_3">
+        </div>
+        <div>
+          <label style="display: flex; align-items: center; gap: 5px;">
+            <input type="checkbox" name="form-__prefix__-is_correct_3" id="id_form-__prefix__-is_correct_3"> Richtig
+          </label>
+        </div>
+      </div>
+
+      <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+        <div style="flex-grow: 1;">
+          <label for="id_form-__prefix__-answer_4">Answer 4:</label><br>
+          <input type="text" name="form-__prefix__-answer_4" id="id_form-__prefix__-answer_4">
+        </div>
+        <div>
+          <label style="display: flex; align-items: center; gap: 5px;">
+            <input type="checkbox" name="form-__prefix__-is_correct_4" id="id_form-__prefix__-is_correct_4"> Richtig
+          </label>
+        </div>
+      </div>
+
+      <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+        <div style="flex-grow: 1;">
+          <label for="id_form-__prefix__-answer_5">Answer 5:</label><br>
+          <input type="text" name="form-__prefix__-answer_5" id="id_form-__prefix__-answer_5">
+        </div>
+        <div>
+          <label style="display: flex; align-items: center; gap: 5px;">
+            <input type="checkbox" name="form-__prefix__-is_correct_5" id="id_form-__prefix__-is_correct_5"> Richtig
+          </label>
+        </div>
+      </div>
     </div>
-    <div class="answers" style="margin-top: 10px;"></div>
-    <div style="margin-top: 10px;">
-      <button type="button" class="add-answer-btn action-button blue">+ Antwort</button>
-      <button type="button" class="delete-question-btn action-button red">– Frage löschen</button>
+    <!-- 🔼 ENDE Antwortmöglichkeiten -->
+
+
+
+
+
+
+      <div style="width: 90%; margin: auto; display: none;">
+        <input type="number" name="form-__prefix__-order" id="id_form-__prefix__-order" value="1">
+      </div>
+      <div style="width: 90%; margin: auto;">
+        <input type="hidden" name="form-__prefix__-DELETE" id="id_form-__prefix__-DELETE">
+      </div>
+      <div style="text-align: center; margin-top: 20px;">
+        <button type="button" class="delete-step-btn"
+                style="width: 60px; height: 60px; border-radius: 50%; background-color: #dc3545; color: white;
+                       font-size: 30px; border: none; box-shadow: 0 4px 8px rgba(0,0,0,0.2); cursor: pointer;"
+                title="Diese Frage entfernen">
+          &minus;
+        </button>
+      </div>
     </div>
-  </div>
-</template>
+</div>
+  </template>
 
-<!-- Vorlage für neue Antworten -->
-<template id="empty-answer-template">
-  <div class="answer-row">
-    <input type="checkbox" name="new-correct-__qprefix__-__aprefix__">
-    <input type="text" name="new-answer-__qprefix__-__aprefix__" placeholder="Antworttext">
-    <button type="button" class="remove-answer-btn">–</button>
-  </div>
-</template>
+  <style>
+    .card.new-step {
+      background-color: #0d6efd;
+      transform-origin: top;
+      transform: rotateX(-90deg);
+      opacity: 0;
+      transition: transform 0.5s ease, background-color 0.5s ease, opacity 0.5s ease;
+    }
+    .card.new-step.show {
+      transform: rotateX(0deg);
+      background-color: white;
+      opacity: 1;
+    }
+  </style>
 
+  <script>
+    function initImagePreviewHandlers(scope) {
+      scope.querySelectorAll('input[type="file"]').forEach(input => {
+        const preview = input.closest('div').querySelector('.image-preview');
+        const removeBtn = input.closest('div').querySelector('.remove-image-btn');
+
+        input.addEventListener('change', e => {
+          const file = e.target.files[0];
+          if (file) {
+            preview.src = URL.createObjectURL(file);
+            preview.style.display = 'block';
+          } else {
+            preview.style.display = 'none';
+          }
+        });
+
+        removeBtn.addEventListener('click', () => {
+          input.value = '';
+          preview.src = '';
+          preview.style.display = 'none';
+        });
+      });
+    }
+
+    function updateOrderFields() {
+      const cards = document.querySelectorAll('#formset-container .card');
+      cards.forEach((card, index) => {
+        const orderInput = card.querySelector('input[name$="-order"]');
+        if (orderInput) {
+          orderInput.value = index + 1;
+        }
+        const heading = card.querySelector('h4');
+        if (heading) {
+          heading.textContent = `Frage ${index + 1}`;
+        }
+      });
+    }
+
+    document.addEventListener('click', function (e) {
+      if (e.target.classList.contains('delete-step-btn')) {
+        const card = e.target.closest('.card');
+        card.style.transition = 'transform 0.4s ease, opacity 0.4s ease';
+        card.style.transform = 'rotateX(-90deg)';
+        card.style.opacity = '0';
+        setTimeout(() => {
+          const deleteInput = card.querySelector('input[name$="-DELETE"]');
+          deleteInput.value = 'on';
+          card.style.display = 'none';
+          updateOrderFields();
+        }, 400);
+      }
+    });
+
+    initImagePreviewHandlers(document);
+    updateOrderFields();
+
+    document.getElementById('add-step-btn').addEventListener('click', () => {
+      const container = document.getElementById('formset-container');
+      const totalForms = document.getElementById('id_form-TOTAL_FORMS');
+      const newIndex = parseInt(totalForms.value);
+      const templateHtml = document.getElementById('empty-form-template').innerHTML.replace(/__prefix__/g, newIndex);
+
+      const tempDiv = document.createElement('div');
+      tempDiv.innerHTML = templateHtml;
+      const newForm = tempDiv.firstElementChild;
+
+      container.appendChild(newForm);
+
+      requestAnimationFrame(() => {
+        newForm.classList.add('show');
+      });
+
+      totalForms.value = newIndex + 1;
+
+      initImagePreviewHandlers(newForm);
+      updateOrderFields();
+    });
+  </script>
 <script>
-let questionCounter = {{ formset.total_form_count }};
-let answerCounters = {};
+    // Fade beim Laden
+    document.body.style.opacity = 0;
+    window.addEventListener('load', () => {
+        document.body.style.transition = "opacity 0.6s ease";
+        document.body.style.opacity = 1;
+    });
 
-document.getElementById('add-question-btn').addEventListener('click', () => {
-  const container = document.getElementById('formset-container');
-  const tmpl = document.getElementById('empty-question-template').innerHTML.replace(/__prefix__/g, questionCounter);
-  const div = document.createElement('div');
-  div.innerHTML = tmpl;
-  const newCard = div.firstElementChild;
-  container.appendChild(newCard);
-  answerCounters[questionCounter] = 0;
-  questionCounter++;
-
-  // Update Total Forms
-  const totalForms = document.getElementById('id_form-TOTAL_FORMS');
-  totalForms.value = questionCounter;
-
-  updateQuestionHeadings();
-});
-
-document.addEventListener('click', function (e) {
-  if (e.target.classList.contains('add-answer-btn')) {
-    const questionCard = e.target.closest('.question-card');
-    const answersDiv = questionCard.querySelector('.answers');
-    const qIndex = [...document.querySelectorAll('.question-card')].indexOf(questionCard);
-    const aIndex = answerCounters[qIndex] || 0;
-
-    let answerHTML = document.getElementById('empty-answer-template').innerHTML
-      .replace(/__qprefix__/g, qIndex)
-      .replace(/__aprefix__/g, aIndex);
-
-    const div = document.createElement('div');
-    div.innerHTML = answerHTML;
-    answersDiv.appendChild(div.firstElementChild);
-
-    answerCounters[qIndex] = aIndex + 1;
-  }
-
-  if (e.target.classList.contains('remove-answer-btn')) {
-    e.target.closest('.answer-row').remove();
-  }
-
-  if (e.target.classList.contains('delete-question-btn')) {
-    const card = e.target.closest('.question-card');
-    card.remove();
-    updateQuestionHeadings();
-  }
-});
-
-function updateQuestionHeadings() {
-  const cards = document.querySelectorAll('.question-card');
-  cards.forEach((card, index) => {
-    const h4 = card.querySelector('h4');
-    if (h4) h4.textContent = `Frage ${index + 1}`;
-  });
-}
+    // Fade-Out bei Navigation
+    document.querySelectorAll('a[href]').forEach(link => {
+        link.addEventListener('click', function (e) {
+            const url = link.getAttribute('href');
+            if (!url.startsWith('#') && !link.hasAttribute('download')) {
+                e.preventDefault();
+                document.body.style.opacity = 0;
+                setTimeout(() => {
+                    window.location.href = url;
+                }, 300);
+            }
+        });
+    });
 </script>
-
-<style>
-  .question-card {
-    padding: 20px;
-    background: white;
-    margin-bottom: 20px;
-    border-radius: 12px;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-  }
-
-  .answer-row {
-    display: flex;
-    gap: 10px;
-    align-items: center;
-    margin: 5px 0;
-  }
-
-  .answer-row input[type="text"] {
-    flex: 1;
-  }
-</style>
+<div id="fade-overlay"></div>
 {% endblock %}

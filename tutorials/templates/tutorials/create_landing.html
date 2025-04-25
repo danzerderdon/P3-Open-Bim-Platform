@@ -6,8 +6,8 @@
 {% block content %}
 
 <!-- Hauptinhalt mit Überlappung -->
-<div class="section-container" style="max-width: 60%,">
-    <div class="card-container">
+<div class="card-container" style="max-width: 60%,">
+
     <div style="text-align: center; padding: 10;">
         <h1 style="color: #156082;">Tutorials erstellen</h1>
         <p>Hier kannst du neue Tutorials anlegen.</p>
@@ -15,19 +15,20 @@
         <a href="{% url 'tutorial_creator' %}">
             <button class="action-button orange" style="font-size: 20px;">+ Neues Tutorial erstellen</button>
         </a>
-    </div>
+
         </div>
 
     <h1 style="color: #156082;">Meine Tutorials:</h1>
-
+    </div>
+<div class="tutorial-wrapper">
+  <div class="tutorial-grid">
     {% for tutorial in tutorials %}
-
-    <div class="tutorial-card {{ tutorial.difficulty|default:'mittel' }}">
+      <div class="tutorial-card {{ tutorial.difficulty|default:'mittel' }}">
 
         <h2><strong>{{ tutorial.title }}</strong></h2>
         {% if tutorial.thumbnail %}
-            <img src="{{ tutorial.thumbnail.url }}" alt="Vorschaubild"
-                 style="max-width: 100%; border-radius: 10px; margin-bottom: 15px;">
+          <img src="{{ tutorial.thumbnail.url }}" alt="Vorschaubild"
+               style="max-width: 100%; border-radius: 10px; margin-bottom: 15px;">
         {% endif %}
 
         <p>{{ tutorial.description }}</p>
@@ -36,26 +37,29 @@
         {% if request.user.groups.all.0.name == "BIM Expert" %}
         <h3>Tutorial Bearbeiten:</h3>
         <div style="margin-top: 20px;">
-            <a href="{% url 'edit_tutorial_sections' tutorial.id %}">
-                <button class="action-button blue">Schritte</button>
-            </a>
-            <a href="{% url 'edit_quiz' tutorial.id %}">
-                <button class="action-button blue">Fragen</button>
-            </a>
-            <a href="{% url 'edit_tutorial_attributes' tutorial.id %}">
-                <button class="action-button orange">Attribute</button>
-            </a>
-            <form class="delete-form" action="{% url 'delete_tutorial' tutorial.id %}" method="post" style="display: inline;">
-                {% csrf_token %}
-                <button type="submit" class="action-button red">Löschen</button>
-            </form>
+          <a href="{% url 'edit_tutorial_sections' tutorial.id %}">
+              <button class="action-button blue">Schritte</button>
+          </a>
+          <a href="{% url 'edit_quiz' tutorial.id %}">
+              <button class="action-button blue">Fragen</button>
+          </a><br>
+          <a href="{% url 'edit_tutorial_attributes' tutorial.id %}">
+              <button class="action-button orange">Attribute bearbeiten</button>
+          </a>
+          <form class="delete-form" action="{% url 'delete_tutorial' tutorial.id %}" method="post" style="display: inline;">
+              {% csrf_token %}
+              <button type="submit" class="action-button red">Tutorial entfernen</button>
+          </form>
         </div>
         {% endif %}
-    </div>
+      </div>
     {% empty %}
-    <p style="text-align: center;">Du hast noch keine Tutorials erstellt.</p>
+      <p style="text-align: center;">Du hast noch keine Tutorials erstellt.</p>
     {% endfor %}
+  </div>
 </div>
+
+
 
 <!-- Stile für Buttons -->
 <style>
@@ -122,6 +126,36 @@
 .tutorial-card.expert {
     border: 3px solid #8e44ad; /* lila */
 }
+
+.tutorial-wrapper {
+  width: 57%;
+  margin: 2rem auto;
+}
+
+.tutorial-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
+}
+
+@media (max-width: 1100px) {
+  .tutorial-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 700px) {
+  .tutorial-wrapper {
+    width: 90%;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .tutorial-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
 
 </style>
 

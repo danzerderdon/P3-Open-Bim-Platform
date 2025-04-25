@@ -4,8 +4,9 @@
   <style>
     .tutorial-wrapper {
       width: 57%;
-      margin: 2rem auto;
-
+      margin-top: 2rem;
+      margin-bottom: 2rem;
+      margin-left: 21.5%;
     }
 
     .tutorial-grid {
@@ -16,12 +17,29 @@
 
     .tutorial-card {
       background: white;
-      border: 1px solid #ddd;
       border-radius: 12px;
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
       padding: 1.5rem;
       text-align: center;
       transition: transform 0.2s ease;
+      border: 3px solid #ddd; /* fallback, wird überschrieben durch Schwierigkeit */
+    }
+
+    /* Farbige Ränder nach Schwierigkeit */
+    .tutorial-card.leicht {
+      border-color: #27ae60; /* grün */
+    }
+
+    .tutorial-card.mittel {
+      border-color: #f1c40f; /* gelb */
+    }
+
+    .tutorial-card.schwer {
+      border-color: #e74c3c; /* rot */
+    }
+
+    .tutorial-card.expert {
+      border-color: #8e44ad; /* lila */
     }
 
     .tutorial-card:hover {
@@ -82,6 +100,8 @@
     @media (max-width: 700px) {
       .tutorial-wrapper {
         width: 90%;
+        margin-left: auto;
+        margin-right: auto;
       }
 
       .tutorial-grid {
@@ -96,7 +116,7 @@
     <div class="tutorial-wrapper">
       <div class="tutorial-grid">
         {% for tutorial in tutorials %}
-          <div class="tutorial-card">
+          <div class="tutorial-card {{ tutorial.difficulty|default:'mittel' }}">
             {% if tutorial.thumbnail %}
               <img src="{{ tutorial.thumbnail.url }}" alt="{{ tutorial.title }} Thumbnail">
             {% endif %}

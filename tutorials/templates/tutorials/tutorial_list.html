@@ -486,6 +486,9 @@ input[type="range"].difficulty-slider:disabled {
   <label>Serie:</label>
   <select id="filter-serie" style="width: 100%; margin-bottom: 1rem;"></select>
 
+  <label>Programm:</label> <!-- NEU -->
+  <select id="filter-programm" style="width: 100%; margin-bottom: 1rem;"></select>
+
   <label>Alphabetisch sortieren:</label>
   <label class="switch">
     <input type="checkbox" id="sort-toggle" checked>
@@ -568,103 +571,119 @@ input[type="range"].difficulty-slider:disabled {
 </style>
 
 <script>
-  document.getElementById("filter-toggle").addEventListener("click", () => {
-    const panel = document.getElementById("filter-panel");
+document.getElementById("filter-toggle").addEventListener("click", () => {
+  const panel = document.getElementById("filter-panel");
   panel.classList.toggle("visible");
-  });
-
-  function getTutorialData(card) {
-    return {
-      element: card,
-      title: card.dataset.title.toLowerCase(),
-      description: card.dataset.description.toLowerCase(),
-      program: card.dataset.program.toLowerCase(),
-      serie: card.dataset.series.toLowerCase(),
-      difficulty: card.dataset.difficulty.toLowerCase(),
-      keywords: card.dataset.keywords.toLowerCase(),
-      createdat: card.dataset.createdat // NEU für Datumssortierung
-    };
-  }
-
-  function updateFilterOptions() {
-    const serieSet = new Set();
-    document.querySelectorAll('.tutorial-card').forEach(card => {
-      if (card.dataset.series) serieSet.add(card.dataset.series);
-    });
-
-    const serieSelect = document.getElementById("filter-serie");
-    serieSelect.innerHTML = '<option value="">Alle Serien</option>';
-    [...serieSet].sort().forEach(serie => {
-      const opt = document.createElement('option');
-      opt.value = serie;
-      opt.innerText = serie;
-      serieSelect.appendChild(opt);
-    });
-  }
-
-  function filterTutorials() {
-    const keyword = document.getElementById("search-input").value.toLowerCase();
-    const serie = document.getElementById("filter-serie").value.toLowerCase();
-    const sortAlpha = document.getElementById("sort-toggle").checked;
-    const diffLevel = parseInt(document.getElementById("difficulty-slider").value);
-    const diffEnabled = document.getElementById("difficulty-toggle")?.checked;
-
-    const diffMap = { leicht: 1, mittel: 2, schwer: 3, expertenmodus: 4 };
-    const cards = [...document.querySelectorAll('.tutorial-card')];
-    const grid = document.querySelector('.tutorial-grid');
-
-    let visibleCards = [];
-
- cards.forEach(card => {
-  const data = getTutorialData(card);
-  const cleanDifficulty = (data.difficulty || "").toLowerCase().trim();  // <-- NEU
-
-  const matchesKeyword = [data.title, data.description, data.program, data.serie, data.keywords].some(val => val.includes(keyword));
-  const matchesSerie = !serie || data.serie === serie;
-  const matchesDiff = !diffEnabled || diffMap[cleanDifficulty] === diffLevel;
-
-  const show = matchesKeyword && matchesSerie && matchesDiff;
-  card.style.display = show ? 'block' : 'none';
-
-  if (show) visibleCards.push({ card, data });
 });
 
+function getTutorialData(card) {
+  return {
+    element: card,
+    title: card.dataset.title.toLowerCase(),
+    description: card.dataset.description.toLowerCase(),
+    program: card.dataset.program.toLowerCase(),
+    serie: card.dataset.series.toLowerCase(),
+    difficulty: card.dataset.difficulty.toLowerCase(),
+    keywords: card.dataset.keywords.toLowerCase(),
+    createdat: card.dataset.createdat
+  };
+}
 
-    // Sortieren
-    if (grid) {
-      if (sortAlpha) {
-        visibleCards.sort((a, b) => a.data.title.localeCompare(b.data.title));
-      } else {
-        visibleCards.sort((a, b) => new Date(b.data.createdat) - new Date(a.data.createdat));
-      }
+function updateFilterOptions() {
+  const serieSet = new Set();
+  const programmSet = new Set();
 
-      visibleCards.forEach(({ card }) => grid.appendChild(card));
+  document.querySelectorAll('.tutorial-card').forEach(card => {
+    if (card.dataset.series) serieSet.add(card.dataset.series);
+    if (card.dataset.program) programmSet.add(card.dataset.program);
+  });
+
+  const serieSelect = document.getElementById("filter-serie");
+  serieSelect.innerHTML = '<option value="">Alle Serien</option>';
+  [...serieSet].sort().forEach(serie => {
+    const opt = document.createElement('option');
+    opt.value = serie;
+    opt.innerText = serie;
+    serieSelect.appendChild(opt);
+  });
+
+  const programmSelect = document.getElementById("filter-programm");
+  programmSelect.innerHTML = '<option value="">Alle Programme</option>';
+  [...programmSet].sort().forEach(programm => {
+    const opt = document.createElement('option');
+    opt.value = programm;
+    opt.innerText = programm;
+    programmSelect.appendChild(opt);
+  });
+}
+
+function filterTutorials() {
+  const keyword = document.getElementById("search-input").value.toLowerCase();
+  const serie = document.getElementById("filter-serie").value.toLowerCase();
+  const programm = document.getElementById("filter-programm").value.toLowerCase();
+  const sortAlpha = document.getElementById("sort-toggle").checked;
+  const diffLevel = parseInt(document.getElementById("difficulty-slider").value);
+  const diffEnabled = document.getElementById("difficulty-toggle")?.checked;
+
+  const diffMap = { leicht: 1, mittel: 2, schwer: 3, expertenmodus: 4 };
+  const cards = [...document.querySelectorAll('.tutorial-card')];
+  const grid = document.querySelector('.tutorial-grid');
+
+  let visibleCards = [];
+
+  cards.forEach(card => {
+    const data = getTutorialData(card);
+    const cleanDifficulty = (data.difficulty || "").toLowerCase().trim();
+
+    const matchesKeyword = [data.title, data.description, data.program, data.serie, data.keywords].some(val => val.includes(keyword));
+    const matchesSerie = !serie || data.serie === serie;
+    const matchesProgramm = !programm || data.program === programm;
+    const matchesDiff = !diffEnabled || diffMap[cleanDifficulty] === diffLevel;
+
+    const show = matchesKeyword && matchesSerie && matchesProgramm && matchesDiff;
+    card.style.display = show ? 'block' : 'none';
+
+    if (show) visibleCards.push({ card, data });
+  });
+
+  // Sortieren
+  if (grid) {
+    if (sortAlpha) {
+      visibleCards.sort((a, b) => a.data.title.localeCompare(b.data.title));
+    } else {
+      visibleCards.sort((a, b) => new Date(b.data.createdat) - new Date(a.data.createdat));
     }
-
-    // Slider deaktivieren wenn Toggle off
-    const slider = document.getElementById("difficulty-slider");
-    if (slider) slider.disabled = !diffEnabled;
+    visibleCards.forEach(({ card }) => grid.appendChild(card));
   }
 
-  document.addEventListener("DOMContentLoaded", () => {
-    updateFilterOptions();
+  // Slider deaktivieren wenn Toggle off
+  const slider = document.getElementById("difficulty-slider");
+  if (slider) slider.disabled = !diffEnabled;
+}
 
-    // Setzt standardmäßig den Difficulty-Filter auf OFF
-    const diffToggle = document.getElementById("difficulty-toggle");
-    if (diffToggle) diffToggle.checked = false;
+document.addEventListener("DOMContentLoaded", () => {
+  updateFilterOptions();
 
-    const slider = document.getElementById("difficulty-slider");
-    if (slider) slider.disabled = true;
+  // Setzt standardmäßig den Difficulty-Filter auf OFF
+  const diffToggle = document.getElementById("difficulty-toggle");
+  if (diffToggle) diffToggle.checked = false;
 
-    ["search-input", "filter-serie", "sort-toggle", "difficulty-slider", "difficulty-toggle"].forEach(id => {
-      const el = document.getElementById(id);
-      if (el) {
-        el.addEventListener("input", filterTutorials);
-        el.addEventListener("change", filterTutorials);
-      }
-    });
+  const slider = document.getElementById("difficulty-slider");
+  if (slider) slider.disabled = true;
+
+  ["search-input", "filter-serie", "filter-programm", "sort-toggle", "difficulty-slider", "difficulty-toggle"].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) {
+      el.addEventListener("input", filterTutorials);
+      el.addEventListener("change", filterTutorials);
+    }
   });
+});
 </script>
+
+
+
+
 <style>
 .tutorial-card {
   margin: 0.25rem 0;

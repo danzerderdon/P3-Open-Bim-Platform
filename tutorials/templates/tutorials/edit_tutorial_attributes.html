@@ -3,7 +3,7 @@
 
 {% block content %}
 <div class="section-container">
-<h1 style="color: #156082;text-align: center;">Tutorial bearbeiten</h1>
+<h1 style="color: #156082;text-align: center;">Tutorial "{{ tutorial.title }}" bearbeiten</h1>
 <div class="card-container">
   <form method="post" enctype="multipart/form-data" style="max-width: 600px; margin: auto;">
     {% csrf_token %}

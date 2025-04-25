@@ -52,8 +52,8 @@ nav button:hover {
 .tutorials-container {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 20px;
-    padding: 40px;
+    gap: 10px;
+    padding: 20px;
     justify-items: center;
 }
 
@@ -361,21 +361,21 @@ input[type="file"]::file-selector-button:hover {
 
 .tutorial-card.leicht {
     border: 8px solid #72c28f !important;
-     padding: 30px; border-radius: 15px; margin: 20px auto; max-width: 500px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); text-align: center;/* grün */
+     padding: 30px; border-radius: 15px; margin: 10px auto; max-width: 500px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); text-align: center;/* grün */
 }
 
 .tutorial-card.mittel {
     border: 8px solid #ede579 !important;
-     padding: 30px; border-radius: 15px; margin: 20px auto; max-width: 500px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); text-align: center;/* gelb */
+     padding: 30px; border-radius: 15px; margin: 10px auto; max-width: 500px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); text-align: center;/* gelb */
 }
 
 .tutorial-card.schwer {
     border: 8px solid #f9c375 !important;
-     padding: 30px; border-radius: 15px; margin: 20px auto; max-width: 500px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); text-align: center;/* rot */
+     padding: 30px; border-radius: 15px; margin: 10px auto; max-width: 500px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); text-align: center;/* rot */
 }
 
 .tutorial-card.expert {
     border: 8px solid #f27b81 !important;
-     padding: 30px; border-radius: 15px; margin: 20px auto; max-width: 500px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); text-align: center;/* lila */
+     padding: 30px; border-radius: 15px; margin: 10px auto; max-width: 500px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); text-align: center;/* lila */
 }
 

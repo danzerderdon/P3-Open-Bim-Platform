@@ -6,24 +6,28 @@
 {% block content %}
 
 <!-- Hauptinhalt mit Überlappung -->
-<div class="card-container" style="position: relative; z-index: 1; margin-bottom: -150px; padding-bottom: 200px;">
+<div class="section-container" style="max-width: 60%,">
+    <div class="card-container">
     <div style="text-align: center; padding: 50px;">
         <h1>Tutorials erstellen</h1>
         <p>Hier kannst du neue Tutorials anlegen.</p>
         <a href="{% url 'tutorial_creator' %}">
-            <button class="action-button grey">Neues Tutorial erstellen</button>
+            <button class="action-button orange" style="font-size: 20px;">+ Neues Tutorial erstellen</button>
         </a>
     </div>
+        </div>
 
     <h1>Meine Tutorials:</h1>
 
     {% for tutorial in tutorials %}
-    <div style="background-color: #b3d9ff; padding: 30px; border-radius: 15px; margin: 20px auto; max-width: 500px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); text-align: center;">
+
+    <div style="background-color: white; padding: 30px; border-radius: 15px; margin: 20px auto; max-width: 500px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); text-align: center;">
+        <h2><strong>{{ tutorial.title }}</strong></h2>
         {% if tutorial.thumbnail %}
             <img src="{{ tutorial.thumbnail.url }}" alt="Vorschaubild"
                  style="max-width: 100%; border-radius: 10px; margin-bottom: 15px;">
         {% endif %}
-        <h3><strong>{{ tutorial.title }}</strong></h3>
+
         <p>{{ tutorial.description }}</p>
         <p style="color: #555; font-size: 14px;">Erstellt am: {{ tutorial.created_at|date:"d.m.Y H:i" }}</p>
 

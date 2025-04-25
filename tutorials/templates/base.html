@@ -10,14 +10,36 @@
 
     /* Navigation */
     nav {
+
+        position: fixed; /* neu: fixiert die Leiste */
+    top: 0; /* neu: oben am Bildschirm */
+    left: 0;
+    right: 0;
+    z-index: 1000; /* stellt sicher, dass sie über anderen Elementen bleibt */
+
         display: flex;
         justify-content: space-between;
         align-items: stretch;
         background-color: #d6d4d4;
         height: 50px;
         font-family: sans-serif;
-        padding: 5px
+        padding: 5px;
+
+
     }
+
+.nav-fade {
+    position: fixed;
+    top: 50px; /* exakt unter der Leiste */
+    left: 0;
+    right: 0;
+    height: 30px;
+    pointer-events: none;
+    z-index: 999; /* unterhalb der Navbar (1000) */
+
+    background: linear-gradient(to bottom, rgba(255,255,255,0.8), rgba(255,255,255,0));
+}
+
 
     nav img {
         height: 100%;
@@ -73,6 +95,12 @@
     nav form button:focus {
         outline: none;
     }
+
+
+    main {
+    padding-top: calc(50px + 30px);
+}
+
 </style>
 </head>
 <body>
@@ -125,6 +153,7 @@
 
     </div>
 </nav>
+<div class="nav-fade"></div>
 
 <!-- 📄 Inhalt -->
 <main>

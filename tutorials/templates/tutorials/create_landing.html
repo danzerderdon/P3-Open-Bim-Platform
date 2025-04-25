@@ -43,11 +43,11 @@
                style="max-width: 100%; border-radius: 10px; margin-bottom: 15px;">
         {% endif %}
 
-        <p>{{ tutorial.description }}</p>
+
         <p style="color: #555; font-size: 14px;">Erstellt am: {{ tutorial.created_at|date:"d.m.Y H:i" }}</p>
 
         {% if request.user.groups.all.0.name == "BIM Expert" %}
-        <h3>Tutorial Bearbeiten:</h3>
+
         <div style="margin-top: 20px;">
           <a href="{% url 'edit_tutorial_sections' tutorial.id %}">
               <button class="action-button blue">Schritte</button>
@@ -166,6 +166,12 @@
   .tutorial-grid {
     grid-template-columns: 1fr;
   }
+}
+
+.tutorial-card {
+  margin: 0;         /* entfernt äußere Abstände */
+  padding: 1rem;     /* falls zu viel innen ist, hier anpassen */
+  box-sizing: border-box;
 }
 
 
@@ -407,6 +413,25 @@
   });
 </script>
 
+<style>
+.tutorial-card {
+  margin: 0.25rem 0;
+  padding-top: 0.4rem;
+  padding-bottom: 0.4rem;
+}
+
+.tutorial-card h2,
+.tutorial-card p,
+.tutorial-card img,
+.tutorial-card form {
+  margin-top: 0;
+  margin-bottom: 0.25rem;
+}
+
+.tutorial-grid {
+  gap: 0.8rem;
+}
+</style>
 
 
 <div id="fade-overlay"></div>

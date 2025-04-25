@@ -217,7 +217,7 @@
 
 .detail-panel {
   position: fixed;
-  top: 20vh;
+  top: 100px;
   right: -40%;
   width: 34%;
   height: 80vh;
@@ -386,11 +386,11 @@ input[type="range"].difficulty-slider:disabled {
 
 
 <!-- Rechte Detailleiste -->
-<div id="tutorial-details" class="detail-panel">
+<div id="tutorial-details" class="detail-panel" style="text-align: left;">
     <div class="detail-panel-header">Details zu diesem Tutorial</div>
 
   <div class="detail-content" id="detail-content">
-    <p style="text-align: center; font-style: italic; color: #999;">Tutorialdetails hier anzeigen…</p>
+    <p style="text-align: left; font-style: italic; color: #999;">Tutorialdetails hier anzeigen…</p>
   </div>
 </div>
 
@@ -665,6 +665,25 @@ input[type="range"].difficulty-slider:disabled {
     });
   });
 </script>
+<style>
+.tutorial-card {
+  margin: 0.25rem 0;
+  padding-top: 0.4rem;
+  padding-bottom: 0.4rem;
+}
+
+.tutorial-card h2,
+.tutorial-card p,
+.tutorial-card img,
+.tutorial-card form {
+  margin-top: 0;
+  margin-bottom: 0.25rem;
+}
+
+.tutorial-grid {
+  gap: 0.8rem;
+}
+</style>
 
 
 

@@ -89,21 +89,7 @@ class UserProgress(models.Model):
     def __str__(self):
         return f"{self.user.username} – {self.tutorial.title} ({'Fertig' if self.completed else 'Nicht fertig'})"
 
-# tutorials/models.py
 
-class Question(models.Model):
-    tutorial = models.ForeignKey(Tutorial, on_delete=models.CASCADE, related_name="questions")
-    text = models.TextField()
-    answer1_text = models.CharField(max_length=255)
-    answer1_is_correct = models.BooleanField(default=False)
-    answer2_text = models.CharField(max_length=255)
-    answer2_is_correct = models.BooleanField(default=False)
-    answer3_text = models.CharField(max_length=255)
-    answer3_is_correct = models.BooleanField(default=False)
-    answer4_text = models.CharField(max_length=255)
-    answer4_is_correct = models.BooleanField(default=False)
-    answer5_text = models.CharField(max_length=255)
-    answer5_is_correct = models.BooleanField(default=False)
 
 class Quiz(models.Model):
     tutorial = models.ForeignKey(Tutorial, on_delete=models.CASCADE, related_name="quiz")

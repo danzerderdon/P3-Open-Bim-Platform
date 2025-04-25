@@ -239,21 +239,9 @@ from django.forms import modelformset_factory
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from .models import Tutorial
-from .forms import QuestionFormSet
 
-@login_required
-def add_questions(request, tutorial_id):
-    tutorial = get_object_or_404(Tutorial, id=tutorial_id, created_by=request.user)
-    formset = QuestionFormSet(request.POST or None, instance=tutorial)
 
-    if request.method == 'POST' and formset.is_valid():
-        formset.save()
-        return redirect('tutorial_detail', pk=tutorial.pk)
 
-    return render(request, 'tutorials/add_questions.html', {
-        'formset': formset,
-        'tutorial': tutorial
-    })
 
 
 from django.contrib import messages  # falls du später im Template Feedback willst

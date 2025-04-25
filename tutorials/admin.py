@@ -3,5 +3,5 @@ from .models import *
 
 admin.site.register(Tutorial)
 admin.site.register(TutorialSection)
-admin.site.register(Question)
+admin.site.register(Quiz)
 admin.site.register(UserProgress)

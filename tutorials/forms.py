@@ -75,29 +75,10 @@ class TutorialScreenshotForm(forms.ModelForm):
 
 from django import forms
 from django.forms import ModelForm, inlineformset_factory
-from .models import Tutorial, Question
+from .models import Tutorial
 from django.forms import ModelForm, inlineformset_factory
-from .models import Tutorial, Question
+from .models import Tutorial
 
-class QuestionForm(ModelForm):
-    class Meta:
-        model = Question
-        fields = [
-            'text',
-            'answer1_text', 'answer1_is_correct',
-            'answer2_text', 'answer2_is_correct',
-            'answer3_text', 'answer3_is_correct',
-            'answer4_text', 'answer4_is_correct',
-            'answer5_text', 'answer5_is_correct',
-        ]
-
-QuestionFormSet = inlineformset_factory(
-    parent_model=Tutorial,
-    model=Question,
-    form=QuestionForm,
-    extra=1,
-    can_delete=True,
-)
 
 
 

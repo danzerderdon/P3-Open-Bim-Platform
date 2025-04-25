@@ -23,7 +23,19 @@
 <div class="tutorial-wrapper">
   <div class="tutorial-grid">
     {% for tutorial in tutorials %}
-      <div class="tutorial-card {{ tutorial.difficulty|default:'mittel' }}">
+      <div class="tutorial-card {{ tutorial.difficulty|default:'mittel' }}"
+     data-title="{{ tutorial.title }}"
+     data-description="{{ tutorial.description }}"
+     data-program="{{ tutorial.program }}"
+     data-program-versions="{{ tutorial.program_versions }}"
+     data-keywords="{{ tutorial.keywords }}"
+     data-difficulty="{{ tutorial.get_difficulty_display }}"
+     data-series="{{ tutorial.series|default:'-' }}"
+     data-createdby="{{ tutorial.created_by.username }}"
+     data-createdat="{{ tutorial.created_at|date:'d.m.Y H:i' }}"
+     data-thumbnail="{% if tutorial.thumbnail %}{{ tutorial.thumbnail.url }}{% endif %}"
+     data-screenshot="{% if tutorial.screenshot %}{{ tutorial.screenshot.url }}{% endif %}"
+>
 
         <h2><strong>{{ tutorial.title }}</strong></h2>
         {% if tutorial.thumbnail %}
@@ -192,6 +204,210 @@
         });
     });
 </script>
+
+<!-- Filter Panel Trigger (Top Left Corner) -->
+<div id="filter-toggle" style="
+  position: fixed;
+  top: 60px;
+  left: 0px;
+  background-color: #156082;
+  color: white;
+  border-radius: 0 0 12px 0;
+  padding: 10px 20px;
+  cursor: pointer;
+  z-index: 1000;">
+  ⚙ Filter
+</div>
+
+<!-- Filter Panel -->
+<div id="filter-panel" class="filter-panel">
+  <label>Suchbegriff:</label>
+  <input type="text" id="search-input" placeholder="Suche..." style="width: 100%; margin-bottom: 1rem; padding: 6px;">
+
+  <label>Serie:</label>
+  <select id="filter-serie" style="width: 100%; margin-bottom: 1rem;"></select>
+
+  <label>Alphabetisch sortieren:</label>
+  <label class="switch">
+    <input type="checkbox" id="sort-toggle" checked>
+    <span class="slider round"></span>
+  </label>
+
+  <div style="margin-top: 1.5rem;">
+    <label>Difficulty-Filter aktivieren:</label>
+    <label class="switch">
+      <input type="checkbox" id="difficulty-toggle" checked>
+      <span class="slider round"></span>
+    </label>
+  </div>
+
+  <label style="margin-top: 1rem; display: block;">Schwierigkeit wählen:</label>
+
+  <input type="range" id="difficulty-slider" min="1" max="4" step="1"
+         style="width: 100%; margin-top: 0.5rem; background: linear-gradient(to right, #27ae60, #f1c40f, #e67e22, #e74c3c);">
+  <img src="/media/colorscale.png" alt="Farbleiste Schwierigkeit" style="width: 100%; max-width: 300px; border-radius: 8px; aspect-ratio: 10 / 1; object-fit: fill;" />
+</div>
+
+
+<style>
+  .switch {
+    position: relative;
+    display: inline-block;
+    width: 50px;
+    height: 24px;
+  }
+  .switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+  .slider.round {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: 0.4s;
+    border-radius: 24px;
+  }
+  .slider.round:before {
+    position: absolute;
+    content: "";
+    height: 18px;
+    width: 18px;
+    left: 4px;
+    bottom: 3px;
+    background-color: white;
+    transition: 0.4s;
+    border-radius: 50%;
+  }
+  input:checked + .slider.round {
+    background-color: #2196F3;
+  }
+  input:checked + .slider.round:before {
+    transform: translateX(26px);
+  }
+  .filter-panel {
+  position: fixed;
+  top: 120px;
+  left: -50%;
+  width: 18%;
+  padding: 16px;
+  border-radius: 12px;
+  background: white;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  z-index: 999;
+  transition: left 0.4s ease;
+}
+
+.filter-panel.visible {
+  left: 0;
+}
+
+</style>
+
+<script>
+  document.getElementById("filter-toggle").addEventListener("click", () => {
+    const panel = document.getElementById("filter-panel");
+  panel.classList.toggle("visible");
+  });
+
+  function getTutorialData(card) {
+    return {
+      element: card,
+      title: card.dataset.title.toLowerCase(),
+      description: card.dataset.description.toLowerCase(),
+      program: card.dataset.program.toLowerCase(),
+      serie: card.dataset.series.toLowerCase(),
+      difficulty: card.dataset.difficulty.toLowerCase(),
+      keywords: card.dataset.keywords.toLowerCase(),
+      createdat: card.dataset.createdat // NEU für Datumssortierung
+    };
+  }
+
+  function updateFilterOptions() {
+    const serieSet = new Set();
+    document.querySelectorAll('.tutorial-card').forEach(card => {
+      if (card.dataset.series) serieSet.add(card.dataset.series);
+    });
+
+    const serieSelect = document.getElementById("filter-serie");
+    serieSelect.innerHTML = '<option value="">Alle Serien</option>';
+    [...serieSet].sort().forEach(serie => {
+      const opt = document.createElement('option');
+      opt.value = serie;
+      opt.innerText = serie;
+      serieSelect.appendChild(opt);
+    });
+  }
+
+  function filterTutorials() {
+    const keyword = document.getElementById("search-input").value.toLowerCase();
+    const serie = document.getElementById("filter-serie").value.toLowerCase();
+    const sortAlpha = document.getElementById("sort-toggle").checked;
+    const diffLevel = parseInt(document.getElementById("difficulty-slider").value);
+    const diffEnabled = document.getElementById("difficulty-toggle")?.checked;
+
+    const diffMap = { leicht: 1, mittel: 2, schwer: 3, expertenmodus: 4 };
+    const cards = [...document.querySelectorAll('.tutorial-card')];
+    const grid = document.querySelector('.tutorial-grid');
+
+    let visibleCards = [];
+
+ cards.forEach(card => {
+  const data = getTutorialData(card);
+  const cleanDifficulty = (data.difficulty || "").toLowerCase().trim();  // <-- NEU
+
+  const matchesKeyword = [data.title, data.description, data.program, data.serie, data.keywords].some(val => val.includes(keyword));
+  const matchesSerie = !serie || data.serie === serie;
+  const matchesDiff = !diffEnabled || diffMap[cleanDifficulty] === diffLevel;
+
+  const show = matchesKeyword && matchesSerie && matchesDiff;
+  card.style.display = show ? 'block' : 'none';
+
+  if (show) visibleCards.push({ card, data });
+});
+
+
+    // Sortieren
+    if (grid) {
+      if (sortAlpha) {
+        visibleCards.sort((a, b) => a.data.title.localeCompare(b.data.title));
+      } else {
+        visibleCards.sort((a, b) => new Date(b.data.createdat) - new Date(a.data.createdat));
+      }
+
+      visibleCards.forEach(({ card }) => grid.appendChild(card));
+    }
+
+    // Slider deaktivieren wenn Toggle off
+    const slider = document.getElementById("difficulty-slider");
+    if (slider) slider.disabled = !diffEnabled;
+  }
+
+  document.addEventListener("DOMContentLoaded", () => {
+    updateFilterOptions();
+
+    // Setzt standardmäßig den Difficulty-Filter auf OFF
+    const diffToggle = document.getElementById("difficulty-toggle");
+    if (diffToggle) diffToggle.checked = false;
+
+    const slider = document.getElementById("difficulty-slider");
+    if (slider) slider.disabled = true;
+
+    ["search-input", "filter-serie", "sort-toggle", "difficulty-slider", "difficulty-toggle"].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) {
+        el.addEventListener("input", filterTutorials);
+        el.addEventListener("change", filterTutorials);
+      }
+    });
+  });
+</script>
+
+
 
 <div id="fade-overlay"></div>
 {% endblock %}

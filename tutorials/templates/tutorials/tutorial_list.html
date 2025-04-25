@@ -460,11 +460,15 @@ input[type="range"].difficulty-slider:disabled {
   });
 </script>
 
+
+
+
+
 <!-- Filter Panel Trigger (Top Left Corner) -->
 <div id="filter-toggle" style="
   position: fixed;
-  top: 20px;
-  left: 20px;
+  top: 60px;
+  left: 0px;
   background-color: #156082;
   color: white;
   border-radius: 0 0 12px 0;
@@ -475,18 +479,7 @@ input[type="range"].difficulty-slider:disabled {
 </div>
 
 <!-- Filter Panel -->
-<div id="filter-panel" style="
-  position: fixed;
-  top: 60px;
-  left: 20px;
-  background: white;
-  width: 260px;
-  padding: 16px;
-  border-radius: 0 0 12px 12px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-  z-index: 999;
-  display: none;
-">
+<div id="filter-panel" class="filter-panel">
   <label>Suchbegriff:</label>
   <input type="text" id="search-input" placeholder="Suche..." style="width: 100%; margin-bottom: 1rem; padding: 6px;">
 
@@ -509,12 +502,11 @@ input[type="range"].difficulty-slider:disabled {
 
   <label style="margin-top: 1rem; display: block;">Schwierigkeit wählen:</label>
 
-
-
   <input type="range" id="difficulty-slider" min="1" max="4" step="1"
          style="width: 100%; margin-top: 0.5rem; background: linear-gradient(to right, #27ae60, #f1c40f, #e67e22, #e74c3c);">
   <img src="/media/colorscale.png" alt="Farbleiste Schwierigkeit" style="width: 100%; max-width: 300px; border-radius: 8px; aspect-ratio: 10 / 1; object-fit: fill;" />
 </div>
+
 
 <style>
   .switch {
@@ -556,12 +548,29 @@ input[type="range"].difficulty-slider:disabled {
   input:checked + .slider.round:before {
     transform: translateX(26px);
   }
+  .filter-panel {
+  position: fixed;
+  top: 120px;
+  left: -50%;
+  width: 260px;
+  padding: 16px;
+  border-radius: 12px;
+  background: white;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  z-index: 999;
+  transition: left 0.4s ease;
+}
+
+.filter-panel.visible {
+  left: 0;
+}
+
 </style>
 
 <script>
   document.getElementById("filter-toggle").addEventListener("click", () => {
     const panel = document.getElementById("filter-panel");
-    panel.style.display = panel.style.display === "block" ? "none" : "block";
+  panel.classList.toggle("visible");
   });
 
   function getTutorialData(card) {

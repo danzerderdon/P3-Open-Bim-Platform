@@ -365,7 +365,7 @@ input[type="file"]::file-selector-button:hover {
 }
 
 .tutorial-card.mittel {
-    border: 8px solid #f9f975 !important;
+    border: 8px solid #ede579 !important;
      padding: 30px; border-radius: 15px; margin: 20px auto; max-width: 500px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); text-align: center;/* gelb */
 }
 

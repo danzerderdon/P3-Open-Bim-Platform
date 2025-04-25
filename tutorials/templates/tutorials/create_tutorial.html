@@ -2,7 +2,9 @@
 {% block title %}Tutorial erstellen{% endblock %}
 
 {% block content %}
+<div class="section-container">
 <h2 style="text-align: center;">Neues Tutorial erstellen</h2>
+
 <div class="card-container">
 <form method="post" enctype="multipart/form-data" style="max-width: 600px; margin: auto;">
     {% csrf_token %}
@@ -66,5 +68,6 @@
         <button type="submit" class="button">Weiter zu den Schritten</button>
     </div>
 </form>
+</div>
 </div>
 {% endblock %}

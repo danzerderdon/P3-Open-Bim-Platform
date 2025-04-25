@@ -2,6 +2,7 @@
 {% block title %}Tutorial bearbeiten{% endblock %}
 
 {% block content %}
+<div class="section-container">
 <h2 style="text-align: center;">Tutorial bearbeiten</h2>
 <div class="card-container">
   <form method="post" enctype="multipart/form-data" style="max-width: 600px; margin: auto;">
@@ -77,7 +78,7 @@
     </div>
   </form>
 </div>
-
+</div>
 <script>
     // Fade beim Laden
     document.body.style.opacity = 0;
@@ -100,5 +101,6 @@
         });
     });
 </script>
+
 <div id="fade-overlay"></div>
 {% endblock %}

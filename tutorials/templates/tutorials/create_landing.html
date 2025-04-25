@@ -21,7 +21,8 @@
 
     {% for tutorial in tutorials %}
 
-    <div style="background-color: white; padding: 30px; border-radius: 15px; margin: 20px auto; max-width: 500px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); text-align: center;">
+    <div class="tutorial-card {{ tutorial.difficulty|default:'mittel' }}">
+
         <h2><strong>{{ tutorial.title }}</strong></h2>
         {% if tutorial.thumbnail %}
             <img src="{{ tutorial.thumbnail.url }}" alt="Vorschaubild"
@@ -83,7 +84,7 @@
 }
 
 .action-button.orange {
-    background-color: #f39c12;
+    background-color: #f0c954;
 }
 
 .action-button.orange:hover {
@@ -91,11 +92,11 @@
 }
 
 .action-button.red {
-    background-color: #e74c3c;
+    background-color: #f27b81;
 }
 
 .action-button.red:hover {
-    background-color: #ff6f61;
+    background-color: red;
 }
 
 .action-button.grey {
@@ -105,6 +106,22 @@
 .action-button.grey:hover {
     background-color: #95a5a6;
 }
+    .tutorial-card.leicht {
+    border: 3px solid #27ae60; /* grün */
+}
+
+.tutorial-card.mittel {
+    border: 3px solid #f1c40f; /* gelb */
+}
+
+.tutorial-card.schwer {
+    border: 3px solid #e74c3c; /* rot */
+}
+
+.tutorial-card.expert {
+    border: 3px solid #8e44ad; /* lila */
+}
+
 </style>
 
 <!-- JS für Übergang + Löschbestätigung -->

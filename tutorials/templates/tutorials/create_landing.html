@@ -13,12 +13,44 @@
         <p>Hier kannst du neue Tutorials anlegen.</p>
         <p>Im Bereich unten kannst du deine bereits erstellten Tutorials sehen, bearbeiten oder Löschen falls sie nicht mehr gebraucht werden.</p>
         <a href="{% url 'tutorial_creator' %}">
-            <button class="action-button orange" style="font-size: 20px;">+ Neues Tutorial erstellen</button>
+            <button class="action-button orange" style="font-size: 20px;">+ Neues Tutorial erstellen</button><br>
         </a>
-
-        </div>
+    </div>
 </div>
-    <h1 style="color: #156082;">Meine Tutorials:</h1>
+<div class="toggle-container">
+  <div class="toggle-header">
+    <h1 style="color: #156082; text-align: center;">Meine Tutorials bearbeiten:</h1>
+    <button class="toggle-button" id="toggle-help" style ="color: grey"title="Hilfe ein-/ausblenden">Help❔</button>
+  </div>
+
+  <div class="toggle-content" id="help-content">
+    <p>Mit diesen Knöpfen kannst du deine Tutorials, die du im unteren Bereich der Seite findest, bearbeiten.</p>
+
+    <div class="info-row">
+      <div class="icon-button blue"><img src="/media/edit_steps.png" alt="Schritte"></div>
+      <p><strong>Schritte:</strong> Öffnet die Schritt-für-Schritt-Anleitung dieses Tutorials.</p>
+    </div>
+    <div class="info-row">
+      <div class="icon-button blue"><img src="/media/edit_quiz.png" alt="Fragen"></div>
+      <p><strong>Fragen:</strong> Bearbeite Quizfragen zum Tutorial.</p>
+    </div>
+    <div class="info-row">
+      <div class="icon-button orange"><img src="/media/edit_atrib.png" alt="Attribute"></div>
+      <p><strong>Attribute:</strong> Ändere Titel, Beschreibung, Schwierigkeit oder Tags.</p>
+    </div>
+    <div class="info-row">
+      <div class="icon-button red"><img src="/media/delete.png" alt="Löschen"></div>
+      <p><strong>Löschen:</strong> Entfernt das gesamte Tutorial unwiderruflich.</p>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
 
 <div class="tutorial-wrapper">
   <div class="tutorial-grid">
@@ -36,33 +68,51 @@
      data-thumbnail="{% if tutorial.thumbnail %}{{ tutorial.thumbnail.url }}{% endif %}"
      data-screenshot="{% if tutorial.screenshot %}{{ tutorial.screenshot.url }}{% endif %}"
 >
-
+<div class="card-top">
         <h2><strong>{{ tutorial.title }}</strong></h2>
-        {% if tutorial.thumbnail %}
-          <img src="{{ tutorial.thumbnail.url }}" alt="Vorschaubild"
-               style="max-width: 100%; border-radius: 10px; margin-bottom: 15px;">
-        {% endif %}
 
+</div>
+{% if tutorial.thumbnail %}
+  <div class="thumbnail-container">
+    <img src="{{ tutorial.thumbnail.url }}" alt="Vorschaubild">
+  </div>
+{% endif %}
 
-        <p style="color: #555; font-size: 14px;">Erstellt am: {{ tutorial.created_at|date:"d.m.Y H:i" }}</p>
+<div class="info-container">
+        <p style="color: #555; font-size: 15px;">Erstellt am: {{ tutorial.created_at|date:"d.m.Y H:i" }}</p>
+          <p style="font-size: 15px; color: #666; margin-bottom: 4px;">
+  <strong>Programm:</strong> {{ tutorial.program|default:"-" }}
+</p>
+<p style="font-size: 15px; color: #666;">
+  <strong>Serie:</strong> {{ tutorial.series|default:"-" }}
+</p>
+</div>
 
         {% if request.user.groups.all.0.name == "BIM Expert" %}
 
-        <div style="margin-top: 20px;">
-          <a href="{% url 'edit_tutorial_sections' tutorial.id %}">
-              <button class="action-button blue">Schritte</button>
-          </a>
-          <a href="{% url 'edit_quiz' tutorial.id %}">
-              <button class="action-button blue">Fragen</button>
-          </a><br>
-          <a href="{% url 'edit_tutorial_attributes' tutorial.id %}">
-              <button class="action-button orange">Attribute bearbeiten</button>
-          </a>
-          <form class="delete-form" action="{% url 'delete_tutorial' tutorial.id %}" method="post" style="display: inline;">
-              {% csrf_token %}
-              <button type="submit" class="action-button red">Tutorial entfernen</button>
-          </form>
-        </div>
+
+
+<div class="icon-button-container">
+  <a href="{% url 'edit_tutorial_sections' tutorial.id %}" class="icon-button blue" title="Schritte bearbeiten">
+    <img src="/media/edit_steps.png" alt="Schritte bearbeiten">
+  </a>
+  <a href="{% url 'edit_quiz' tutorial.id %}" class="icon-button blue" title="Fragen bearbeiten">
+    <img src="/media/edit_quiz.png" alt="Fragen bearbeiten">
+  </a>
+  <a href="{% url 'edit_tutorial_attributes' tutorial.id %}" class="icon-button orange" title="Attribute bearbeiten">
+    <img src="/media/edit_atrib.png" alt="Attribute bearbeiten">
+  </a>
+  <form class="delete-form" action="{% url 'delete_tutorial' tutorial.id %}" method="post">
+    {% csrf_token %}
+    <button type="submit" class="icon-button red" title="Tutorial entfernen">
+      <img src="/media/delete.png" alt="Tutorial entfernen">
+    </button>
+  </form>
+</div>
+
+
+
+
         {% endif %}
       </div>
     {% empty %}
@@ -174,6 +224,265 @@
   box-sizing: border-box;
 }
 
+.icon-button-container {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 15px;
+  align-items: center;
+}
+
+.icon-button {
+  width: 33px;
+  height: 33px;
+  border-radius: 50%;
+  padding: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #e6e6e6;
+  transition: background-color 0.3s ease;
+  cursor: pointer;
+  border: none;
+}
+
+.icon-button img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+/* Farbliche Varianten */
+.icon-button.blue {
+  background-color: #0d5c75;
+}
+.icon-button.blue:hover {
+  background-color: #2b9bc4;
+}
+
+.icon-button.orange {
+  background-color: #f0c954;
+}
+.icon-button.orange:hover {
+  background-color: #f5b041;
+}
+
+.icon-button.red {
+  background-color: #f27b81;
+}
+.icon-button.red:hover {
+  background-color: red;
+}
+
+/* Entfernt Standard-Form-Button-Styling */
+form.delete-form {
+  margin: 0;
+  padding: 0;
+}
+form.delete-form button {
+  all: unset;
+}
+
+form.delete-form button {
+  all: unset; /* entfernt Standardbutton-Stile */
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f27b81;
+  cursor: pointer;
+  padding: 8px;
+  transition: background-color 0.3s ease;
+}
+
+form.delete-form button:hover {
+  background-color: red;
+}
+
+form.delete-form button img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+.button-info-section {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin: 2rem 0;
+  max-width: 800px;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+.button-info-section {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 2rem 0;
+  max-width: 800px;
+}
+
+.info-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.info-row p {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.4;
+  color: #333;
+}
+
+/* Icon bleibt wie gehabt */
+.icon-button {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  padding: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.icon-button img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+.icon-button.blue { background-color: #0d5c75; }
+.icon-button.orange { background-color: #f0c954; }
+.icon-button.red { background-color: #f27b81; }
+
+
+
+
+
+    .toggle-container {
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  max-width: 800px;
+  margin: 2rem auto;
+}
+
+.toggle-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.toggle-button {
+  background: none;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  color: #0d5c75;
+}
+
+.toggle-content {
+  margin-top: 20px;
+  display: none; /* Start versteckt */
+}
+
+/* deine bisherigen Styles (z. B. .info-row, .icon-button etc.) bleiben gleich */
+
+.toggle-content {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.5s ease;
+  margin-top: 0; /* wird animiert durch max-height */
+}
+
+.toggle-content.show {
+  max-height: 1000px; /* hoch genug für den kompletten Inhalt */
+}
+.toggle-content {
+  opacity: 0;
+  transition: max-height 0.5s ease, opacity 0.5s ease;
+}
+.toggle-content.show {
+  opacity: 1;
+}
+.toggle-container {
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  max-width: 600px; /* 👈 wie beim oberen Container */
+  margin: 2rem auto;
+}
+
+.icon-button {
+  width: 33px;
+  height: 33px;
+  padding: 5px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.tutorial-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+.icon-button-container {
+  margin-top: auto;
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+.card-top {
+  flex-grow: 1;
+}
+.info-container {
+  padding: 10px 0 0;
+  text-align: center;
+}
+
+.icon-button-container {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  padding-bottom: 10px;
+}
+
+.thumbnail-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 140px; /* gleiche Höhe für alle Bilderbereiche */
+  margin-bottom: 10px;
+}
+
+.thumbnail-container img {
+  max-height: 100%;
+  max-width: 100%;
+  object-fit: contain;
+  border-radius: 10px;
+}
+
+
+
+
+
 
 </style>
 
@@ -211,7 +520,19 @@
     });
 </script>
 
+<script>
+  document.getElementById("toggle-help").addEventListener("click", function () {
+    const content = document.getElementById("help-content");
+    content.style.display = content.style.display === "none" || content.style.display === "" ? "block" : "none";
+  });
+</script>
 
+<script>
+  document.getElementById("toggle-help").addEventListener("click", function () {
+    const content = document.getElementById("help-content");
+    content.classList.toggle("show");
+  });
+</script>
 
 
 
@@ -393,10 +714,12 @@ function filterTutorials() {
     const matchesProgramm = !programm || data.program === programm;
     const matchesDiff = !diffEnabled || diffMap[cleanDifficulty] === diffLevel;
 
-    const show = matchesKeyword && matchesSerie && matchesProgramm && matchesDiff;
-    card.style.display = show ? 'block' : 'none';
-
-    if (show) visibleCards.push({ card, data });
+    if (matchesKeyword && matchesSerie && matchesProgramm && matchesDiff) {
+      card.style.removeProperty("display");  // <- hier ist die Änderung
+      visibleCards.push({ card, data });
+    } else {
+      card.style.display = "none";
+    }
   });
 
   // Sortieren
@@ -433,6 +756,7 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 });
 </script>
+
 
 
 

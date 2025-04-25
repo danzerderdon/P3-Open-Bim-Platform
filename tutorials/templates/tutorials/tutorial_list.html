@@ -1,0 +1,131 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <style>
+    .tutorial-wrapper {
+      width: 57%;
+      margin: 2rem auto;
+
+    }
+
+    .tutorial-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2rem;
+    }
+
+    .tutorial-card {
+      background: white;
+      border: 1px solid #ddd;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      padding: 1.5rem;
+      text-align: center;
+      transition: transform 0.2s ease;
+    }
+
+    .tutorial-card:hover {
+      transform: translateY(-5px);
+    }
+
+    .tutorial-card img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 8px;
+      margin-bottom: 1rem;
+    }
+
+    .tutorial-card h2 {
+      font-size: 1.4rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .tutorial-card p {
+      margin-bottom: 0.5rem;
+    }
+
+    .tutorial-card a {
+      display: inline-block;
+      margin-top: 0.5rem;
+      color: #0066cc;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    .tutorial-card a:hover {
+      text-decoration: underline;
+    }
+
+    h1 {
+      text-align: center;
+      margin-top: 2rem;
+    }
+
+    .pagination {
+      text-align: center;
+      margin-top: 2rem;
+    }
+
+    .pagination a {
+      margin: 0 10px;
+      text-decoration: none;
+      color: #333;
+      font-weight: bold;
+    }
+
+    @media (max-width: 1100px) {
+      .tutorial-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 700px) {
+      .tutorial-wrapper {
+        width: 90%;
+      }
+
+      .tutorial-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+
+  <h1>Alle Tutorials</h1>
+
+  {% if tutorials %}
+    <div class="tutorial-wrapper">
+      <div class="tutorial-grid">
+        {% for tutorial in tutorials %}
+          <div class="tutorial-card">
+            {% if tutorial.thumbnail %}
+              <img src="{{ tutorial.thumbnail.url }}" alt="{{ tutorial.title }} Thumbnail">
+            {% endif %}
+            <h2>{{ tutorial.title }}</h2>
+            <p><strong>Programm:</strong> {{ tutorial.program }}</p>
+            <p><strong>Schwierigkeit:</strong> {{ tutorial.get_difficulty_display }}</p>
+            <p>{{ tutorial.description|truncatechars:150 }}</p>
+            <a href="#">Tutorial öffnen (kommt bald)</a>
+          </div>
+        {% endfor %}
+      </div>
+
+      {% if is_paginated %}
+        <div class="pagination">
+          {% if page_obj.has_previous %}
+            <a href="?page=1">« Erste</a>
+            <a href="?page={{ page_obj.previous_page_number }}">‹ Zurück</a>
+          {% endif %}
+
+          <span>Seite {{ page_obj.number }} von {{ page_obj.paginator.num_pages }}</span>
+
+          {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}">Weiter ›</a>
+            <a href="?page={{ page_obj.paginator.num_pages }}">Letzte »</a>
+          {% endif %}
+        </div>
+      {% endif %}
+    </div>
+  {% else %}
+    <p style="text-align: center;">Aktuell gibt es keine Tutorials.</p>
+  {% endif %}
+{% endblock %}

@@ -301,3 +301,14 @@ def edit_tutorial_quiz(request, tutorial_id):
         'formset': formset,
         'tutorial': tutorial
     })
+
+from django.views.generic import ListView
+from .models import Tutorial
+
+
+class TutorialListView(ListView):
+    model = Tutorial
+    template_name = 'tutorial_list.html'  # Template-Datei
+    context_object_name = 'tutorials'
+    ordering = ['-created_at']  # Neueste zuerst
+    paginate_by = 10  # Optional: Pagination

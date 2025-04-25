@@ -144,7 +144,7 @@ form button:hover {
     box-shadow: 0 15px 20px rgba(0,0,0,0.1); /* Sanfter Schatten */
     padding: 20px;                  /* Innenabstand */
     margin: 20px auto;              /* Abstand nach außen (oben/unten) und zentrieren */
-    max-width: 600px;               /* Optionale maximale Breite */
+    max-width: 50%;               /* Optionale maximale Breite */
 }
 
 

@@ -346,10 +346,11 @@ input[type="range"].difficulty-slider:disabled {
      data-thumbnail="{% if tutorial.thumbnail %}{{ tutorial.thumbnail.url }}{% endif %}"
      data-screenshot="{% if tutorial.screenshot %}{{ tutorial.screenshot.url }}{% endif %}"
 >
+  <h2>{{ tutorial.title }}</h2>
   {% if tutorial.thumbnail %}
     <img src="{{ tutorial.thumbnail.url }}" alt="{{ tutorial.title }} Thumbnail">
   {% endif %}
-  <h2>{{ tutorial.title }}</h2>
+
   <p><strong>Programm:</strong> {{ tutorial.program }}</p>
   <p><strong>Serie:</strong> {{ tutorial.series }}</p>
 

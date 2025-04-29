@@ -2,6 +2,9 @@
 {% block title %}Tutorial-Schritte bearbeiten{% endblock %}
 
 {% block content %}
+<!-- Quill CSS -->
+<link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+
 <div class="section-container">
   <div class="card-container">
   <h1 style="color: #156082;text-align: center;">Fragen für: {{ tutorial.title }}</h1>
@@ -366,4 +369,59 @@
     });
 </script>
 <div id="fade-overlay"></div>
+<!-- Quill JS -->
+<script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+
+<script>
+  function initQuillEditors() {
+    document.querySelectorAll('textarea').forEach(function(textarea) {
+      if (!textarea.classList.contains('quill-initialized')) {
+        const editorDiv = document.createElement('div');
+        editorDiv.classList.add('quill-editor');
+        editorDiv.style.height = '200px';
+        textarea.parentNode.insertBefore(editorDiv, textarea);
+        textarea.style.display = 'none';
+
+        const quill = new Quill(editorDiv, {
+          theme: 'snow',
+          placeholder: 'Fragetext hier eingeben...'
+        });
+
+        // Falls bereits Inhalt existiert
+        if (textarea.value) {
+          quill.root.innerHTML = textarea.value;
+        }
+
+        // Beim Abschicken in Textarea speichern
+        textarea.form.addEventListener('submit', function () {
+          textarea.value = quill.root.innerHTML;
+        });
+
+        textarea.classList.add('quill-initialized');
+      }
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', function () {
+    initQuillEditors();
+  });
+
+  // nach Hinzufügen neuer Frage
+  document.getElementById('add-step-btn').addEventListener('click', () => {
+    setTimeout(() => {
+      initQuillEditors();
+    }, 200);
+  });
+</script>
+
+<style>
+  .ql-editor {
+    min-height: 150px;
+    margin: 0;
+  }
+  .ql-editor p {
+    margin: 0 0 6px;
+  }
+</style>
+
 {% endblock %}

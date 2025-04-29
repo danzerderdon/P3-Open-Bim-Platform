@@ -2,6 +2,9 @@
 {% block title %}Tutorial bearbeiten{% endblock %}
 
 {% block content %}
+<!-- Quill Editor CSS -->
+<link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+
 <div class="section-container">
 <h1 style="color: #156082;text-align: center;">Tutorial "{{ tutorial.title }}" bearbeiten</h1>
 <div class="card-container">
@@ -101,6 +104,44 @@
         });
     });
 </script>
+
+<!-- Quill Editor JS -->
+<script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const textarea = document.querySelector('textarea[name="description"]');
+    if (textarea && !textarea.classList.contains('quill-initialized')) {
+      const wrapper = document.createElement('div');
+      wrapper.innerHTML = '<div class="quill-editor" style="height: 200px;"></div>';
+      textarea.style.display = 'none';
+      textarea.parentNode.insertBefore(wrapper, textarea);
+      wrapper.appendChild(textarea);
+
+      const quill = new Quill(wrapper.querySelector('.quill-editor'), {
+        theme: 'snow',
+        placeholder: 'Beschreibung eingeben...'
+      });
+
+      if (textarea.value) {
+        quill.root.innerHTML = textarea.value;
+      }
+
+      textarea.form.addEventListener('submit', function () {
+        textarea.value = quill.root.innerHTML;
+      });
+
+      textarea.classList.add('quill-initialized');
+    }
+  });
+</script>
+
+<style>
+  .ql-editor {
+    min-height: 150px;
+    margin: 0 0 5px;
+  }
+</style>
 
 <div id="fade-overlay"></div>
 {% endblock %}

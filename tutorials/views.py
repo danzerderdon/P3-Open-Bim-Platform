@@ -312,3 +312,18 @@ class TutorialListView(ListView):
     context_object_name = 'tutorials'
     ordering = ['-created_at']  # Neueste zuerst
     paginate_by = 10  # Optional: Pagination
+
+from django.views.generic.detail import DetailView
+from .models import Tutorial
+
+class TutorialDetailView(DetailView):
+    model = Tutorial
+    template_name = 'tutorials/tutorial_detail.html'
+    context_object_name = 'tutorial'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        tutorial = self.get_object()
+        # Aufteilen und trimmen der Keywords
+        context["keywords"] = [kw.strip() for kw in tutorial.keywords.split(",")] if tutorial.keywords else []
+        return context

@@ -1,0 +1,100 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<style>
+  .tutorial-detail-container {
+    max-width: 900px;
+    margin: 3rem auto;
+    padding: 2rem;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+    text-align: left;
+  }
+
+  .tutorial-detail-container h1 {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    color: #156082;
+  }
+
+  .tutorial-detail-container p {
+    font-size: 1rem;
+    line-height: 1.6;
+    margin-bottom: 0.8rem;
+  }
+
+  .keyword-badge {
+    display: inline-block;
+    background: #e0e0e0;
+    color: #333;
+    padding: 4px 8px;
+    border-radius: 8px;
+    font-size: 0.8rem;
+    margin: 3px;
+  }
+
+  .tutorial-media {
+    margin-top: 1.5rem;
+  }
+
+  .tutorial-media img {
+    max-width: 100%;
+    border-radius: 8px;
+    margin: 1rem 0;
+  }
+
+  .back-button {
+    display: inline-block;
+    margin-top: 2rem;
+    padding: 10px 20px;
+    background-color: #156082;
+    color: white;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: bold;
+  }
+
+  .back-button:hover {
+    background-color: #124e67;
+  }
+</style>
+
+<div class="tutorial-detail-container">
+  <h1>{{ object.title }}</h1>
+  <p><strong>Erstellt von:</strong> {{ object.created_by.username }} am {{ object.created_at|date:"d.m.Y H:i" }}</p>
+  <hr>
+    <p><strong>Programm:</strong> {{ object.program }}{% if object.program_versions %} ({{ object.program_versions }}){% endif %}</p>
+  <p><strong>Serie:</strong> {{ object.series }}</p>
+  <p><strong>Schwierigkeit:</strong> {{ object.get_difficulty_display }}</p>
+
+  <hr>
+
+  <p><strong>Beschreibung des Inhalts:</strong></p>
+  <div>{{ object.description|safe }}</div>
+<hr>
+  <div class="tutorial-media">
+    {% if object.thumbnail %}
+      <p><strong>Thumbnail des Tutorials:</strong></p>
+      <img src="{{ object.thumbnail.url }}" alt="Thumbnail">
+    {% endif %}
+
+    {% if object.screenshot %}
+      <p><strong>Dieses Diagramm beschreibt die Inhalte des Tutorials:</strong></p>
+      <img src="{{ object.screenshot.url }}" alt="Screenshot">
+    {% endif %}
+  </div>
+
+  {% if keywords %}
+    <p><strong>Schlagwörter:</strong></p>
+    <div>
+      {% for keyword in keywords %}
+        <span class="keyword-badge">{{ keyword }}</span>
+      {% endfor %}
+    </div>
+  {% endif %}
+
+  <a href="{% url 'tutorials' %}" class="back-button">← Zurück zur Übersicht</a>
+</div>
+{% endblock %}

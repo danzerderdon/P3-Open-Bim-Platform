@@ -4,7 +4,7 @@ from django.contrib.auth import views as auth_views
 from .views import tutorial_create_landing,create_tutorial, TutorialListView
 from django.conf import settings
 from django.conf.urls.static import static
-
+from .views import TutorialDetailView
 
 
 
@@ -27,6 +27,7 @@ urlpatterns = [
     path('tutorial/<int:tutorial_id>/delete/', views.delete_tutorial, name='delete_tutorial'),
     path('tutorial/<int:tutorial_id>/edit-attributes/', views.edit_tutorial_attributes, name='edit_tutorial_attributes'),
     path('tutorial/<int:tutorial_id>/quiz/', views.edit_tutorial_quiz, name='edit_quiz'),
+    path('tutorials/<int:pk>/', views.TutorialDetailView.as_view(), name='tutorial-detail'),
 
 
 

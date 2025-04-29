@@ -334,6 +334,7 @@ input[type="range"].difficulty-slider:disabled {
 
 
 <div class="tutorial-card {{ tutorial.difficulty|default:'mittel' }}"
+     data-id="{{ tutorial.id }}"
      data-title="{{ tutorial.title }}"
      data-description="{{ tutorial.description }}"
      data-program="{{ tutorial.program }}"
@@ -391,8 +392,8 @@ input[type="range"].difficulty-slider:disabled {
     <div class="detail-panel-header">Details zu diesem Tutorial</div>
 
   <div class="detail-content" id="detail-content">
-    <p style="text-align: left; font-style: italic; color: #999;">Tutorialdetails hier anzeigen…</p>
-  </div>
+
+
 </div>
 
 <script>
@@ -406,7 +407,7 @@ input[type="range"].difficulty-slider:disabled {
       card.addEventListener('click', () => {
         const isActive = card.classList.contains('active');
 
-        // Wenn schon aktiv → wieder ausblenden
+        // Ausblenden bei erneutem Klick
         if (isActive) {
           card.classList.remove('active');
           panel.classList.remove('visible');
@@ -415,15 +416,14 @@ input[type="range"].difficulty-slider:disabled {
         }
 
         // Vorherige Karte deaktivieren
-        if (selectedCard) {
-          selectedCard.classList.remove('active');
-        }
+        if (selectedCard) selectedCard.classList.remove('active');
 
         // Aktuelle Karte aktivieren
         card.classList.add('active');
         selectedCard = card;
 
         const {
+          id,
           title = '-',
           description = '-',
           program = '-',
@@ -444,14 +444,23 @@ input[type="range"].difficulty-slider:disabled {
         const content = `
           <h2>${title}</h2>
           <p><strong>Serie:</strong> ${series}</p>
+          <hr>
           <p><strong>Erstellt von:</strong> ${createdby} am ${createdat}</p>
+
           <p><strong>Programm:</strong> ${program} ${programVersions ? `(${programVersions})` : ''}</p>
           <p><strong>Schwierigkeit:</strong> ${difficulty}</p>
+          <hr>
           <p><strong>Beschreibung:</strong><br>${description.replace(/\n/g, "<br>")}</p>
+          <hr>
           ${thumbnail ? `<p><strong>Thumbnail:</strong></p><img src="${thumbnail}" alt="Thumbnail">` : ''}
-          ${screenshot ? `<p><strong>Screenshot:</strong></p><img src="${screenshot}" alt="Screenshot">` : ''}
+          ${screenshot ? `<p><strong>Prozessdiagramm:</strong></p><img src="${screenshot}" alt="Screenshot">` : ''}
           <p><strong>Schlagwörter:</strong></p>
           <div>${keywordBadges}</div>
+          <p style="text-align: center; margin-top: 1rem;">
+            <a href="/tutorials/${id}/" class="action-button blue">
+              🔎 Vollansicht öffnen
+            </a>
+          </p>
         `;
 
         detailContent.innerHTML = content;
@@ -460,6 +469,8 @@ input[type="range"].difficulty-slider:disabled {
     });
   });
 </script>
+
+
 
 
 

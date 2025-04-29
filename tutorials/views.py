@@ -326,4 +326,6 @@ class TutorialDetailView(DetailView):
         tutorial = self.get_object()
         # Aufteilen und trimmen der Keywords
         context["keywords"] = [kw.strip() for kw in tutorial.keywords.split(",")] if tutorial.keywords else []
+        context["step_count"] = tutorial.sections.count()
+        context["quiz_question_count"] = tutorial.quiz.count()
         return context

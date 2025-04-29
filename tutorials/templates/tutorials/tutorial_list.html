@@ -450,17 +450,18 @@ input[type="range"].difficulty-slider:disabled {
           <p><strong>Programm:</strong> ${program} ${programVersions ? `(${programVersions})` : ''}</p>
           <p><strong>Schwierigkeit:</strong> ${difficulty}</p>
           <hr>
-          <p><strong>Beschreibung:</strong><br>${description.replace(/\n/g, "<br>")}</p>
+          <p><strong>Beschreibung:</strong><br><br>${description.replace(/\n/g, "<br>")}</p><br>
           <hr>
           ${thumbnail ? `<p><strong>Thumbnail:</strong></p><img src="${thumbnail}" alt="Thumbnail">` : ''}
           ${screenshot ? `<p><strong>Prozessdiagramm:</strong></p><img src="${screenshot}" alt="Screenshot">` : ''}
           <p><strong>Schlagwörter:</strong></p>
-          <div>${keywordBadges}</div>
+          <div>${keywordBadges}</div><br>
           <p style="text-align: center; margin-top: 1rem;">
-            <a href="/tutorials/${id}/" class="action-button blue">
-              🔎 Vollansicht öffnen
-            </a>
-          </p>
+  <a href="/tutorials/${id}/" style="text-decoration: none; background-color: #156082; color: white; padding: 10px 20px; border-radius: 8px; font-weight: bold;">
+    🔎 Vollansicht öffnen
+  </a>
+</p>
+
         `;
 
         detailContent.innerHTML = content;

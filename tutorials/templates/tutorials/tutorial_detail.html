@@ -68,11 +68,13 @@
     <p><strong>Programm:</strong> {{ object.program }}{% if object.program_versions %} ({{ object.program_versions }}){% endif %}</p>
   <p><strong>Serie:</strong> {{ object.series }}</p>
   <p><strong>Schwierigkeit:</strong> {{ object.get_difficulty_display }}</p>
+    <p><strong>Anzahl der Schritte des Tutorials:</strong> {{ step_count }}</p>
+<p><strong>Zu bearbeitende Quizfragen:</strong> {{ quiz_question_count }}</p>
 
   <hr>
 
-  <p><strong>Beschreibung des Inhalts:</strong></p>
-  <div>{{ object.description|safe }}</div>
+  <p><strong>Beschreibung des Inhalts:</strong></p><br>
+  <div>{{ object.description|safe }}</div><br>
 <hr>
   <div class="tutorial-media">
     {% if object.thumbnail %}
@@ -94,6 +96,11 @@
       {% endfor %}
     </div>
   {% endif %}
+
+
+
+
+
 
   <a href="{% url 'tutorials' %}" class="back-button">← Zurück zur Übersicht</a>
 </div>

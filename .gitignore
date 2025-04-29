@@ -1,0 +1,20 @@
+# Virtuelle Umgebungen
+venv/
+
+# Bytecode-Dateien
+__pycache__/
+*.py[cod]
+
+# Datenbanken
+*.sqlite3
+
+# IDE-Dateien
+.idea/
+.vscode/
+
+# Systemdateien
+.DS_Store
+Thumbs.db
+
+# Medien (optional, falls du nicht willst, dass sie getrackt werden)
+/media/

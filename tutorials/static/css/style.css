@@ -355,7 +355,7 @@ input[type="file"]::file-selector-button:hover {
     box-shadow: 0 15px 20px rgba(0,0,0,0.1); /* Sanfter Schatten */
     padding: 20px;                  /* Innenabstand */
     margin: 20px auto;              /* Abstand nach außen (oben/unten) und zentrieren */
-    max-width: 50%;               /* Optionale maximale Breite */
+    max-width: 55%;               /* Optionale maximale Breite */
     text-align: left;
 }
 
@@ -379,3 +379,9 @@ input[type="file"]::file-selector-button:hover {
      padding: 30px; border-radius: 15px; margin: 10px auto; max-width: 500px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); text-align: center;/* lila */
 }
 
+.card-container {
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.25);
+}
+.toggle-container {
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.25);
+}

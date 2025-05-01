@@ -6,70 +6,73 @@
 <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
 
 <div class="section-container">
+  <div class="card" style="text-align: left; padding: 20px; background: white; margin-bottom: 20px; border-radius: 12px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
   <h1 style="color: #156082;text-align: center;">Neues Tutorial erstellen</h1>
+    </div>
 
-  <div class="card-container">
+  <div class="card" style="text-align: left; padding: 20px; background: white; margin-bottom: 20px; border-radius: 12px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
     <form method="post" enctype="multipart/form-data" style="max-width: 600px; margin: auto;">
       {% csrf_token %}
 
       <div style="margin-bottom: 20px;">
-        <label><strong>Titel:</strong></label><br>
+        <h3><strong>Titel:</strong></h3>
         {{ form.title }}
-      </div>
+      </div><br><hr>
 
       <div style="margin-bottom: 20px;">
-        <label><strong>Beschreibung:</strong></label><br>
+        <h3><strong>Beschreibung:</strong></h3>
         <!-- Quill Editor -->
         <textarea name="description" id="description-field" hidden>{{ form.description.value|safe }}</textarea>
         <div id="quill-container" style="height: 200px;"></div>
-      </div>
+      </div><br><hr>
 
       <div style="margin-bottom: 20px;">
-        <label><strong>Schwierigkeitsgrad:</strong></label><br>
+        <h3><strong>Schwierigkeitsgrad:</strong></h3>
         {{ form.difficulty }}
-      </div>
+      </div><br><hr>
 
       <div style="margin-bottom: 20px;">
-        <label><strong>Programm:</strong></label><br>
+        <h3><strong>Programm:</strong></h3>
         {{ form.program }}
-      </div>
+      </div><br><hr>
 
       <div style="margin-bottom: 20px;">
-        <label for="{{ form.program_versions.id_for_label }}"><strong>Programmversion(en):</strong></label><br>
+        <h3 for="{{ form.program_versions.id_for_label }}"><strong>Programmversion(en):</strong></h3>
         {{ form.program_versions }}<br>
-        <small style="color: #555;">z. B. 2021, 2022, 2023</small>
-      </div>
+
+      </div><br><hr>
 
       <div style="margin-bottom: 20px;">
-        <label><strong>Keywords:</strong></label><br>
+        <h3><strong>Keywords:</strong></h3>
         {{ form.keywords }}
-        <small>Kommagetrennt, z.B. IFC, Modellierung, BIM</small>
-      </div><br>
+
+      </div><br><hr>
 
       <div style="margin-bottom: 20px;">
-        <label><strong>Vorschaubild:</strong></label><br><br>
+        <h3><strong>Vorschaubild:</strong></h3>
         {{ form.thumbnail }}<br>
         <div id="thumbnail-preview" style="margin-top: 10px;"></div>
-      </div><br>
+      </div><br><hr>
 
       <div style="margin-bottom: 20px;">
-        <label><strong>Screenshot (Prozessdiagramm):</strong></label><br><br>
+        <h3><strong>Screenshot (Prozessdiagramm):</strong></h3>
         {{ form.screenshot }}
         <div id="screenshot-preview" style="margin-top: 10px;"></div>
-      </div><br>
+      </div><br><hr>
 
       <div style="margin-bottom: 20px;">
-        <label><strong>Dateien anhängen:</strong></label><br>
-        <small>z.B. PDFs, Arbeitsmaterial, IFC-Dateien etc.</small><br><br>
+        <h3><strong>Dateien anhängen:</strong></h3>
+        <p>z.B. PDFs, Arbeitsmaterial, IFC-Dateien etc.</p>
+        <p>Für mehrere dateien Zip-File Hochladen</p>
         {{ form.attachments }}
         <div id="attachments-list" style="margin-top: 10px;"></div>
-      </div><br>
+      </div><br><hr>
 
       <div style="margin-bottom: 30px;">
-        <label><strong>Tutorial-Serie:</strong></label><br>
-        <small>z.B. "Solibri Basics" (optional)</small><br>
+        <h3><strong>Tutorial-Serie:</strong></h3>
+        <p>z.B. "Solibri Basics" (optional)</p>
         {{ form.series }}
-      </div>
+      </div><br><hr>
 
       <div style="text-align: center;">
         <button type="submit" class="button">Weiter zu den Schritten</button>

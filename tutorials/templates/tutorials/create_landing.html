@@ -6,20 +6,23 @@
 {% block content %}
 
 <!-- Hauptinhalt mit Überlappung -->
-<div class="card-container" style="max-width: 60%,">
+<div class="home-container"  style="box-shadow: 0 12px 40px rgba(0,0,0,0.35);">
+<h1 style="color: #156082; text-align: center;">Create: – Erstellen und Teilen eigener Tutorials</h1><br><hr><br>
+
+
 
     <div style="text-align: center; padding: 10;">
-        <h2 style="color: #156082;">Tutorials erstellen</h2>
-        <p>Hier kannst du neue Tutorials anlegen.</p>
-        <p>Im Bereich unten kannst du deine bereits erstellten Tutorials sehen, bearbeiten oder Löschen falls sie nicht mehr gebraucht werden.</p>
+
+        <p>Hier kannst du <strong>neue Tutorials</strong> anlegen.</p>
+        <p>Im Bereich unten kannst du deine bereits erstellten Tutorials <strong>sehen, bearbeiten oder Löschen</strong> falls sie nicht mehr gebraucht werden.</p>
         <a href="{% url 'tutorial_creator' %}">
             <button class="action-button orange" style="font-size: 20px;">+ Neues Tutorial erstellen</button><br>
-        </a>
-    </div>
+        </a><br><hr>
+
 </div>
-<div class="toggle-container">
+<div class="toggle-container" >
   <div class="toggle-header">
-    <h2 style="color: #156082; text-align: center;">Meine Tutorials bearbeiten:</h2>
+    <h3 style="color: #156082; text-align: center;">Meine Tutorials bearbeiten:</h3>
     <button class="toggle-button" id="toggle-help" style ="color: grey"title="Hilfe ein-/ausblenden">Help❔</button>
   </div>
 
@@ -44,7 +47,7 @@
     </div>
   </div>
 </div>
-
+ </div>
 
 
 
@@ -315,16 +318,6 @@ form.delete-form button img {
 }
 
 
-
-
-
-
-
-
-
-
-
-
 .button-info-section {
   display: flex;
   flex-direction: column;
@@ -480,7 +473,13 @@ form.delete-form button img {
 }
 
 
+.toggle-container {
+  box-shadow: none !important;
+  padding-left: 30px !important;
+  padding-right: 30px !important;
+  max-width: 90% !important;
 
+}
 
 
 
@@ -512,7 +511,7 @@ form.delete-form button img {
     // 🔴 Bestätigung beim Löschen
     document.querySelectorAll("form.delete-form").forEach(form => {
         form.addEventListener("submit", function (e) {
-            const confirmed = confirm("❗ Willst du dieses Tutorial wirklich löschen?");
+            const confirmed = confirm("🔴 Willst du dieses Tutorial wirklich löschen? 🔴" );
             if (!confirmed) {
                 e.preventDefault();
             }
@@ -758,9 +757,6 @@ document.addEventListener("DOMContentLoaded", () => {
 </script>
 
 
-
-
-
 <style>
 .tutorial-card {
   margin: 0.25rem 0;
@@ -778,6 +774,21 @@ document.addEventListener("DOMContentLoaded", () => {
 
 .tutorial-grid {
   gap: 0.8rem;
+}
+
+.toggle-container {
+  padding: 0px;
+  margin: 0px;
+  border-radius: 0px;
+  box-shadow: none;
+  width: 100%;
+  max-width: none;
+}
+
+.tutorial-card {
+width: 100%;
+
+
 }
 </style>
 

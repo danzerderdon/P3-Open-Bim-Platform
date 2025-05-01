@@ -126,10 +126,6 @@
         </form>
         {% endif %}
 
-        <form action="{% url 'files' %}" method="get">
-            <button type="submit" class="{% if active_page == 'files' %}active{% endif %}">Files</button>
-        </form>
-
         <form action="{% url 'community' %}" method="get">
             <button type="submit" class="{% if active_page == 'community' %}active{% endif %}">Community</button>
         </form>

@@ -6,74 +6,77 @@
 <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
 
 <div class="section-container">
+  <div class="card" style="text-align: left; padding: 20px; background: white; margin-bottom: 20px; border-radius: 12px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
   <h1 style="color: #156082;text-align: center;">Tutorial "{{ tutorial.title }}" bearbeiten</h1>
-  <div class="card-container">
-    <form method="post" enctype="multipart/form-data" style="max-width: 600px; margin: auto;">
+  </div>
+  <div class="card" style="text-align: left; padding: 20px; background: white; margin-bottom: 20px; border-radius: 12px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
+    <form method="post" enctype="multipart/form-data" style="width: 100%; margin: auto;">
       {% csrf_token %}
 
       <div style="margin-bottom: 20px;">
-        <label><strong>Titel:</strong></label><br>
+        <h3><strong>Titel:</strong></h3>
         {{ form.title }}
-      </div>
+      </div><br><hr>
 
       <div style="margin-bottom: 20px;">
-        <label><strong>Beschreibung:</strong></label><br>
+        <h3><strong>Beschreibung:</strong></h3>
         {{ form.description }}
-      </div>
+      </div><br><hr>
 
       <div style="margin-bottom: 20px;">
-        <label><strong>Schwierigkeitsgrad:</strong></label><br>
+        <h3><strong>Schwierigkeitsgrad:</strong></h3>
         {{ form.difficulty }}
-      </div>
+      </div><br><hr>
 
       <div style="margin-bottom: 20px;">
-        <label><strong>Programm:</strong></label><br>
+        <h3><strong>Programm:</strong></h3>
         {{ form.program }}
-      </div>
+      </div><br><hr>
 
       <div style="margin-bottom: 20px;">
-        <label for="{{ form.program_versions.id_for_label }}"><strong>Programmversion(en):</strong></label><br>
+        <h3 for="{{ form.program_versions.id_for_label }}"><strong>Programmversion(en):</strong></h3>
         {{ form.program_versions }}<br>
         <small style="color: #555;">z. B. 2021, 2022, 2023</small>
-      </div>
+      </div><br><hr>
 
       <div style="margin-bottom: 20px;">
-        <label><strong>Keywords:</strong></label><br>
+        <h3><strong>Keywords:</strong></h3>
         {{ form.keywords }}
         <small style="color: #555;">Kommagetrennt, z.B. IFC, Modellierung, BIM</small>
-      </div>
+      </div><br><hr>
 
       <div style="margin-bottom: 20px;">
-        <label><strong>Vorschaubild:</strong></label><br><br>
+        <h3><strong>Vorschaubild:</strong></h3><br>
         {{ form.thumbnail }}<br>
         <div id="thumbnail-preview" style="margin-top: 10px;">
           {% if tutorial.thumbnail %}
             <img src="{{ tutorial.thumbnail.url }}" style="max-width: 100%; border-radius: 8px;">
           {% endif %}
-        </div>
-      </div><br>
+        </div><br><hr>
+      </div>
 
       <div style="margin-bottom: 20px;">
-        <label><strong>Screenshot (Prozessdiagramm):</strong></label><br><br>
+        <h3><strong>Screenshot (Prozessdiagramm):</strong></h3><br>
         {{ form.screenshot }}<br>
         <div id="screenshot-preview" style="margin-top: 10px;">
           {% if tutorial.screenshot %}
             <img src="{{ tutorial.screenshot.url }}" style="max-width: 100%; border-radius: 8px;">
           {% endif %}
         </div>
-      </div>
+      </div><br><hr>
 
       <div style="margin-bottom: 20px;">
-        <label><strong>Dateien anhängen:</strong></label><br><br>
+        <h3><strong>Dateien anhängen:</strong></h3><br>
         {{ form.attachments }}<br>
-        <small style="color: #555;">z. B. PDFs, Arbeitsmaterial, IFC-Dateien etc.</small>
+        <p>z.B. PDFs, Arbeitsmaterial, IFC-Dateien etc.</p>
+        <p>Für mehrere dateien Zip-File Hochladen</p>
         <div id="attachments-list" style="margin-top: 10px;"></div>
-      </div>
+      </div><br><hr>
 
       <div style="margin-bottom: 30px;">
-        <label><strong>Tutorial-Serie:</strong></label><br>
+        <h3><strong>Tutorial-Serie:</strong></h3>
         {{ form.series }}
-        <small style="color: #555;">z. B. "Solibri Basics" (optional)</small>
+        <p>z.B. "Solibri Basics" (optional)</p>
       </div>
 
       <div style="text-align: center;">

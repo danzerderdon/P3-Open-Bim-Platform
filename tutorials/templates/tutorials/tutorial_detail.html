@@ -59,13 +59,57 @@
   .back-button:hover {
     background-color: #124e67;
   }
+
+  .button-row {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.back-button {
+  flex: 1; /* verteilt gleichmäßig */
+  text-align: center;
+  padding: 12px 20px;
+  border-radius: 8px;
+  color: white;
+  font-weight: bold;
+  text-decoration: none;
+  transition: background-color 0.3s ease;
+}
+
+.back-button.red {
+  background-color: #e74c3c;
+}
+.back-button.red:hover {
+  background-color: #c0392b;
+}
+
+.back-button.yellow {
+  background-color: #f1c40f;
+  color: #333;
+}
+.back-button.yellow:hover {
+  background-color: #d4ac0d;
+}
+
+.back-button.green {
+  background-color: #27ae60;
+}
+.back-button.green:hover {
+  background-color: #1e8449;
+}
+
 </style>
 
 
 
 
 <div class="tutorial-detail-container" style="box-shadow: none; border: 8px solid #97c7e6;">
-  <h1>{{ object.title }}</h1>
+  <h1>{{ object.title }}</h1><br>
+  {% if object.thumbnail %}
+
+      <img src="{{ object.thumbnail.url }}" alt="Thumbnail" style="width: 80%; display: block; margin: 0 auto;"><br>
+    {% endif %}
   <p><strong>Erstellt von:</strong> {{ object.created_by.username }} am {{ object.created_at|date:"d.m.Y H:i" }}</p>
   <hr>
     <p><strong>Programm:</strong> {{ object.program }}{% if object.program_versions %} ({{ object.program_versions }}){% endif %}</p>
@@ -80,19 +124,17 @@
   <div>{{ object.description|safe }}</div><br>
 <hr>
   <div class="tutorial-media">
-    {% if object.thumbnail %}
-      <p><strong>Thumbnail des Tutorials:</strong></p><br>
-      <img src="{{ object.thumbnail.url }}" alt="Thumbnail" style="width: 80%; display: block; margin: 0 auto;">
-    {% endif %}
+
 
     {% if object.screenshot %}
-      <br><p><strong>Dieses Diagramm beschreibt die Inhalte des Tutorials:</strong></p><br>
+      <p><strong>Dieses Diagramm beschreibt die Inhalte des Tutorials:</strong></p><br>
       <img src="{{ object.screenshot.url }}" alt="Screenshot" style="width: 80%; display: block; margin: 0 auto;">
 
     {% endif %}
   </div>
 
   {% if keywords %}
+  <br><hr>
     <p><strong>Schlagwörter:</strong></p>
     <div>
       {% for keyword in keywords %}
@@ -100,12 +142,17 @@
       {% endfor %}
     </div>
   {% endif %}
+<br><hr><br>
 
 
 
 
 
+<div class="button-row">
+  <a href="{% url 'tutorials' %}" class="back-button red">← Zurück zur Übersicht</a>
+  <a href="{% url 'tutorials' %}" class="back-button yellow">🗒️ als Tabelle zeigen</a>
+  <a href="{% url 'tutorials' %}" class="back-button green">👟 Step by Step bearbeiten</a>
+</div>
 
-  <a href="{% url 'tutorials' %}" class="back-button">← Zurück zur Übersicht</a>
 </div>
 {% endblock %}

@@ -27,7 +27,7 @@
         <div style="width: 90%; margin: auto; margin-top: 15px;">
 
           <div style="width: 90%; margin: auto; text-align: center;">
-            {{ form.image.label_tag }}<br>
+
             {{ form.image }}
 
           {% if form.instance.image %}
@@ -562,6 +562,13 @@ document.addEventListener('click', function (e) {
     margin: 10px auto;
     border-radius: 10px;
   }
-</style>
+    /* Versteckt das "Clear"-Checkbox-Feld + Label für Bildfelder */
+input[type="checkbox"][name$="-image-clear"],
+input[type="checkbox"][name$="-image-clear"] + label {
+  display: none !important;
+}
 
+
+
+</style>
 {% endblock %}

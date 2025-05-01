@@ -6,7 +6,7 @@
 {% block content %}
 
 <!-- Hauptinhalt mit Überlappung -->
-<div class="home-container"  style="box-shadow: 0 12px 40px rgba(0,0,0,0.35);">
+<div class="home-container"  style="box-shadow: none; border: 8px solid #97c7e6;">
 <h1 style="color: #156082; text-align: center;">Create: – Erstellen und Teilen eigener Tutorials</h1><br><hr><br>
 
 
@@ -72,9 +72,10 @@
      data-screenshot="{% if tutorial.screenshot %}{{ tutorial.screenshot.url }}{% endif %}"
 >
 <div class="card-top">
-        <h2><strong>{{ tutorial.title }}</strong></h2>
+        <h2><strong>{{ tutorial.title }}</strong></h2><br>
 
 </div>
+
 {% if tutorial.thumbnail %}
   <div class="thumbnail-container">
     <img src="{{ tutorial.thumbnail.url }}" alt="Vorschaubild">
@@ -96,6 +97,7 @@
 
 
 <div class="icon-button-container">
+
   <a href="{% url 'edit_tutorial_sections' tutorial.id %}" class="icon-button blue" title="Schritte bearbeiten">
     <img src="/media/edit_steps.png" alt="Schritte bearbeiten">
   </a>
@@ -553,23 +555,23 @@ form.delete-form button img {
 
 <!-- Filter Panel -->
 <div id="filter-panel" class="filter-panel">
-  <label>Suchbegriff:</label>
-  <input type="text" id="search-input" placeholder="Suche..." style="width: 100%; margin-bottom: 1rem; padding: 6px;">
+
+  <input type="text" id="search-input" placeholder="Suche..." style="width: 91.5%; margin-bottom: 1rem; padding: 6px;">
 
   <label>Serie:</label>
-  <select id="filter-serie" style="width: 100%; margin-bottom: 1rem;"></select>
+  <select id="filter-serie" style="width: 95%; margin-bottom: 1rem;"></select>
 
   <label>Programm:</label> <!-- NEU -->
-  <select id="filter-programm" style="width: 100%; margin-bottom: 1rem;"></select>
+  <select id="filter-programm" style="width: 95%; margin-bottom: 1rem;"></select><br><hr>
 
-  <label>Alphabetisch sortieren:</label>
+  <p>Alphabetisch sortieren:</p>
   <label class="switch">
     <input type="checkbox" id="sort-toggle" checked>
     <span class="slider round"></span>
   </label>
 
   <div style="margin-top: 1.5rem;">
-    <label>Difficulty-Filter aktivieren:</label>
+    <p>Difficulty-Filter aktivieren:</p>
     <label class="switch">
       <input type="checkbox" id="difficulty-toggle" checked>
       <span class="slider round"></span>
@@ -579,8 +581,8 @@ form.delete-form button img {
   <label style="margin-top: 1rem; display: block;">Schwierigkeit wählen:</label>
 
   <input type="range" id="difficulty-slider" min="1" max="4" step="1"
-         style="width: 100%; margin-top: 0.5rem; background: linear-gradient(to right, #27ae60, #f1c40f, #e67e22, #e74c3c);">
-  <img src="/media/colorscale.png" alt="Farbleiste Schwierigkeit" style="width: 100%; max-width: 300px; border-radius: 8px; aspect-ratio: 10 / 1; object-fit: fill;" />
+         style="width: 95%; margin-top: 0.5rem; background: linear-gradient(to right, #27ae60, #f1c40f, #e67e22, #e74c3c);">
+  <img src="/media/colorscale.png" alt="Farbleiste Schwierigkeit" style="width: 95%;  border-radius: 8px; aspect-ratio: 10 / 1; object-fit: fill;" />
 </div>
 
 
@@ -790,9 +792,45 @@ width: 100%;
 }
 
 
-.filter-panel {
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.35);
+
+.tutorial-grid {
+  gap: 2.5rem;
 }
+  .filter-panel {
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.35);
+  width: 13%;
+  text-align: center; !important
+
+}
+
+.tutorial-wrapper {
+  width: 65%;              /* oder z.B. 80%, je nach gewünschter Breite */
+  max-width: 1200px;       /* optional, um die Karten nicht zu breit werden zu lassen */
+  margin: 2rem auto;       /* zentriert horizontal */
+}
+
+/* Hover mit kräftigem Glow */
+.tutorial-card:hover {
+  transform: translateY(-12px) scale(1.02);
+  transition: transform 0.3s ease-out, box-shadow 0.3s ease-out;
+}
+
+.tutorial-card.leicht:hover {
+  box-shadow: 0 0 25px rgba(0, 0, 0, 0.4);
+}
+
+.tutorial-card.mittel:hover {
+  box-shadow: 0 0 25px rgba(0, 0, 0, 0.4);
+}
+
+.tutorial-card.schwer:hover {
+  box-shadow: 0 0 25px rgba(0, 0, 0, 0.4);
+}
+
+.tutorial-card.expert:hover {
+  box-shadow: 0 0 25px rgba(0, 0, 0, 0.4);
+}
+
 
 </style>
 

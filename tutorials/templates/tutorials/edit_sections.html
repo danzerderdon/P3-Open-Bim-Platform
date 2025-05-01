@@ -8,7 +8,7 @@
 <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
 
 <div class="section-container">
-  <div class="card" style="text-align: left; padding: 20px; background: white; margin-bottom: 20px; border-radius: 12px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
+  <div class="card" style="border: 8px solid #97c7e6; text-align: left; padding: 20px; background: white; margin-bottom: 20px; border-radius: 12px; box-shadow: none;">
     <h1 style="color: #156082;text-align: center;">Schritte für: {{ tutorial.title }}</h1>
   </div>
 
@@ -21,20 +21,20 @@
         {% if not form.instance.pk and forloop.last and not form.has_changed %}
         {% else %}
         <div class="card" style="padding: 20px; background: white; margin-bottom: 20px; border-radius: 12px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
-          <h4>Schritt {{ forloop.counter }}</h4>
+          <h2>Schritt {{ forloop.counter }}</h2>
 
-          <div style="width: 90%; margin: auto;">{{ form.title.label_tag }}<br>{{ form.title }}{{ form.id }}</div>
+          <div style="width: 90%; margin: auto;">{{ form.title.label_tag }}<br>{{ form.title }}{{ form.id }}</div><br>
 
           <!-- Content Field -->
           <div style="width: 90%; margin: auto;">
             {{ form.content.label_tag }}
 
             {{ form.content }}
-          </div>
+          </div><br><hr><br>
 
           <div style="width: 90%; margin: auto; text-align: center;">
             {{ form.image.label_tag }}<br>
-            {{ form.image }}
+            {{ form.image }}<br>
             {% if form.instance.image %}
               <div>
                 <img src="{{ form.instance.image.url }}" class="image-preview" style="width: 50%; margin: 10px auto; display: block; border-radius: 10px;">
@@ -79,10 +79,11 @@
 
   <template id="empty-form-template">
     <div class="card new-step" style="padding: 20px; background: white; margin-bottom: 20px; border-radius: 12px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
-      <h4>Schritt</h4>
+      <h2>Schritt</h2>
       <div style="width: 90%; margin: auto;"><label for="id_form-__prefix__-title">Title:</label><br><input type="text" name="form-__prefix__-title" id="id_form-__prefix__-title" placeholder="Text..."><input type="hidden" name="form-__prefix__-id" id="id_form-__prefix__-id"></div>
+      <br>
       <div style="width: 90%; margin: auto;"><label for="id_form-__prefix__-content">Content:</label><br><textarea name="form-__prefix__-content" id="id_form-__prefix__-content" placeholder="Text..."></textarea></div>
-
+<br><hr><br>
 
       <div style="width: 90%; margin: auto; text-align: center;">
         <label for="id_form-__prefix__-image">Image:</label><br>

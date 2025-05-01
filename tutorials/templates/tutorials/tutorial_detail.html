@@ -64,7 +64,7 @@
 
 
 
-<div class="tutorial-detail-container">
+<div class="tutorial-detail-container" style="box-shadow: none; border: 8px solid #97c7e6;">
   <h1>{{ object.title }}</h1>
   <p><strong>Erstellt von:</strong> {{ object.created_by.username }} am {{ object.created_at|date:"d.m.Y H:i" }}</p>
   <hr>
@@ -81,13 +81,14 @@
 <hr>
   <div class="tutorial-media">
     {% if object.thumbnail %}
-      <p><strong>Thumbnail des Tutorials:</strong></p>
-      <img src="{{ object.thumbnail.url }}" alt="Thumbnail">
+      <p><strong>Thumbnail des Tutorials:</strong></p><br>
+      <img src="{{ object.thumbnail.url }}" alt="Thumbnail" style="width: 80%; display: block; margin: 0 auto;">
     {% endif %}
 
     {% if object.screenshot %}
-      <p><strong>Dieses Diagramm beschreibt die Inhalte des Tutorials:</strong></p>
-      <img src="{{ object.screenshot.url }}" alt="Screenshot">
+      <br><p><strong>Dieses Diagramm beschreibt die Inhalte des Tutorials:</strong></p><br>
+      <img src="{{ object.screenshot.url }}" alt="Screenshot" style="width: 80%; display: block; margin: 0 auto;">
+
     {% endif %}
   </div>
 

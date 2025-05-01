@@ -16,5 +16,3 @@ __pycache__/
 .DS_Store
 Thumbs.db
 
-# Medien (optional, falls du nicht willst, dass sie getrackt werden)
-/media/

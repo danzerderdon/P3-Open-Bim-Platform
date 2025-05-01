@@ -10,7 +10,7 @@
     <h1 style="color: #156082;">Willkommen auf der Open BIM-Education Plattform 🏢</h1>
 <div class="home-container" >
     {% if user.is_authenticated %}
-        <p style="text-align: center;">Wilkommen zurück auf der Open BIM-Education Plattform,</p>
+        <p style="text-align: center;">Wilkommen zurück auf der <strong>Open BIM-Education Plattform</strong>,</p>
     <h2 style="text-align: center;"><strong style="color: orange;">{{ request.user.username }}</strong></h2>
 
 
@@ -35,53 +35,58 @@
         <!-- Register Button -->
         <form action="{% url 'register' %}" method="get" style="display:inline; margin-left: 10px;">
             <button type="submit">Registrieren</button>
-        </form>
+        </form><br><br>
 
 
     {% endif %}
 
 </head>
 <body>
-  <h2>Über uns – BIM Education</h2>
-  <p>BIM Education ist die Plattform, auf der du BIM-Tutorials erstellen, teilen und abrufen kannst – ganz einfach und direkt.</p>
-  <p>Von Attribut bis Zonenmodell: Hier findest du alles, was du brauchst, um dich in der BIM-Branche zurechtzufinden – oder dein Wissen weiterzugeben.</p>
-  <p>Die Tutorials beinhalten Tests und Zertifikate, damit dein Lernfortschritt nicht nur messbar, sondern auch nachvollziehbar ist.</p>
-  <p>Weil uns der Austausch besonders wichtig ist, gibt’s auch eine Community-Sektion, in der du Fragen stellen, beantworten oder dich einfach mit anderen austauschen kannst.</p>
-  <p>Auf deinem persönlichen Dashboard behältst du jederzeit den Überblick: dein Fortschritt, deine Zertifikate, alles an einem Ort.</p>
+<hr>
+  <h2>Über uns – BIM Education</h2><hr>
+  <p>BIM Education ist eine Plattform, auf der du <strong>BIM-Tutorials erstellen, teilen und abrufen</strong> kannst <br><strong>– ganz einfach und direkt.</strong></p>
+  <p>Von Attribut bis Zonenmodell: Hier findest du alles, was du brauchst, um dich in der BIM-Branche zurechtzufinden <br>– oder dein Wissen weiterzugeben.</p>
+  <p>Die <strong>Tutorials beinhalten Tests und Zertifikate</strong>, damit dein Lernfortschritt nicht nur messbar, sondern auch nachvollziehbar ist.</p>
+  <p>Weil uns der Austausch besonders wichtig ist, gibt’s auch eine <strong>Community-Sektion</strong>, in der du Fragen stellen, beantworten oder dich einfach mit anderen austauschen kannst.</p>
+  <p>Auf deinem <strong>persönlichen Dashboard</strong> behältst du jederzeit den Überblick: dein Fortschritt, deine Zertifikate, alles an einem Ort.</p>
 
   <br>
+<hr>
   <h2>Funktionen im Detail</h2>
 
-  <br>
 
-  <h3 style="color: #156082;">Tutorials: finden und bearbeiten von Anleitungen</h3>
+<hr>
+  <h3 style="color: #156082;">Tutorials:    - Erstellen und Bearbeiten von Anleitungen</h3>
   <p>Egal, ob du gerade erst anfängst oder schon tief in IFC-Strukturen steckst – bei uns findest du Tutorials für jedes Level.</p>
-  <p>Filter nach Thema, Schwierigkeitsgrad oder Format, und finde genau das, was dich weiterbringt.</p>
+  <p><strong>Filter nach Thema, Schwierigkeitsgrad oder Format</strong>, und finde genau das, was dich weiterbringt.</p>
   <p>Viele Tutorials beinhalten praktische Tests – für echtes Verständnis statt bloßem Durchklicken.</p>
 <br>
 
 
   {% if user.groups.first.name == "BIM Expert" %}
-
-  <h3 style="color: orange;">Create: Tutorials und Wissensabfragen erstellen</h3>
-  <p>Deine Rolle ist BIM Experte.</p>
-  <p>Du hast BIM-Wissen, das du teilen willst? Dann erstelle deine eigenen Tutorials – direkt über unsere Plattform.</p>
-  <p>Mit Texten, Bildern, Videos, Quizfragen und optionalen Zertifikaten kannst du Inhalte genau so aufbauen, wie du es brauchst.</p>
+<hr>
+  <h3 style="color: orange;">Create:    - Tutorials und Wissensabfragen erstellen</h3>
+  <p>Deine Rolle ist <strong>BIM Experte</strong>.</p>
+  <p>Du hast BIM-Wissen, das du teilen willst? Dann erstelle deine <strong>eigenen Tutorials</strong> – direkt über unsere Plattform.</p>
+  <p>Mit <strong>Texten, Bildern, Videos, Quizfragen und optionalen Zertifikaten</strong> kannst du Inhalte genau so aufbauen, wie du es brauchst.</p>
   <p><em>(Tutorial-Erstellung ist aktuell nur für freigeschaltete Accounts – z. B. „BIM Experte“ – verfügbar.)</em></p>
 <br>
     {% endif %}
 
+<hr>
+  <h3 style="color: #156082;">Dashboard:    - Eignenen Fortschritt tracken</h3>
 
-  <h3 style="color: #156082;">Dashboard: Eignenen Fortschritt tracken</h3>
 
-  <p>Dein persönlicher BIM-Hub: Im Dashboard siehst du, welche Tutorials du schon abgeschlossen hast, wo du noch dran bist und welche Zertifikate du bereits erhalten hast.</p>
-  <p>Dein persönlicher BIM-Hub: Im Dashboard siehst du, welche Tutorials du schon abgeschlossen hast, wo du noch dran bist und welche Zertifikate du bereits erhalten hast.</p>
+  <p>Dein <strong>persönlicher BIM-Hub</strong>: Im Dashboard siehst du, welche Tutorials du schon abgeschlossen hast, wo du noch dran bist und welche Zertifikate du bereits erhalten hast.</p>
   <p>Auch deine eigenen erstellten Inhalte (falls du welche veröffentlichst) findest du hier auf einen Blick – inklusive Zugriffszahlen, Bewertungen und Feedback.</p>
 <br>
-
-  <h3 style="color: #156082;">User menu: Login, Passwort ändern & Rollen</h3>
-  <p>Das User Menu befindet sich immer in der Ecke unten links.</p> <br>
+<hr>
+  <h3 style="color: #156082;">User menu:    - Login, Passwort ändern & Rollen</h3>
+  <p>Das <strong>User Menu</strong> befindet sich immer in der Ecke unten links.</p> <br>
+  <img src="/media/usermenu.png" alt="Filter Button" style="width: 50%;"><br>
   <p>Beim Login kannst du zwischen verschiedenen Rollen wählen – je nachdem, wo du gerade stehst:</p>
+
+
   <ul>
 
     <li><strong>Lernender:</strong> Zugriff auf zusätzliche Inhalte, Quizfunktionen, Zertifikate</li>

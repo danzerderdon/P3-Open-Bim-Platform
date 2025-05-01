@@ -315,6 +315,30 @@ input[type="range"].difficulty-slider:disabled {
 
 
 
+<h1>Alle Tutorials</h1>
+
+<div class="toggle-container">
+  <div class="toggle-header">
+    <h3 style="color: #156082; text-align: center;">hier kannst du Tutorials finden und auswählen</h3>
+    <button class="toggle-button" id="toggle-help" style ="color: grey"title="Hilfe ein-/ausblenden">Help❔</button>
+  </div>
+
+  <div class="toggle-content" id="help-content">
+    <p>Die <strong>Karten</strong> unten zeigen alle Tutorials, die aktuell auf der Platform zur Verfügung stehen und bearbeitet werden können.</p>
+    <br>
+    <p>Der <strong>Filter Button</strong> ermöglicht es, die Inhalte nach verschiedenen Kriterien zu durchsuchen.</p>
+    <img src="/media/Filter Button.png" alt="Filter Button" style="width: 30%;"><br>
+    <p>Hier kann der <strong>Inhalt nach Serie, Programm oder Schwierigkeit</strong> gefiltert werden.</p>
+    <p>Zusätzlich erlaubt die <strong>Suchleiste</strong> ein suchen nach speziellen Begriffen.</p>
+    <img src="/media/Filter Function.png" alt="Filter Button" style="width: 50%;">
+    <p><strong>Clickt</strong> man nun ein <strong>gewünschtes Tutorial</strong> unter den Suchbegriffen an, dann erscheint Rechts ein <strong>Voschaufenster</strong> mit näheren Details zum jeweiligen Tutorial:</p>
+    <img src="/media/Select.png" alt="Filter Button" style="width: 80%;">
+    <p>Über das Vorschau-Fenster gelangt man dann <strong>zum Tutorial</strong></p>
+    <img src="/media/Info.png" alt="Filter Button" style="width: 50%;">
+    <p>.</p>
+
+  </div>
+</div>
 
 
 
@@ -322,9 +346,6 @@ input[type="range"].difficulty-slider:disabled {
 
 
 
-
-
-  <h1>Alle Tutorials</h1>
 
   {% if tutorials %}
     <div class="tutorial-wrapper">
@@ -715,9 +736,93 @@ document.addEventListener("DOMContentLoaded", () => {
 .tutorial-grid {
   gap: 0.8rem;
 }
+
+.toggle-container {
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  max-width: 600px;
+  margin: 2rem auto;
+}
+
+.toggle-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.toggle-button {
+  background: none;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  color: grey;
+}
+
+.toggle-content {
+  margin-top: 20px;
+  max-height: 0;
+  opacity: 0;
+  overflow: hidden;
+  transition: max-height 0.5s ease, opacity 0.5s ease;
+}
+
+.toggle-content.show {
+  max-height: 1000px;
+  opacity: 1;
+}
+
+/* Info-Zeile */
+.info-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.info-row p {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.4;
+  color: #333;
+}
+
+/* Farbige Icon-Kreise */
+.icon-button {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  padding: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.icon-button img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.icon-button.blue { background-color: #0d5c75; }
+.icon-button.orange { background-color: #f0c954; }
+.icon-button.red { background-color: #f27b81; }
+
 </style>
+<script>
+  document.getElementById("toggle-help").addEventListener("click", function () {
+    const content = document.getElementById("help-content");
+    content.style.display = content.style.display === "none" || content.style.display === "" ? "block" : "none";
+  });
+</script>
 
-
+<script>
+  document.getElementById("toggle-help").addEventListener("click", function () {
+    const content = document.getElementById("help-content");
+    content.classList.toggle("show");
+  });
+</script>
 
 
 {% endblock %}

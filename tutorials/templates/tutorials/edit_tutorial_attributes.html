@@ -6,110 +6,88 @@
 <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
 
 <div class="section-container">
-<h1 style="color: #156082;text-align: center;">Tutorial "{{ tutorial.title }}" bearbeiten</h1>
-<div class="card-container">
-  <form method="post" enctype="multipart/form-data" style="max-width: 600px; margin: auto;">
-    {% csrf_token %}
+  <h1 style="color: #156082;text-align: center;">Tutorial "{{ tutorial.title }}" bearbeiten</h1>
+  <div class="card-container">
+    <form method="post" enctype="multipart/form-data" style="max-width: 600px; margin: auto;">
+      {% csrf_token %}
 
-    <div style="margin-bottom: 20px;">
-      <label><strong>Titel:</strong></label><br>
-      {{ form.title }}
-    </div>
+      <div style="margin-bottom: 20px;">
+        <label><strong>Titel:</strong></label><br>
+        {{ form.title }}
+      </div>
 
-    <div style="margin-bottom: 20px;">
-      <label><strong>Beschreibung:</strong></label><br>
-      {{ form.description }}
-    </div>
+      <div style="margin-bottom: 20px;">
+        <label><strong>Beschreibung:</strong></label><br>
+        {{ form.description }}
+      </div>
 
-    <div style="margin-bottom: 20px;">
-      <label><strong>Schwierigkeitsgrad:</strong></label><br>
-      {{ form.difficulty }}
-    </div>
+      <div style="margin-bottom: 20px;">
+        <label><strong>Schwierigkeitsgrad:</strong></label><br>
+        {{ form.difficulty }}
+      </div>
 
-    <div style="margin-bottom: 20px;">
-      <label><strong>Programm:</strong></label><br>
-      {{ form.program }}
-    </div>
+      <div style="margin-bottom: 20px;">
+        <label><strong>Programm:</strong></label><br>
+        {{ form.program }}
+      </div>
 
-    <div style="margin-bottom: 20px;">
-  <label for="{{ form.program_versions.id_for_label }}"><strong>Programmversion(en):</strong></label><br>
-  {{ form.program_versions }}
-  <small style="color: #555;">z. B. 2021, 2022, 2023</small>
-</div>
+      <div style="margin-bottom: 20px;">
+        <label for="{{ form.program_versions.id_for_label }}"><strong>Programmversion(en):</strong></label><br>
+        {{ form.program_versions }}<br>
+        <small style="color: #555;">z. B. 2021, 2022, 2023</small>
+      </div>
 
+      <div style="margin-bottom: 20px;">
+        <label><strong>Keywords:</strong></label><br>
+        {{ form.keywords }}
+        <small style="color: #555;">Kommagetrennt, z.B. IFC, Modellierung, BIM</small>
+      </div>
 
-    <div style="margin-bottom: 20px;">
-      <label><strong>Keywords:</strong></label><br>
-      {{ form.keywords }}
-      <small style="color: #555;">Kommagetrennt, z.B. IFC, Modellierung, BIM</small>
-    </div>
-
-    <div style="margin-bottom: 20px;">
-      <label><strong>Vorschaubild:</strong></label><br>
-      {{ form.thumbnail }}
-      {% if tutorial.thumbnail %}
-        <div style="margin-top: 10px;">
-          <img src="{{ tutorial.thumbnail.url }}" style="max-width: 100%; border-radius: 8px;">
+      <div style="margin-bottom: 20px;">
+        <label><strong>Vorschaubild:</strong></label><br><br>
+        {{ form.thumbnail }}<br>
+        <div id="thumbnail-preview" style="margin-top: 10px;">
+          {% if tutorial.thumbnail %}
+            <img src="{{ tutorial.thumbnail.url }}" style="max-width: 100%; border-radius: 8px;">
+          {% endif %}
         </div>
-      {% endif %}
-    </div>
+      </div><br>
 
-    <div style="margin-bottom: 20px;">
-      <label><strong>Screenshot (Prozessdiagramm):</strong></label><br>
-      {{ form.screenshot }}
-      {% if tutorial.screenshot %}
-        <div style="margin-top: 10px;">
-          <img src="{{ tutorial.screenshot.url }}" style="max-width: 100%; border-radius: 8px;">
+      <div style="margin-bottom: 20px;">
+        <label><strong>Screenshot (Prozessdiagramm):</strong></label><br><br>
+        {{ form.screenshot }}<br>
+        <div id="screenshot-preview" style="margin-top: 10px;">
+          {% if tutorial.screenshot %}
+            <img src="{{ tutorial.screenshot.url }}" style="max-width: 100%; border-radius: 8px;">
+          {% endif %}
         </div>
-      {% endif %}
-    </div>
+      </div>
 
-    <div style="margin-bottom: 20px;">
-      <label><strong>Dateien anhängen:</strong></label><br>
-      {{ form.attachments }}
-      <small style="color: #555;">z. B. PDFs, Arbeitsmaterial, IFC-Dateien etc.</small>
-    </div>
+      <div style="margin-bottom: 20px;">
+        <label><strong>Dateien anhängen:</strong></label><br><br>
+        {{ form.attachments }}<br>
+        <small style="color: #555;">z. B. PDFs, Arbeitsmaterial, IFC-Dateien etc.</small>
+        <div id="attachments-list" style="margin-top: 10px;"></div>
+      </div>
 
-    <div style="margin-bottom: 30px;">
-      <label><strong>Tutorial-Serie:</strong></label><br>
-      {{ form.series }}
-      <small style="color: #555;">z. B. "Solibri Basics" (optional)</small>
-    </div>
+      <div style="margin-bottom: 30px;">
+        <label><strong>Tutorial-Serie:</strong></label><br>
+        {{ form.series }}
+        <small style="color: #555;">z. B. "Solibri Basics" (optional)</small>
+      </div>
 
-    <div style="text-align: center;">
-      <button type="submit" class="button">Speichern</button>
-    </div>
-  </form>
+      <div style="text-align: center;">
+        <button type="submit" class="button">Speichern</button>
+      </div>
+    </form>
+  </div>
 </div>
-</div>
-<script>
-    // Fade beim Laden
-    document.body.style.opacity = 0;
-    window.addEventListener('load', () => {
-        document.body.style.transition = "opacity 0.6s ease";
-        document.body.style.opacity = 1;
-    });
 
-    // Fade-Out bei Navigation
-    document.querySelectorAll('a[href]').forEach(link => {
-        link.addEventListener('click', function (e) {
-            const url = link.getAttribute('href');
-            if (!url.startsWith('#') && !link.hasAttribute('download')) {
-                e.preventDefault();
-                document.body.style.opacity = 0;
-                setTimeout(() => {
-                    window.location.href = url;
-                }, 300);
-            }
-        });
-    });
-</script>
-
-<!-- Quill Editor JS -->
 <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
 
 <script>
   document.addEventListener('DOMContentLoaded', function () {
+    // === Quill Editor ===
     const textarea = document.querySelector('textarea[name="description"]');
     if (textarea && !textarea.classList.contains('quill-initialized')) {
       const wrapper = document.createElement('div');
@@ -123,9 +101,7 @@
         placeholder: 'Beschreibung eingeben...'
       });
 
-      if (textarea.value) {
-        quill.root.innerHTML = textarea.value;
-      }
+      quill.root.innerHTML = textarea.value || '';
 
       textarea.form.addEventListener('submit', function () {
         textarea.value = quill.root.innerHTML;
@@ -133,6 +109,67 @@
 
       textarea.classList.add('quill-initialized');
     }
+
+    // === Bildvorschau ===
+    function previewImage(input, previewId) {
+      const preview = document.getElementById(previewId);
+      if (input.files && input.files[0]) {
+        const reader = new FileReader();
+        reader.onload = function (e) {
+          preview.innerHTML = '<img src="' + e.target.result + '" style="max-width: 100%; border-radius: 8px;">';
+        };
+        reader.readAsDataURL(input.files[0]);
+      }
+    }
+
+    const thumbnailInput = document.getElementById('id_thumbnail');
+    if (thumbnailInput) {
+      thumbnailInput.addEventListener('change', function () {
+        previewImage(this, 'thumbnail-preview');
+      });
+    }
+
+    const screenshotInput = document.getElementById('id_screenshot');
+    if (screenshotInput) {
+      screenshotInput.addEventListener('change', function () {
+        previewImage(this, 'screenshot-preview');
+      });
+    }
+
+    // === Dateinamenanzeige ===
+    const attachmentsInput = document.getElementById('id_attachments');
+    const attachmentsList = document.getElementById('attachments-list');
+
+    if (attachmentsInput && attachmentsList) {
+      attachmentsInput.addEventListener('change', function () {
+        attachmentsList.innerHTML = '';
+        Array.from(this.files).forEach(file => {
+          const item = document.createElement('div');
+          item.textContent = '📄 ' + file.name;
+          attachmentsList.appendChild(item);
+        });
+      });
+    }
+
+    // === Page Fade ===
+    document.body.style.opacity = 0;
+    window.addEventListener('load', () => {
+      document.body.style.transition = "opacity 0.6s ease";
+      document.body.style.opacity = 1;
+    });
+
+    document.querySelectorAll('a[href]').forEach(link => {
+      link.addEventListener('click', function (e) {
+        const url = link.getAttribute('href');
+        if (!url.startsWith('#') && !link.hasAttribute('download')) {
+          e.preventDefault();
+          document.body.style.opacity = 0;
+          setTimeout(() => {
+            window.location.href = url;
+          }, 300);
+        }
+      });
+    });
   });
 </script>
 

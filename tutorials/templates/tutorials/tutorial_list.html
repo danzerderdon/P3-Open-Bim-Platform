@@ -823,8 +823,14 @@ document.addEventListener("DOMContentLoaded", () => {
   ;
 }
 
+.filter-panel {
+  ...
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.35);
+}
 
-
+.detail-panel {
+  box-shadow: -4px 0 40px rgba(0, 0, 0, 0.35);
+}
 </style>
 <script>
   document.getElementById("toggle-help").addEventListener("click", function () {
@@ -839,6 +845,7 @@ document.addEventListener("DOMContentLoaded", () => {
     content.classList.toggle("show");
   });
 </script>
+
 
 
 {% endblock %}

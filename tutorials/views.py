@@ -137,6 +137,12 @@ from django.shortcuts import get_object_or_404
 
 
 from django.contrib import messages  # falls du später im Template Feedback willst
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import get_object_or_404, redirect, render
+from django.forms import modelformset_factory
+from django.contrib import messages
+from .models import Tutorial, TutorialSection
+
 
 @login_required
 def edit_tutorial_sections(request, tutorial_id):
@@ -163,10 +169,10 @@ def edit_tutorial_sections(request, tutorial_id):
                 instance = form.save(commit=False)
                 instance.tutorial = tutorial
 
-                if 'image' in form.cleaned_data and not form.cleaned_data.get('image'):
-                    if form.instance.pk:
-                        old_instance = TutorialSection.objects.get(pk=form.instance.pk)
-                        instance.image = old_instance.image
+                # ✅ Bild wirklich löschen, wenn "Bild entfernen" aktiviert wurde
+                if form.cleaned_data.get('image_clear') and form.instance.image:
+                    form.instance.image.delete(save=False)
+                    form.instance.image = None
 
                 instance.save()
                 handled_ids.append(instance.id)
@@ -176,13 +182,10 @@ def edit_tutorial_sections(request, tutorial_id):
 
             return redirect('create')  # redirect nur bei Erfolg
         else:
-            # 👉 Fehlerausgabe in der Konsole
             print("❌ Formset ist NICHT valide:")
             for i, form in enumerate(formset.forms):
                 if form.errors:
                     print(f"Formular {i} Fehler: {form.errors}")
-
-            # 👉 Optional Feedback für User im Template (wenn du messages nutzt)
             messages.error(request, "Es gab ein Problem beim Speichern. Bitte überprüfe deine Eingaben.")
     else:
         formset = SectionFormSet(queryset=TutorialSection.objects.filter(tutorial=tutorial))
@@ -191,8 +194,6 @@ def edit_tutorial_sections(request, tutorial_id):
         'formset': formset,
         'tutorial': tutorial
     })
-
-
 
 
 

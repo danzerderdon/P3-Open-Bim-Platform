@@ -162,7 +162,7 @@
   <div class="user-header" onclick="toggleUserMenu()">
     <img src="{% static 'images/user_icon.png' %}" alt="User Icon">
     {% if user.is_authenticated %}
-      <span>Willkommen zurück, {{ user.username }}!</span>
+      <span>Willkommen zurück,<span class="notranslate"> {{ user.username }}</span>!</span>
     {% else %}
       <span>Sie sind nicht eingeloggt</span>
     {% endif %}
@@ -231,13 +231,79 @@
 </script>
 
 
+
+
+
+
 <div id="google_translate_element" style="position: fixed; bottom: 20px; right: 20px; z-index: 9999;"></div>
 
 <!-- CSS für nicht zu übersetzende Bereiche -->
 <style>
-    .notranslate {
-        translate: no !important;
+.goog-te-banner-frame.skiptranslate {
+        display: none !important;
     }
+
+    body {
+        top: 0px !important;
+    }
+
+    .goog-te-gadget-simple {
+        background-color: #156082 !important;  /* Neue Hintergrundfarbe */
+        color: #ffffff !important;  /* Weißer Text */
+        border-radius: 5px;
+        padding: 5px 10px;
+        cursor: pointer;
+        font-weight: bold;
+        text-align: center;
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        z-index: 9999;
+        box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .goog-te-gadget-simple:hover {
+        background-color: #2b9bc4 !important;  /* Dunklere Version für Hover */
+    }
+
+    .goog-te-gadget-icon {
+        display: none !important;  /* Google Icon ausblenden */
+    }
+
+
+    .goog-te-gadget-simple .goog-te-menu-value {
+        color: #ffffff !important;  /* Textfarbe */
+    }
+
+    .goog-te-gadget-simple .goog-te-menu-value span {
+        color: #ffffff !important;  /* Textfarbe */
+    }
+
+    .goog-te-gadget-icon {
+        display: none !important;  /* Google Icon ausblenden */
+    }
+
+    /* Google Translate Leiste verkleinern */
+    .goog-te-banner-frame.skiptranslate {
+        height: 200px !important; /* Höhe anpassen */
+        overflow: hidden !important;
+    }
+
+    .goog-te-banner-frame.skiptranslate .goog-te-banner-content {
+        font-size: 10px !important; /* Schriftgröße anpassen */
+        padding: 2px !important;
+    }
+
+    .goog-te-banner-frame.skiptranslate .goog-te-banner-content .goog-te-button,
+    .goog-te-banner-frame.skiptranslate .goog-te-banner-content .goog-te-menu-value {
+        padding: 2px 5px !important;
+        font-size: 10px !important;
+    }
+
+    body {
+        top: 0px !important;
+    }
+
 </style>
 
 <script type="text/javascript">
@@ -249,17 +315,19 @@
         }, 'google_translate_element');
     }
 
-    // Hinzufügen der 'notranslate'-Klasse zu bestimmten Elementen
+    // Elemente mit der Klasse 'notranslate' werden vom Übersetzen ausgeschlossen
     document.addEventListener('DOMContentLoaded', function() {
-        // Beispiel: Usernames nicht übersetzen
-        const usernameElements = document.querySelectorAll('.username');
-        usernameElements.forEach(element => {
-            element.classList.add('notranslate');
+        const elements = document.querySelectorAll('.notranslate');
+        elements.forEach(element => {
+            element.setAttribute('translate', 'no');
         });
     });
 </script>
 
-<script type="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+<script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+
+
+
 
 
 

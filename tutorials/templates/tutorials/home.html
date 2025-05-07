@@ -9,10 +9,10 @@
 
 
 <div class="home-container"  style="box-shadow: none; border: 8px solid #97c7e6;">
-    <h1 style="color: #156082; text-align: center">Willkommen auf der Open BIM-Education Plattform 🏢</h1><br><hr><br>
+    <h1 style="color: #156082; text-align: center">Willkommen auf der<span class="notranslate"> Open BIM-Education Plattform </span>🏢</h1><br><hr><br>
     {% if user.is_authenticated %}
         <p style="text-align: center;">Wilkommen zurück auf der <strong>Open BIM-Education Plattform</strong>,</p>
-    <h2 style="text-align: center;"><strong style="color: orange;">{{ request.user.username }}</strong></h2>
+    <h2 style="text-align: center;"><strong style="color: orange;" class="notranslate">{{ request.user.username }}</strong></h2>
 
 
 

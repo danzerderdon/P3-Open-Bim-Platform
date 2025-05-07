@@ -231,6 +231,38 @@
 </script>
 
 
+<div id="google_translate_element" style="position: fixed; bottom: 20px; right: 20px; z-index: 9999;"></div>
+
+<!-- CSS für nicht zu übersetzende Bereiche -->
+<style>
+    .notranslate {
+        translate: no !important;
+    }
+</style>
+
+<script type="text/javascript">
+    function googleTranslateElementInit() {
+        new google.translate.TranslateElement({
+            pageLanguage: 'auto',  // Automatische Spracherkennung
+            includedLanguages: 'en,de,fr,es,it,pt,nl,ru,zh-CN,ja,ko,ar,hi,tr,pl',
+            layout: google.translate.TranslateElement.InlineLayout.SIMPLE
+        }, 'google_translate_element');
+    }
+
+    // Hinzufügen der 'notranslate'-Klasse zu bestimmten Elementen
+    document.addEventListener('DOMContentLoaded', function() {
+        // Beispiel: Usernames nicht übersetzen
+        const usernameElements = document.querySelectorAll('.username');
+        usernameElements.forEach(element => {
+            element.classList.add('notranslate');
+        });
+    });
+</script>
+
+<script type="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+
+
+
 {% block extra_js %}{% endblock %}
 </body>
 </html>

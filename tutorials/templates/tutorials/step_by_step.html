@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+{% block title %}{{ tutorial.title }} – Schritt {{ step.order }}{% endblock %}
+{% block content %}
+
+<style>
+  .sidebar { width: 80px; float: left; overflow-y: auto; height: 80vh; border-right: 1px solid #ddd; }
+  .sidebar a { display: block; padding: 8px; text-decoration: none; color: #444; }
+  .sidebar a.active { background: #156082; color: white; }
+  .main { margin-left: 100px; }
+  .progress { width: 100%; background: #eee; height: 20px; border-radius: 4px; overflow: hidden; margin-bottom: 20px; }
+  .progress-bar { height: 100%; background: #156082; width: {{ progress }}%; }
+</style>
+
+<h2>{{ tutorial.title }} – Schritt {{ step.order }} / {{ total_steps }}</h2>
+
+<div class="progress">
+  <div class="progress-bar"></div>
+</div>
+
+<div class="sidebar">
+  {% for s in steps %}
+    <a href="{% url 'tutorial_step' tutorial.id s.order %}"
+       class="{% if s.order == step.order %}active{% endif %}">
+      {{ s.order }}
+    </a>
+  {% endfor %}
+</div>
+
+<div class="main">
+  <h3>{{ step.title }}</h3>
+  <div>{{ step.content|safe }}</div>
+
+  {% if step.image %}
+    <div style="margin:20px 0;">
+      <img src="{{ step.image.url }}" style="max-width:100%; border-radius:8px;">
+    </div>
+  {% endif %}
+
+  <div style="margin-top:30px; display:flex; gap:10px;">
+    {% if prev_order %}
+      <a class="button" href="{% url 'tutorial_step' tutorial.id prev_order %}">
+        « Nochmal zurück
+      </a>
+    {% endif %}
+    {% if next_order %}
+      <a class="button" href="{% url 'tutorial_step' tutorial.id next_order %}">
+        Nächster Schritt »
+      </a>
+    {% else %}
+      <a class="button" href="{% url 'tutorial-detail' pk=tutorial.id %}">
+        Tutorial beenden
+      </a>
+    {% endif %}
+  </div>
+</div>
+
+{% endblock %}

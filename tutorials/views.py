@@ -336,28 +336,29 @@ from .models import Tutorial, TutorialSection
 
 def tutorial_step(request, tutorial_id, step_order):
     tutorial = get_object_or_404(Tutorial, id=tutorial_id)
-    steps = tutorial.sections.all()         # Meta.ordering=['order']
+    steps = tutorial.sections.all()
     total = steps.count()
 
-    # Wenn order ungültig, spring zum ersten Schritt
-    if step_order < 1 or step_order > total:
-        return redirect('tutorial_step', tutorial_id=tutorial_id, step_order=1)
-
+    # aktueller Schritt
     step = get_object_or_404(TutorialSection, tutorial=tutorial, order=step_order)
 
-    # Fortschritt in Prozent (vor dem aktuellen Schritt abgeschlossen)
+    # progress in Prozent (Vorher-Schritt)
+    # z. B. step_order = 3 von total=5 → (3-1)/5*100 = 40
     progress = int((step_order - 1) / total * 100)
 
-    # Links für Zurück/Weiter
-    prev_order = step_order - 1 if step_order > 1 else None
-    next_order = step_order + 1 if step_order < total else None
+    # Einen Schritt zurück: (step_order-2)/total*100, aber nie <0
+    if step_order > 1:
+        prev_progress = int((step_order - 2) / total * 100)
+    else:
+        prev_progress = 0
 
     return render(request, 'tutorials/step_by_step.html', {
         'tutorial': tutorial,
         'steps': steps,
         'step': step,
-        'total_steps': total,
+        'prev_order': step_order > 1 and step_order - 1 or None,
+        'next_order': step_order < total and step_order + 1 or None,
         'progress': progress,
-        'prev_order': prev_order,
-        'next_order': next_order,
+        'prev_progress': prev_progress,
+        'active_page': 'tutorials',
     })

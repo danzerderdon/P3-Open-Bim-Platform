@@ -157,7 +157,7 @@
     .header-fixed .progress__bar {
       background: #155a7a;
       height: 100%;
-      width: {{ progress }}%;
+      width: {{ prev_progress }}%;
       transition: width 0.3s ease;
     }
 
@@ -246,7 +246,7 @@
 
       /* 1) Screenshot auf max. 90 % der Viewport-Höhe begrenzen */
 .step-image img {
-  max-height: 90vh !important;
+  max-height: 66vh !important;
   width: auto;
   object-fit: contain;
 }
@@ -287,6 +287,77 @@
   overflow-y: auto;
   padding: 30px;
 }
+
+
+.progress__bar {
+  background: #155a7a;
+  height: 100%;
+  /* ganz wichtige Zeile: bei Width-Änderung animieren */
+  transition: width 0.6s ease-out;
+  width: 0;                     /* startet bei 0 */
+  transition: width 0.6s ease;
+}
+
+.header-fixed .progress__bar {
+  /* Basis-Styles beibehalten… */
+
+  /* Grobe Streifen: 2rem statt 1rem */
+  background-image:
+    linear-gradient(
+      45deg,
+      rgba(255,255,255,0.2) 25%,
+      transparent 25%,
+      transparent 50%,
+      rgba(255,255,255,0.2) 50%,
+      rgba(255,255,255,0.2) 75%,
+      transparent 75%,
+      transparent
+    );
+  background-size: 2rem 2rem;
+
+  /* Etwas langsamer, damit die großen Streifen sanft wandern */
+  animation: stripe-move 1.5s linear infinite;
+}
+
+@keyframes stripe-move {
+  from { background-position: 0 0; }
+  to   { background-position: 2rem 0; }
+}
+
+    .header-fixed {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  background: #fff;
+  padding: 20px 30px;
+  border-bottom: 1px solid #ddd;
+  z-index: 900;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+.header-fixed h1 {
+  font-size: 1.8rem;
+  margin-bottom: 10px;
+}
+/* NEU: Zielflagge ganz rechts */
+.header-fixed .flag {
+  position: absolute;
+  top: 50%;                /* vertikal zentriert */
+  right: 30px;             /* gleiches Padding wie header */
+  transform: translateY(-50%);
+  font-size: 1.5rem;       /* Größe nach Wunsch */
+  line-height: 1;
+}
+/* 1) Links­bündig ausrichten */
+.step-text {
+  text-align: left;
+
+}
+
+/* Optional: den Border-Bereich darunter auch anpassen */
+.step-body {
+
+}
+
+
 
   </style>
 </head>
@@ -344,9 +415,10 @@
   <div class="main">
     <!-- 1) Titel + Fortschrittsbalken -->
     <div class="header-fixed">
-      <h1>{{ tutorial.title }}</h1>
+      <h1 style="color: #156082;">{{ tutorial.title }}</h1>
+      <div class="flag">🏁</div>   <!-- hier die Zielflagge -->
       <div class="progress">
-        <div class="progress__bar"></div>
+        <div class="progress__bar" data-target="{{ progress }}"></div>
       </div>
     </div>
 
@@ -354,7 +426,7 @@
     <div class="content">
       <div class="step-body">
         <div class="step-text">
-          <h2>Schritt {{ step.order }}: {{ step.title }}</h2>
+          <h2>Schritt {{ step.order }}: {{ step.title }}</h2><hr><br>
           <p>{{ step.content|safe }}</p>
         </div>
         {% if step.image %}
@@ -398,6 +470,32 @@
     });
   </script>
   <script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const bar = document.querySelector('.progress__bar');
+    // Neuer Zielwert aus Django-Template
+    const newProgress = {{ progress }};  // Zahl, 0–100
+
+    // Alten Wert aus localStorage holen (falls nicht da → 0)
+    const oldProgress = parseFloat(localStorage.getItem('lastProgress') || '0');
+
+    // 1) Bar sofort auf den alten Wert setzen (ohne Animation)
+    bar.style.transition = 'none';
+    bar.style.width = oldProgress + '%';
+
+    // 2) Kurze Pause, damit der Browser das erste Width-Setting verarbeitet
+    requestAnimationFrame(() => {
+      // Transition wieder aktivieren
+      bar.style.transition = 'width 0.6s ease-out';
+      // 3) Zum neuen Wert fahren (wird animiert!)
+      bar.style.width = newProgress + '%';
+    });
+
+    // 4) Speichere den neuen Wert für den nächsten Seitenwechsel
+    localStorage.setItem('lastProgress', newProgress);
+  });
+</script>
+
 
 </body>
 </html>

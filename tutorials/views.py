@@ -362,3 +362,18 @@ def tutorial_step(request, tutorial_id, step_order):
         'prev_progress': prev_progress,
         'active_page': 'tutorials',
     })
+
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render, get_object_or_404
+from .models import Tutorial
+
+@login_required
+def tutorial_all_steps(request, tutorial_id):
+    tutorial = get_object_or_404(Tutorial, id=tutorial_id)
+    steps = tutorial.sections.all()
+    return render(request, 'tutorials/tutorial_all_steps.html', {
+        'tutorial': tutorial,
+        'steps': steps,
+        'active_page': 'tutorials',
+    })
+

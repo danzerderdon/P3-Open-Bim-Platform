@@ -29,6 +29,8 @@ urlpatterns = [
     path('tutorial/<int:tutorial_id>/quiz/', views.edit_tutorial_quiz, name='edit_quiz'),
     path('tutorials/<int:pk>/', views.TutorialDetailView.as_view(), name='tutorial-detail'),
     path('tutorial/<int:tutorial_id>/step/<int:step_order>/',views.tutorial_step,name='tutorial_step'),
+    path('tutorial/<int:tutorial_id>/all_steps/',views.tutorial_all_steps,name='tutorial_all_steps'),
+
 
 
 

@@ -1,7 +1,12 @@
 {% extends 'base.html' %}
 {% load static %}
 
+
+
+
+
 {% block content %}
+<div id="page-fade"></div>
 <style>
   .tutorial-detail-container {
     max-width: 54%;
@@ -99,6 +104,17 @@
   background-color: #1e8449;
 }
 
+  #page-fade {
+  position: fixed;
+  inset: 0;                    /* top:0; right:0; bottom:0; left:0; */
+  background-color: #155a7a;   /* deine Fade-Farbe */
+  opacity: 0;                  /* initial unsichtbar */
+  pointer-events: none;        /* Klicks hindurchlassen */
+  z-index: 9999;
+  transition: opacity 2s ease; /* 1s Fade */
+}
+
+
 </style>
 
 
@@ -150,9 +166,40 @@
 
 <div class="button-row">
   <a href="{% url 'tutorials' %}" class="back-button red">← Zurück zur Übersicht</a>
-  <a href="{% url 'tutorials' %}" class="back-button yellow">🗒️ als Tabelle zeigen</a>
+  <a href="{% url 'tutorial_all_steps' tutorial.id %}" class="back-button yellow">🗒️ als Tabelle zeigen</a>
   <a href="{% url 'tutorial_step' tutorial.id 1 %}" class="back-button green">👟 Step by Step bearbeiten</a>
 </div>
 
 </div>
+
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const fade = document.getElementById('page-fade');
+
+  document.querySelectorAll('a[href]').forEach(link => {
+    // nur unser spezieller Button mit beidem: back-button + green
+    if (!link.classList.contains('back-button') ||
+        !link.classList.contains('green')) {
+      return;  // alle anderen Links ignorieren
+    }
+
+    link.addEventListener('click', e => {
+      e.preventDefault();
+      const url = link.href;
+
+      // Fade-Out starten
+      fade.style.opacity = '1';
+
+      // nach Ende der 1s-Transition weiterleiten
+      fade.addEventListener('transitionend', () => {
+        window.location.href = url;
+      }, { once: true });
+    });
+  });
+});
+</script>
+
+
+
 {% endblock %}

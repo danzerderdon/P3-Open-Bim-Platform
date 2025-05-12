@@ -1,0 +1,121 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block title %}{{ tutorial.title }} – Alle Schritte als Tabelle{% endblock %}
+
+{% block content %}
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, sans-serif;
+
+      margin: 0;
+      padding: 0 30px;
+    }
+    h1 {
+      text-align: center;
+      margin: 30px 0;
+      color: #156082;
+    }
+    .steps-table {
+      width: 100%;
+      background: white;
+      margin: 0 auto;    /* zentriert sie horizontal */
+      border-collapse: collapse;
+      margin-bottom: 50px;
+    }
+    .steps-table th,
+    .steps-table td {
+      border: 1px solid #ccc;
+      padding: 12px;
+      vertical-align: top;
+    }
+    .steps-table th {
+      background: #e6f2fa;
+      text-align: left;
+      font-weight: bold;
+
+    }
+    .step-thumb {
+      max-height: 50vh;
+      max-width: 100%;
+      display: block;
+      margin: 0 auto;
+      border-radius: 4px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+      /* Alle Zellen linksbündig */
+.steps-table th,
+.steps-table td {
+  text-align: left;
+}
+
+/* Optional: nur die Beschreibungs-Spalte */
+.steps-table td:nth-child(2) {
+  text-align: left;
+}
+
+.steps-table td {
+  border: 3px solid #ccc;
+
+
+.steps-table th {
+  border: 3px solid #ccc;
+  </style>
+
+</head>
+<body>
+
+  <!-- Kopfzeile -->
+  <div class="tutorial-detail-container"
+     style="box-shadow: none;
+            border: 8px solid #97c7e6;
+            background-color: #fff;
+            width: 95%;
+margin: 0 auto;    /* zentriert sie horizontal */">
+  <h1>{{ tutorial.title }} – Alle Schritte als Tabelle</h1>
+
+  <!-- Tabelle aller Schritte -->
+  <table class="steps-table">
+    <thead>
+      <tr>
+        <th style="width:10%;">Schritt</th>
+        <th style="width:45%;">Beschreibung</th>
+        <th style="width:45%;">Bild</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for s in steps %}
+      <tr>
+        <!-- Spalte 1: Schrittnummer + Titel -->
+        <td>Schritt {{ s.order }}:<br><strong>{{ s.title }}</strong></td>
+        <!-- Spalte 2: Inhalt (HTML erlaubt) -->
+        <td>{{ s.content|safe }}</td>
+        <!-- Spalte 3: optionales Bild -->
+        <td>
+          {% if s.image %}
+            <img src="{{ s.image.url }}" alt="Bild Schritt {{ s.order }}" class="step-thumb">
+          {% endif %}
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+<!-- Bottom-Bar mit Zurück-Button -->
+  <div class="bottom-bar">
+
+    <a href="{% url 'tutorial-detail' tutorial.id %}" class="button button--secondary">
+      « Zurück zur Tutorial-Übersicht
+    </a>
+
+
+  </div>
+    </div>
+</body>
+<style>
+  /* Auf dieser Seite das User-Panel unten links komplett ausblenden */
+  .user-panel {
+    display: none !important;
+  }
+</style>
+{% endblock %}

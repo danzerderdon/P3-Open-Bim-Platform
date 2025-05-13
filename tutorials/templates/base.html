@@ -328,6 +328,79 @@
 <script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 
 
+{% load static %}
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>Deine Seite</title>
+  <style>
+    /* 1) Container für das Flugzeug, 30% von oben, hinter den Karten */
+    #plane-container {
+      position: fixed;
+      top: 30vh;        /* 30% der Viewport-Höhe */
+      left: 0;
+      width: 100%;
+      height: 0;        /* Höhe selbst über das img geregelt */
+      pointer-events: none;
+      overflow: visible;
+      z-index: -10;       /* kleiner als die Karten (siehe weiter unten) */
+    }
+
+    /* 2) Flugzeug-Icon initial ganz links außerhalb */
+    #plane {
+      position: absolute;
+      left: -150px;     /* Start außerhalb */
+      transform: rotate(5deg);
+      width: 150px;
+      will-change: left;
+    }
+
+    /* 3) Keyframes für die Flug-Animation */
+    @keyframes fly {
+      from { left: -150px; }
+      to   { left: 100%; }
+    }
+    .fly {
+      animation: fly 8s linear forwards;
+    }
+
+    /* 4) Alle Karten vor das Flugzeug holen */
+    .tutorial-card,
+    .card-container {
+      position: relative; /* nötig, damit z-index greift */
+      z-index: 2;         /* höher als das Flugzeug */
+    }
+  </style>
+</head>
+<body>
+  <!-- … hier kommt dein restlicher Seiteninhalt … -->
+
+  <!-- Das Flugzeug-Element -->
+  <div id="plane-container">
+    <img id="plane" src="{% static 'images/plane.png' %}" alt="Flugzeug">
+  </div>
+
+  <!-- JS zum Starten der Animation -->
+  <script>
+    (function() {
+      const plane = document.getElementById('plane');
+
+      function startFly() {
+        plane.classList.remove('fly');
+        // Reflow forcieren, damit die Animation zurückgesetzt wird
+        void plane.offsetWidth;
+        plane.classList.add('fly');
+      }
+
+      // beim Laden einmal starten
+      startFly();
+      // alle 60 000 ms (1 Minute) wiederholen
+      setInterval(startFly, 60000);
+    })();
+  </script>
+</body>
+</html>
 
 
 

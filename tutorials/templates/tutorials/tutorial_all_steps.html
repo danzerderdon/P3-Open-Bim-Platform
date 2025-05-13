@@ -127,7 +127,7 @@ margin: 0 auto;    /* zentriert sie horizontal */">
   <h1>{{ tutorial.title }} – Alle Schritte als Tabelle</h1>
 
  <!-- ───── Meta-Infos (oben links) ───── -->
-
+<div style="text-align: left; padding: 2rem">
     <p><strong>Erstellt von:</strong>
        {{ tutorial.created_by.username }}
        am {{ tutorial.created_at|date:"d.m.Y H:i" }}</p>
@@ -136,7 +136,7 @@ margin: 0 auto;    /* zentriert sie horizontal */">
       {{ tutorial.program }}{% if tutorial.program_versions %} ({{ tutorial.program_versions }}){% endif %}</p>
     <p><strong>Serie:</strong> {{ tutorial.series }}</p>
     <p><strong>Schwierigkeit:</strong> {{ tutorial.get_difficulty_display }}</p>
-
+</div>
 
 
   <!-- Tabelle aller Schritte -->

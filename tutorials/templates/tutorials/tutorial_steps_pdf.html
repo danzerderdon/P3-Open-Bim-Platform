@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <style>
+    /* Einfaches Tabellen-Styling für PDF */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12px;
+    }
+    th, td {
+      border: 1px solid #444;
+      padding: 6px;
+      text-align: left;
+    }
+    th {
+      background: #eee;
+    }
+    h1 {
+      font-size: 18px;
+      margin-bottom: 1rem;
+    }
+    .back-button.blue {
+  background-color: #3498db;
+  color: white;
+}
+.back-button.blue:hover {
+  background-color: #217dbb;
+}
+
+  </style>
+  <title>{{ tutorial.title }} – Schritte</title>
+</head>
+<body>
+  <h1>{{ tutorial.title }} – Alle Schritte</h1>
+  <table>
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Titel</th>
+        <th>Beschreibung</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for step in steps %}
+      <tr>
+        <td>{{ forloop.counter }}</td>
+        <td>{{ step.title }}</td>
+        <td>{{ step.content|truncatechars:100 }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</body>
+</html>

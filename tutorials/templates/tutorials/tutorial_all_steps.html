@@ -6,6 +6,44 @@
 
 {% block content %}
   <style>
+
+@media print {
+  /* alles Ausblenden, was beim PDF/Print stört */
+  nav,
+  .nav-fade,
+  .sidebar,
+  .step-nav,
+  #google_translate_element,
+  .user-panel,
+  .bottom-bar {
+    display: none !important;
+  }
+.steps-table tr {
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+  /* optional: vermeide auch Umbrüche innerhalb einzelner Zellen */
+  .steps-table th,
+  .steps-table td {
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+  /* Body rücken und leeren, damit die Tabelle voll oben sitzt */
+  body {
+    margin: 0;
+    padding: 0;
+  }
+
+  /* Falls du noch einen wrapper rundherum hast */
+  .tutorial-detail-container {
+    box-shadow: none !important;
+    border: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+}
+
+
     body {
       font-family: 'Segoe UI', Tahoma, sans-serif;
 
@@ -107,10 +145,25 @@ margin: 0 auto;    /* zentriert sie horizontal */">
     <a href="{% url 'tutorial-detail' tutorial.id %}" class="button button--secondary">
       « Zurück zur Tutorial-Übersicht
     </a>
+    <button id="btn-print-pdf" class="button button--secondary">
+  📄 Als PDF speichern
+</button>
+
 
 
   </div>
     </div>
+
+
+<script>
+  document.getElementById('btn-print-pdf').addEventListener('click', function() {
+    window.print();
+  });
+</script>
+
+
+
+
 </body>
 <style>
   /* Auf dieser Seite das User-Panel unten links komplett ausblenden */
@@ -118,4 +171,5 @@ margin: 0 auto;    /* zentriert sie horizontal */">
     display: none !important;
   }
 </style>
+
 {% endblock %}

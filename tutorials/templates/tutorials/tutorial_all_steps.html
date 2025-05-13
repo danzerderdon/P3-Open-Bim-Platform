@@ -19,6 +19,7 @@
     display: none !important;
   }
 
+
 .steps-table {
       width: 180mm !important;     /* oder z.B. 180mm, 90%, etc. */
       margin: 0 auto !important; /* zentriert die Tabelle auf der Seite */
@@ -124,6 +125,19 @@
             width: 85%;
 margin: 0 auto;    /* zentriert sie horizontal */">
   <h1>{{ tutorial.title }} – Alle Schritte als Tabelle</h1>
+
+ <!-- ───── Meta-Infos (oben links) ───── -->
+
+    <p><strong>Erstellt von:</strong>
+       {{ tutorial.created_by.username }}
+       am {{ tutorial.created_at|date:"d.m.Y H:i" }}</p>
+    <hr>
+    <p><strong>Programm:</strong>
+      {{ tutorial.program }}{% if tutorial.program_versions %} ({{ tutorial.program_versions }}){% endif %}</p>
+    <p><strong>Serie:</strong> {{ tutorial.series }}</p>
+    <p><strong>Schwierigkeit:</strong> {{ tutorial.get_difficulty_display }}</p>
+
+
 
   <!-- Tabelle aller Schritte -->
   <table class="steps-table">

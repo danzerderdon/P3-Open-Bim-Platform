@@ -18,6 +18,18 @@
   .bottom-bar {
     display: none !important;
   }
+
+.steps-table {
+      width: 180mm !important;     /* oder z.B. 180mm, 90%, etc. */
+      margin: 0 auto !important; /* zentriert die Tabelle auf der Seite */
+    }
+
+  .steps-table img {
+      max-height: 20vh !important;
+      width: auto !important;
+      object-fit: contain;
+    }
+
 .steps-table tr {
     page-break-inside: avoid;
     break-inside: avoid;
@@ -56,7 +68,7 @@
       color: #156082;
     }
     .steps-table {
-      width: 100%;
+      width: 95%;
       background: white;
       margin: 0 auto;    /* zentriert sie horizontal */
       border-collapse: collapse;
@@ -109,7 +121,7 @@
      style="box-shadow: none;
             border: 8px solid #97c7e6;
             background-color: #fff;
-            width: 95%;
+            width: 85%;
 margin: 0 auto;    /* zentriert sie horizontal */">
   <h1>{{ tutorial.title }} – Alle Schritte als Tabelle</h1>
 

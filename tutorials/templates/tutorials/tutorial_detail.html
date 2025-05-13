@@ -8,6 +8,16 @@
 {% block content %}
 <div id="page-fade"></div>
 <style>
+
+  .back-button.grey {
+  background-color: #bdc3c7;  /* hellgrau */
+  color: #333;
+  cursor: not-allowed;
+}
+.back-button.grey:hover {
+  background-color: #bdc3c7;  /* Hover gleich lassen, kein Effekt */
+}
+
   .tutorial-detail-container {
     max-width: 54%;
     margin: 3rem auto;
@@ -165,10 +175,25 @@
 
 
 <div class="button-row">
+  <!-- Der „Zurück“-Button bleibt immer sichtbar -->
   <a href="{% url 'tutorials' %}" class="back-button red">← Zurück zur Übersicht</a>
-  <a href="{% url 'tutorial_all_steps' tutorial.id %}" class="back-button yellow">🗒️ als Tabelle zeigen</a>
-  <a href="{% url 'tutorial_step' tutorial.id 1 %}" class="back-button green">👟 Step by Step bearbeiten</a>
+
+  {% if step_count|default:0 >= 1 %}
+    <!-- Es gibt mindestens einen Schritt – zeige beide Links -->
+    <a href="{% url 'tutorial_all_steps' tutorial.id %}" class="back-button yellow">
+      🗒️ als Tabelle zeigen
+    </a>
+    <a href="{% url 'tutorial_step' tutorial.id 1 %}" class="back-button green">
+      👟 Step by Step bearbeiten
+    </a>
+  {% else %}
+    <!-- Keine Schritte vorhanden – grauer, deaktivierter „Button“ -->
+    <button class="back-button grey" disabled>
+      Noch keine Schritte vorhanden
+    </button>
+  {% endif %}
 </div>
+
 
 </div>
 

@@ -376,6 +376,38 @@
       position: relative; /* nötig, damit z-index greift */
               /* höher als das Flugzeug */
     }
+
+#crane-container img {
+  /* Variante A: über Grayscale→Sepia→Hue-Shift */
+  filter:
+    grayscale(100%)    /* 1) alle Originalfarben heraus */
+    sepia(100%)        /* 2) warme Basis legen */
+    hue-rotate(160deg) /* 3) Farbton in Richtung Haus-Türkis schieben */
+    saturate(100%)     /* 4) Sättigung reduzieren */
+    brightness(2.1)    /* 5) etwas aufhellen */
+    contrast(0.9);     /* 6) Kontrast leicht senken */
+}
+
+
+
+
+      /* 1) Kran-Container: fixe Position unten rechts, hinter den Karten */
+    #crane-container {
+      position: fixed;
+      bottom: 50px;     / Abstand vom unteren Viewport-Rand */
+      right: 10%;       /* Abstand vom rechten Viewport-Rand */
+      width: 200px;     /* passt du nach Belieben an */
+      height: auto;
+      pointer-events: none;
+      z-index: -10;       /* hinter deinen .tutorial-card / .card-container (z-index:2) */
+    }
+
+    /* 2) Sicherstellen, dass deine Karten drüber liegen */
+    .tutorial-card,
+    .card-container {
+      position: relative;
+      z-index: 2;
+    }
   </style>
 </head>
 <body>
@@ -385,7 +417,9 @@
   <div id="plane-container">
     <img id="plane" src="{% static 'images/plane.png' %}" alt="Flugzeug">
   </div>
-
+<div id="crane-container">
+    <img src="{% static 'images/kran.gif' %}" alt="Animierter Kran">
+  </div>
   <!-- JS zum Starten der Animation -->
   <script>
     (function() {

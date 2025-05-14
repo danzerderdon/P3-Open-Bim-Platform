@@ -357,7 +357,15 @@
 
 }
 
-
+/* NEU: Zielflagge ganz rechts */
+.header-fixed .flagstart {
+  position: absolute;
+  top: 50%;                /* vertikal zentriert */
+  left: 30px;             /* gleiches Padding wie header */
+  transform: translateY(-50%);
+  font-size: 1.5rem;       /* Größe nach Wunsch */
+  line-height: 1;
+}
 
 
 
@@ -419,6 +427,7 @@
   <div class="main">
     <!-- 1) Titel + Fortschrittsbalken -->
     <div class="header-fixed">
+      <div class="flagstart">🚥</div>
       <h1 style="color: #156082;">{{ tutorial.title }}</h1>
       <div class="flag">🏁</div>   <!-- hier die Zielflagge -->
       <div class="progress">

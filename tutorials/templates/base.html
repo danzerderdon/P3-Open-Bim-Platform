@@ -384,7 +384,7 @@
     sepia(100%)        /* 2) warme Basis legen */
     hue-rotate(160deg) /* 3) Farbton in Richtung Haus-Türkis schieben */
     saturate(100%)     /* 4) Sättigung reduzieren */
-    brightness(2.1)    /* 5) etwas aufhellen */
+    brightness(1.7)    /* 5) etwas aufhellen */
     contrast(0.9);     /* 6) Kontrast leicht senken */
 }
 
@@ -394,9 +394,9 @@
       /* 1) Kran-Container: fixe Position unten rechts, hinter den Karten */
     #crane-container {
       position: fixed;
-      bottom: 50px;     / Abstand vom unteren Viewport-Rand */
-      right: 12%;       /* Abstand vom rechten Viewport-Rand */
-      width: 200px;     /* passt du nach Belieben an */
+      bottom: -30px;     / Abstand vom unteren Viewport-Rand */
+      right: 5%; !important       /* Abstand vom rechten Viewport-Rand */
+      width: 300px;     /* passt du nach Belieben an */
       height: auto;
       pointer-events: none;
       z-index: -10;       /* hinter deinen .tutorial-card / .card-container (z-index:2) */

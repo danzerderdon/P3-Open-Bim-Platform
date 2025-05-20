@@ -340,7 +340,7 @@
       position: fixed;
       top: 30vh;        /* 30% der Viewport-Höhe */
       left: 0;
-      width: 100%;
+      width: 200px;
       height: 0;        /* Höhe selbst über das img geregelt */
       pointer-events: none;
       overflow: visible;
@@ -393,9 +393,7 @@
   <div id="plane-container">
     <img id="plane" src="{% static 'images/plane.png' %}" alt="Flugzeug">
   </div>
-<div id="crane-container">
-    <img src="{% static 'images/kran.gif' %}" alt="Animierter Kran">
-  </div>
+
   <!-- JS zum Starten der Animation -->
   <script>
     (function() {

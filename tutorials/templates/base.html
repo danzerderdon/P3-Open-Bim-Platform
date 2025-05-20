@@ -377,30 +377,6 @@
               /* höher als das Flugzeug */
     }
 
-#crane-container img {
-  /* Variante A: über Grayscale→Sepia→Hue-Shift */
-  filter:
-    grayscale(100%)    /* 1) alle Originalfarben heraus */
-    sepia(100%)        /* 2) warme Basis legen */
-    hue-rotate(160deg) /* 3) Farbton in Richtung Haus-Türkis schieben */
-    saturate(100%)     /* 4) Sättigung reduzieren */
-    brightness(1.7)    /* 5) etwas aufhellen */
-    contrast(0.9);     /* 6) Kontrast leicht senken */
-}
-
-
-
-
-      /* 1) Kran-Container: fixe Position unten rechts, hinter den Karten */
-    #crane-container {
-      position: fixed;
-      bottom: -30px;     / Abstand vom unteren Viewport-Rand */
-      right: 5%; !important       /* Abstand vom rechten Viewport-Rand */
-      width: 15%; !important     /* passt du nach Belieben an */
-      height: auto;
-      pointer-events: none;
-      z-index: -10;       /* hinter deinen .tutorial-card / .card-container (z-index:2) */
-    }
 
     /* 2) Sicherstellen, dass deine Karten drüber liegen */
     .tutorial-card,

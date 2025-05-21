@@ -443,21 +443,33 @@
           <p>{{ step.content|safe }}</p>
         </div>
 
+        <!-- Rechte Spalte (Media-Container) -->
+  <div class="step-media"
+       style="
+         display: flex;
+         flex-direction: column;
+         gap: 20px;
+         max-width: 40%;
+         flex-shrink: 0;
+         align-items: center;
+         margin-left: 20px;
+       ">
+
         {% if step.image %}
-        <div class="step-image">
+        <div class="step-image" style="width: 100%; height: auto; display: block; object-fit: cover; border-radius: 6px; box-shadow: 0 2px 6px rgba(0,0,0,0.1);">
           <img src="{{ step.image.url }}" alt="Bild zu {{ step.title }}">
         </div>
         {% endif %}
 
         {% if step.video %}
-  <div class="step-image" style="margin-top: 20px;">
+  <div class="step-image" style="width: 100%; border-radius: 6px;">
     <video controls style="max-width: 100%; border-radius: 6px; box-shadow: 0 2px 6px rgba(0,0,0,0.1);">
       <source src="{{ step.video.url }}">
       Dein Browser unterstützt dieses Video nicht.
     </video>
   </div>
 {% endif %}
-
+</div>
       </div>
     </div>
 

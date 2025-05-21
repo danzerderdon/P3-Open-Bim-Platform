@@ -1,6 +1,9 @@
 # Virtuelle Umgebungen
 venv/
 
+media/tutorial_videos/
+
+
 # Bytecode-Dateien
 __pycache__/
 *.py[cod]

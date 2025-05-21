@@ -26,7 +26,7 @@
           <div style="width: 90%; margin: auto;">{{ form.title.label_tag }}<br>{{ form.title }}{{ form.id }}</div><br>
 
           <div style="width: 90%; margin: auto;">
-            {{ form.content.label_tag }}
+            {{ form.content.label_tag }}<br>
             {{ form.content }}
           </div><br><hr><br>
 
@@ -85,6 +85,48 @@
 </div>
 
 
+<hr>
+
+{# —————— HIER STEP 3: Video-Block für bereits vorhandene Schritte einfügen —————— #}
+
+{{ form.video.label_tag }}<br>
+{{ form.video }}<br>
+
+<video id="{{ form.prefix }}-videoPreview"
+       controls
+       style="max-width:50%; {% if form.instance.video %}display:block{% else %}display:none{% endif %}; margin:10px auto; border-radius:10px;">
+  {% if form.instance.video %}
+    <source src="{{ form.instance.video.url }}">
+  {% endif %}
+</video>
+
+
+
+<div style="display:flex; justify-content:center; gap:15px; margin-top:10px;">
+  <!-- Remove-Video-Button -->
+  <button type="button"
+          class="remove-video-btn"
+          title="Video entfernen"
+          style="
+            background-color: orange;
+            border: none;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+          ">
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="white" viewBox="0 0 24 24">
+      <path d="M6 7H18V19C18 20.1 17.1 21 16 21H8C6.9 21 6 20.1 6 19V7ZM19 4H15.5L14.5 3H9.5L8.5 4H5V6H19V4Z"/>
+    </svg>
+  </button>
+</div>
+
+
+
           </div>
 
 
@@ -109,6 +151,42 @@
       <button type="submit" class="button">Speichern</button>
     </div>
   </form>
+
+  <!-- Fixierter Refresh/Save Button oben rechts -->
+<div id="refresh-save-btn" style="
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 9999;
+">
+  <button id="refresh-submit-btn"
+          type="submit"
+          form="tutorial-form"
+          name="refresh_save"
+          title="Speichern & Seite neu laden"
+          style="
+          position: fixed;
+          top: 100px;  /* vorher 20px */
+          right: 20px;
+          background-color: #0d5c73;
+          color: white;
+          border: none;
+          border-radius: 50%;
+          width: 48px;
+          height: 48px;
+          font-size: 20px;
+          box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          z-index: 9999;
+          cursor: pointer;">
+    ⟳
+  </button>
+</div>
+
+
+
 
   <!-- Template -->
   <template id="empty-form-template">
@@ -161,6 +239,43 @@
   </button>
 
 </div>
+          <hr>
+<label for="id_form-__prefix__-video">Video:</label><br>
+<input type="file" name="form-__prefix__-video" id="id_form-__prefix__-video" accept="video/*"><br>
+
+<video id="id_form-__prefix__-videoPreview"
+       controls
+       style="width: 50%; margin: 10px auto; display: none; border-radius: 10px;"></video>
+
+<input type="checkbox"
+       name="form-__prefix__-video-clear"
+       id="id_form-__prefix__-video-clear"
+       style="display: none;">
+
+<div style="display: flex; justify-content: center; gap: 15px; margin-top: 10px;">
+  <button type="button"
+          class="remove-video-btn"
+          title="Video entfernen"
+          style="
+            background-color: orange;
+            border: none;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);">
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="white" viewBox="0 0 24 24">
+      <path d="M6 7H18V19C18 20.1 17.1 21 16 21H8C6.9 21 6 20.1 6 19V7ZM19 4H15.5L14.5 3H9.5L8.5 4H5V6H19V4Z"/>
+    </svg>
+  </button>
+</div>
+
+
+
+
       </div>
       <div style="width: 90%; margin: auto; display: none;"><input type="number" name="form-__prefix__-order" id="id_form-__prefix__-order" value="1"></div>
       <div style="width: 90%; margin: auto;"><input type="hidden" name="form-__prefix__-DELETE" id="id_form-__prefix__-DELETE"></div>
@@ -197,7 +312,8 @@
 <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
 <script>
   function initImagePreviewHandlers(scope) {
-    scope.querySelectorAll('input[type="file"]').forEach(input => {
+    scope.querySelectorAll('input[type="file"][accept^="image"], input[type="file"][name$="-image"]').forEach(input => {
+
       const preview = input.closest('div').querySelector('.image-preview');
       const removeBtn = input.closest('div').querySelector('.remove-image-btn');
 
@@ -221,6 +337,54 @@
       });
     });
   }
+
+
+
+function initVideoPreviewHandlers(scope) {
+  scope.querySelectorAll('input[type="file"][name$="-video"]').forEach(input => {
+    const videoId = input.id.replace('-video', '-videoPreview');
+    const video = scope.querySelector(`#${videoId}`);
+
+    input.addEventListener('change', () => {
+      const file = input.files[0];
+      if (file && video) {
+        let source = video.querySelector('source');
+        if (!source) {
+          source = document.createElement('source');
+          video.appendChild(source);
+        }
+        source.src = URL.createObjectURL(file);
+        video.load();
+        video.style.display = 'block';
+      } else if (video) {
+        video.style.display = 'none';
+      }
+    });
+  });
+
+  // Entfernen-Button aktivieren
+  scope.querySelectorAll('.remove-video-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const card = btn.closest('.card');
+      const input = card.querySelector('input[type="file"][name$="-video"]');
+      const preview = card.querySelector('video[id$="-videoPreview"]');
+      const source = preview?.querySelector('source');
+      const clearCheckbox = card.querySelector(`input[type="checkbox"][name="${input.name}-clear"]`);
+
+      if (input) input.value = '';
+      if (source) source.src = '';
+      if (preview) {
+        preview.load();
+        preview.style.display = 'none';
+      }
+      if (clearCheckbox) clearCheckbox.checked = true;
+    });
+  });
+}
+
+
+
+
 
   function updateOrderFields() {
     const cards = document.querySelectorAll('#formset-container .card');
@@ -249,6 +413,7 @@
 
   document.addEventListener('DOMContentLoaded', function () {
     initImagePreviewHandlers(document);
+    initVideoPreviewHandlers(document);
     updateOrderFields();
     initQuillEditors();
   });
@@ -267,6 +432,7 @@
     });
     totalForms.value = newIndex + 1;
     initImagePreviewHandlers(newForm);
+    initVideoPreviewHandlers(newForm);
     updateOrderFields();
     initQuillEditors();
   });
@@ -361,7 +527,48 @@ document.addEventListener('click', function (e) {
     }).catch(err => console.error("❌ Clipboard read failed:", err));
   }
 });
+
+  scope.querySelectorAll('video[id$="-videoPreview"]').forEach(video => {
+  if (video.querySelector('source')?.src || video.currentSrc) {
+    video.style.display = 'block';
+  }
+});
+
+
+
 </script>
+
+<script>
+  document.getElementById('refresh-submit-btn').addEventListener('click', function (e) {
+    const form = document.getElementById('tutorial-form');
+
+    // Verhindere den Standard-Submit, um es manuell zu steuern
+    e.preventDefault();
+
+    // Erstelle ein FormData-Objekt
+    const formData = new FormData(form);
+
+    // Sende es via Fetch (oder XMLHttpRequest, falls du willst)
+    fetch(form.action, {
+      method: 'POST',
+      body: formData,
+    })
+    .then(response => {
+      if (response.ok) {
+        // Erfolgreich gespeichert → Seite neu laden
+        location.reload();
+      } else {
+        alert("Fehler beim Speichern 😢");
+      }
+    })
+    .catch(err => {
+      console.error("Fehler beim Speichern:", err);
+      alert("Technischer Fehler beim Speichern.");
+    });
+  });
+</script>
+
+
 <style>
   img.image-preview {
     width: 90% !important;

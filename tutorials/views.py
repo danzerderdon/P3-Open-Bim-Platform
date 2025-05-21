@@ -150,7 +150,7 @@ def edit_tutorial_sections(request, tutorial_id):
 
     SectionFormSet = modelformset_factory(
         TutorialSection,
-        fields=('title', 'content', 'image', 'order'),
+        fields=('title', 'content', 'image', 'video', 'order'),
         extra=0,
         can_delete=True
     )
@@ -173,6 +173,11 @@ def edit_tutorial_sections(request, tutorial_id):
                 if form.cleaned_data.get('image_clear') and form.instance.image:
                     form.instance.image.delete(save=False)
                     form.instance.image = None
+
+                # ✅ Video löschen
+                if form.cleaned_data.get('video_clear') and form.instance.video:
+                    form.instance.video.delete(save=False)
+                    form.instance.video = None
 
                 instance.save()
                 handled_ids.append(instance.id)

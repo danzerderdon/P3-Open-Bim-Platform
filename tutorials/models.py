@@ -71,6 +71,7 @@ class TutorialSection(models.Model):
     title = models.CharField(max_length=200, default="Schritt")
     content = models.TextField()
     image = models.ImageField(upload_to='tutorial_images/', blank=True, null=True)
+    video = models.FileField(upload_to='tutorial_videos/', blank=True, null=True)
     order = models.PositiveIntegerField(default=1)
 
     class Meta:

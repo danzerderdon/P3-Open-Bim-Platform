@@ -442,11 +442,22 @@
           <h2>Schritt {{ step.order }}: {{ step.title }}</h2><hr><br>
           <p>{{ step.content|safe }}</p>
         </div>
+
         {% if step.image %}
         <div class="step-image">
           <img src="{{ step.image.url }}" alt="Bild zu {{ step.title }}">
         </div>
         {% endif %}
+
+        {% if step.video %}
+  <div class="step-image" style="margin-top: 20px;">
+    <video controls style="max-width: 100%; border-radius: 6px; box-shadow: 0 2px 6px rgba(0,0,0,0.1);">
+      <source src="{{ step.video.url }}">
+      Dein Browser unterstützt dieses Video nicht.
+    </video>
+  </div>
+{% endif %}
+
       </div>
     </div>
 

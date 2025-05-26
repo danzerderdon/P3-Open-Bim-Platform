@@ -1,8 +1,9 @@
 # Virtuelle Umgebungen
 venv/
 
-# Medien (Videos)
+# Medien (Videos+bilder)
 media/tutorial_videos/
+media/tutorial_images/
 *.mp4
 *.avi
 *.mov

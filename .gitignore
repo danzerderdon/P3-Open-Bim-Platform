@@ -1,8 +1,13 @@
 # Virtuelle Umgebungen
 venv/
 
+# Medien (Videos)
 media/tutorial_videos/
-
+*.mp4
+*.avi
+*.mov
+*.mkv
+*.webm
 
 # Bytecode-Dateien
 __pycache__/
@@ -18,7 +23,3 @@ __pycache__/
 # Systemdateien
 .DS_Store
 Thumbs.db
-
-*.mp4
-*.avi
-*.mov

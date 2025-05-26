@@ -306,18 +306,8 @@
   /* Basis-Styles beibehalten… */
 
   /* Grobe Streifen: 2rem statt 1rem */
-  background-image:
-    linear-gradient(
-      45deg,
-      rgba(255,255,255,0.2) 25%,
-      transparent 25%,
-      transparent 50%,
-      rgba(255,255,255,0.2) 50%,
-      rgba(255,255,255,0.2) 75%,
-      transparent 75%,
-      transparent
-    );
-  background-size: 2rem 2rem;
+  background-color: white !important;
+
 
   /* Etwas langsamer, damit die großen Streifen sanft wandern */
   animation: stripe-move 1.5s linear infinite;
@@ -371,13 +361,25 @@
   line-height: 1;
 }
 
+body.no-background-image {
+  background: none !important;
+  background-color: #f5f7fa !important;
+}
 
 
 
   </style>
+
+  <style>
+  html, body {
+    background: #f5f7fa !important;
+    background-image: none !important;
+  }
+</style>
+
 </head>
 
-<body>
+<body class="no-background-image">
 
   <!-- NAVIGATION -->
   <nav>
@@ -440,7 +442,7 @@
       </div>
     </div>
 
-    <div class="content">
+
     <!-- 2) Scrollbarer Bereich -->
     <div class="step-body">
   <div class="step-text">
@@ -485,23 +487,10 @@
 
 </div>
       </div>
-    </div>
 
 
-    <!-- 3) Footer Navigation -->
-    <footer class="step-nav">
-  {% if prev_order %}
-  <a href="{% url 'quiz_question' tutorial.id prev_order %}" class="button button--secondary">« Zurück</a>
-  {% else %}
-  <button class="button button--secondary" disabled>« Zurück</button>
-  {% endif %}
 
-  {% if next_order %}
-  <a href="{% url 'quiz_question' tutorial.id next_order %}" class="button button--primary">Weiter »</a>
-  {% else %}
-  <a href="{% url 'quiz_result' tutorial.id %}" class="button button--primary">Abschließen & Auswertung</a>
-  {% endif %}
-</footer>
+
 
   </div>
 

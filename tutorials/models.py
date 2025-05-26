@@ -85,11 +85,25 @@ class TutorialSection(models.Model):
 class UserProgress(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     tutorial = models.ForeignKey(Tutorial, on_delete=models.CASCADE)
+
+    # Neues Feld: Score in Prozent
+    score_percent = models.FloatField(default=0.0)
+
+    # Flag, ob Quiz & Tutorial abgeschlossen
     completed = models.BooleanField(default=False)
+
+    # Zeitstempel der letzten vollständigen Bearbeitung
     completed_at = models.DateTimeField(null=True, blank=True)
 
+    # Optional: Anzahl der Versuche (z. B. für Statistik)
+    attempts = models.PositiveIntegerField(default=0)
+
+    class Meta:
+        unique_together = ('user', 'tutorial')
+
     def __str__(self):
-        return f"{self.user.username} – {self.tutorial.title} ({'Fertig' if self.completed else 'Nicht fertig'})"
+        status = "✅" if self.completed else "❌"
+        return f"{self.user.username} – {self.tutorial.title} {status} ({self.score_percent:.1f} %)"
 
 
 
@@ -121,3 +135,14 @@ class Quiz(models.Model):
 
     def __str__(self):
         return f"{self.tutorial.title} – Frage {self.order}: {self.title}"
+
+class QuizResult(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    tutorial = models.ForeignKey(Tutorial, on_delete=models.CASCADE)
+    correct_answers = models.PositiveIntegerField(default=0)
+    total_questions = models.PositiveIntegerField(default=0)
+    score_percent = models.FloatField(default=0.0)
+    last_attempt = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"{self.user.username} – {self.tutorial.title} ({self.score_percent:.1f}%)"

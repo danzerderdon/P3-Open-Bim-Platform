@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+
+
+<style>
+  .result-container {
+    max-width: 700px;
+    margin: 60px auto;
+    padding: 40px;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    text-align: center;
+    font-family: 'Segoe UI', sans-serif;
+  }
+
+  .result-container h2 {
+    font-size: 2rem;
+    color: #155a7a;
+    margin-bottom: 15px;
+  }
+
+  .result-container h3 {
+    margin-bottom: 20px;
+  }
+
+  .progress-bar-container {
+    background: #ddd;
+    border-radius: 30px;
+    overflow: hidden;
+    height: 30px;
+    margin: 20px auto;
+    width: 100%;
+  }
+
+  .progress-bar-fill {
+    background: #2196f3;
+    color: white;
+    height: 100%;
+    text-align: center;
+    line-height: 30px;
+    font-weight: bold;
+    transition: width 0.5s ease;
+  }
+
+  .result-message {
+    font-size: 1.1rem;
+    margin: 20px 0;
+  }
+
+  .result-buttons a {
+    display: inline-block;
+    margin: 10px 8px;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-weight: bold;
+    text-decoration: none;
+    color: white;
+    background-color: #155a7a;
+    transition: background 0.3s ease;
+  }
+
+  .result-buttons a:hover {
+    background-color: #0f4e65;
+  }
+
+</style>
+
+<div class="result-container">
+  <h2>Auswertung abgeschlossen</h2>
+  <h3>{{ tutorial.title }}</h3>
+
+  <p>Du hast <strong>{{ correct }}</strong> von <strong>{{ total }}</strong> Fragen richtig beantwortet.</p>
+  <p>Dein Score: <strong>{{ score }}%</strong></p>
+
+  <div class="progress-bar-container">
+    <div class="progress-bar-fill" style="width: {{ score }}%;">{{ score }}%</div>
+  </div>
+
+  {% if score > 50 %}
+    <p class="result-message">🎉 <strong>Super gemacht! Du hast bestanden und dein Ergebnis wurde gespeichert.</strong></p>
+  {% else %}
+    <p class="result-message">😕 <strong>Leider unter 50%. Das Ergebnis wurde nicht gespeichert.</strong></p>
+  {% endif %}
+
+  <div class="result-buttons">
+    <a href="{% url 'start_quiz' tutorial.id %}">🔁 Quiz neu starten</a>
+    <a href="{% url 'tutorial-detail' tutorial.id %}">📘 Zurück zur Übersicht</a>
+  </div>
+</div>
+
+{% endblock %}

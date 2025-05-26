@@ -1,10 +1,12 @@
 {% load static %}
+{% load quiz_extras %}
 <!DOCTYPE html>
 <html lang="de">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>{{ tutorial.title }} – Schritt {{ step.order }}</title>
+  <title>{{ tutorial.title }} – Frage {{ quiz.order }}</title>
+
 
   <!-- Optional: weiterhin dein globales CSS -->
   <link rel="stylesheet" href="{% static 'css/style.css' %}">
@@ -132,6 +134,8 @@
       bottom: 0;
       display: flex;
       flex-direction: column;
+      padding-top: 120px;
+      padding-left: 20px
     }
 
     /* ----- 1) FIXED HEADER ----- */
@@ -414,13 +418,14 @@
 
   <!-- SIDEBAR -->
   <aside class="sidebar">
-    <h2>Schritte</h2>
-    {% for s in steps %}
-      <a href="{% url 'tutorial_step' tutorial.id s.order %}"
-         class="{% if s.order == step.order %}active{% endif %}">
-        Schritt {{ s.order }}
-      </a>
-    {% endfor %}
+    <h2>Fragen</h2>
+{% for q in quiz_list %}
+  <a href="{% url 'quiz_question' tutorial.id q.order %}"
+     class="{% if q.order == quiz.order %}active{% endif %}">
+    Frage {{ q.order }}
+  </a>
+{% endfor %}
+
   </aside>
 
   <!-- MAIN-CONTENT -->
@@ -435,13 +440,29 @@
       </div>
     </div>
 
-    <!-- 2) Scrollbarer Bereich -->
     <div class="content">
-      <div class="step-body">
-        <div class="step-text">
-          <h2>Schritt {{ step.order }}: {{ step.title }}</h2><hr><br>
-          <p>{{ step.content|safe }}</p>
-        </div>
+    <!-- 2) Scrollbarer Bereich -->
+    <div class="step-body">
+  <div class="step-text">
+    <h2>Frage {{ quiz.order }}: {{ quiz.title }}</h2>
+    <p>{{ quiz.content|safe }}</p>
+
+<form method="post">
+  {% csrf_token %}
+  {% for a in answers %}
+    <label style="display: block; margin-top: 10px;">
+      <input type="checkbox" name="selected_answers" value="{{ a.value }}">
+      {{ a.text }}
+    </label>
+  {% endfor %}
+  <br>
+  <button type="submit" class="button button--primary">Antwort bestätigen & Weiter</button>
+</form>
+
+
+
+  </div>
+
 
         <!-- Rechte Spalte (Media-Container) -->
   <div class="step-media"
@@ -455,46 +476,33 @@
          margin-left: 20px;
        ">
 
-        {% if step.image %}
-        <div class="step-image" style="width: 100%; height: auto; display: block; object-fit: cover; border-radius: 6px; box-shadow: 0 2px 6px rgba(0,0,0,0.1);">
-          <img src="{{ step.image.url }}" alt="Bild zu {{ step.title }}">
-        </div>
-        {% endif %}
-
-        {% if step.video %}
-  <div class="step-image" style="width: 100%; border-radius: 6px;">
-    <video controls style="max-width: 100%; border-radius: 6px; box-shadow: 0 2px 6px rgba(0,0,0,0.1);">
-      <source src="{{ step.video.url }}">
-      Dein Browser unterstützt dieses Video nicht.
-    </video>
+        {% if quiz.image %}
+  <div class="step-image" style="width: 100%; height: auto; display: block; object-fit: cover; border-radius: 6px; box-shadow: 0 2px 6px rgba(0,0,0,0.1);">
+    <img src="{{ quiz.image.url }}" alt="Bild zur Frage {{ quiz.title }}">
   </div>
-{% endif %}
+  {% endif %}
+    </div>
+
 </div>
       </div>
     </div>
 
+
     <!-- 3) Footer Navigation -->
     <footer class="step-nav">
-      {% if prev_order %}
-      <a href="{% url 'tutorial_step' tutorial.id prev_order %}"
-         class="button button--secondary">« Zurück</a>
-      {% else %}
-      <button class="button button--secondary" disabled>« Zurück</button>
-      {% endif %}
-      {% if next_order %}
-  <a href="{% url 'tutorial_step' tutorial.id next_order %}"
-     class="button button--primary">Weiter »</a>
-{% else %}
-  {% if has_quiz %}
-    <a href="{% url 'start_quiz' tutorial.id %}"
-       class="button button--primary">➤ Zu den Fragen</a>
+  {% if prev_order %}
+  <a href="{% url 'quiz_question' tutorial.id prev_order %}" class="button button--secondary">« Zurück</a>
   {% else %}
-    <a href="{% url 'tutorial-detail' pk=tutorial.id %}"
-       class="button button--primary">Tutorial beenden</a>
+  <button class="button button--secondary" disabled>« Zurück</button>
   {% endif %}
-{% endif %}
 
-    </footer>
+  {% if next_order %}
+  <a href="{% url 'quiz_question' tutorial.id next_order %}" class="button button--primary">Weiter »</a>
+  {% else %}
+  <a href="{% url 'quiz_result' tutorial.id %}" class="button button--primary">Abschließen & Auswertung</a>
+  {% endif %}
+</footer>
+
   </div>
 
   <!-- GOOGLE TRANSLATE -->

@@ -21,7 +21,7 @@ urlpatterns = [
     path('create/', views.tutorial_create_landing, name='create'),
     path('files/', views.home, name='files'),     # Dummy-URL für files
     path('community/', views.home, name='community'),     # Dummy-URL für community
-    path('dashboard/', views.home, name='dashboard'),     # Dummy-URL für dashboard
+    path('dashboard/', views.dashboard_view, name='dashboard'),
     path('create/new/', create_tutorial, name='tutorial_creator'),
     path('tutorial/<int:tutorial_id>/edit-steps/', views.edit_tutorial_sections, name='edit_tutorial_sections'),
     path('tutorial/<int:tutorial_id>/delete/', views.delete_tutorial, name='delete_tutorial'),
@@ -30,6 +30,9 @@ urlpatterns = [
     path('tutorials/<int:pk>/', views.TutorialDetailView.as_view(), name='tutorial-detail'),
     path('tutorial/<int:tutorial_id>/step/<int:step_order>/',views.tutorial_step,name='tutorial_step'),
     path('tutorial/<int:tutorial_id>/all_steps/',views.tutorial_all_steps,name='tutorial_all_steps'),
+    path('tutorial/<int:tutorial_id>/quiz/start/', views.start_quiz, name='start_quiz'),
+    path('tutorial/<int:tutorial_id>/quiz/<int:question_order>/', views.quiz_question, name='quiz_question'),
+    path('tutorial/<int:tutorial_id>/quiz/result/', views.quiz_result, name='quiz_result'),
 
 
 

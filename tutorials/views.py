@@ -343,6 +343,7 @@ def tutorial_step(request, tutorial_id, step_order):
     tutorial = get_object_or_404(Tutorial, id=tutorial_id)
     steps = tutorial.sections.all()
     total = steps.count()
+    has_quiz = tutorial.quiz.exists()
 
     # aktueller Schritt
     step = get_object_or_404(TutorialSection, tutorial=tutorial, order=step_order)
@@ -366,6 +367,7 @@ def tutorial_step(request, tutorial_id, step_order):
         'progress': progress,
         'prev_progress': prev_progress,
         'active_page': 'tutorials',
+        'has_quiz': has_quiz,  # 👈 HINZUGEFÜGT
     })
 
 from django.contrib.auth.decorators import login_required
@@ -380,5 +382,136 @@ def tutorial_all_steps(request, tutorial_id):
         'tutorial': tutorial,
         'steps': steps,
         'active_page': 'tutorials',
+    })
+
+# views.py
+from django.shortcuts import render, redirect, get_object_or_404
+from .models import Tutorial, Quiz, QuizResult, UserProgress
+from django.contrib.auth.decorators import login_required
+
+@login_required
+def start_quiz(request, tutorial_id):
+    tutorial = get_object_or_404(Tutorial, id=tutorial_id)
+    return redirect('quiz_question', tutorial_id=tutorial.id, question_order=1)
+
+@login_required
+def quiz_question(request, tutorial_id, question_order):
+    tutorial = get_object_or_404(Tutorial, id=tutorial_id)
+    question = get_object_or_404(Quiz, tutorial=tutorial, order=question_order)
+    questions = Quiz.objects.filter(tutorial=tutorial).count()
+    progress = int((question_order - 1) / questions * 100)
+
+    # Hole vorherige Antworten aus der Session
+    if 'answers' not in request.session:
+        request.session['answers'] = {}
+
+    if request.method == 'POST':
+        selected = request.POST.getlist('selected_answers')
+        request.session['answers'][str(question_order)] = selected
+        request.session.modified = True
+
+        if question_order < questions:
+            return redirect('quiz_question', tutorial_id=tutorial.id, question_order=question_order + 1)
+        else:
+            return redirect('quiz_result', tutorial_id=tutorial.id)
+
+    # Dynamisch nur gefüllte Antworten anzeigen
+    answers = []
+    for i in range(1, 6):
+        answer = getattr(question, f'answer_{i}')
+        if answer:
+            answers.append({'text': answer, 'value': i})
+
+    # NEU: Alle Fragen laden für die Sidebar
+    quiz_list = Quiz.objects.filter(tutorial=tutorial).order_by('order')
+
+    return render(request, 'tutorials/quiz_question.html', {
+
+        'tutorial': tutorial,
+        'quiz': question,
+        'answers': answers,
+        'order': question_order,
+        'total': questions,
+        'progress': progress,
+        'quiz_list': quiz_list,
+
+    })
+
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render, get_object_or_404
+from .models import Tutorial, Quiz, QuizResult, UserProgress
+from django.utils import timezone
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render, get_object_or_404
+from .models import Tutorial, Quiz, QuizResult, UserProgress
+
+@login_required
+def quiz_result(request, tutorial_id):
+    tutorial = get_object_or_404(Tutorial, id=tutorial_id)
+    questions = Quiz.objects.filter(tutorial=tutorial)
+    user_answers = request.session.get('answers', {})
+
+    correct = 0
+    total = questions.count()
+
+    for q in questions:
+        user_answer_list = user_answers.get(str(q.order), [])
+        if not isinstance(user_answer_list, list):
+            user_answer_list = [user_answer_list]
+
+        correct_answers = [
+            str(i) for i in range(1, 6)
+            if getattr(q, f'is_correct_{i}')
+        ]
+
+        if set(user_answer_list) == set(correct_answers):
+            correct += 1
+
+    score = round((correct / total) * 100, 2) if total > 0 else 0.0
+
+    if score > 50:
+        # Ergebnis speichern
+        QuizResult.objects.update_or_create(
+            user=request.user,
+            tutorial=tutorial,
+            defaults={
+                'correct_answers': correct,
+                'total_questions': total,
+                'score_percent': score
+            }
+        )
+
+        progress, _ = UserProgress.objects.get_or_create(
+            user=request.user,
+            tutorial=tutorial
+        )
+        progress.score_percent = score
+        progress.completed = True
+        progress.completed_at = timezone.now()  # ✅ Zeitstempel setzen
+        progress.save()
+
+    # Session aufräumen
+    request.session.pop('answers', None)
+
+    return render(request, 'tutorials/result.html', {
+        'tutorial': tutorial,
+        'score': score,
+        'correct': correct,
+        'total': total
+    })
+
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render
+from .models import UserProgress
+
+@login_required
+def dashboard_view(request):
+    progress_entries = UserProgress.objects.filter(
+        user=request.user,
+        completed=True
+    ).select_related('tutorial').order_by('-completed_at')  # <--- Hier geändert
+
+    return render(request, 'tutorials/dashboard.html', {
+        'progress_entries': progress_entries
     })
 

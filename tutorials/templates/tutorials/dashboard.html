@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+{% block content %}
+
+<style>
+    .dashboard-container {
+        max-width: 900px;
+        margin: 40px auto;
+        background: #fff;
+        padding: 40px;
+        border-radius: 8px;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+    }
+
+    .dashboard-container h2 {
+        color: #155a7a;
+        font-weight: bold;
+        margin-bottom: 30px;
+        text-align: center;
+    }
+
+    .dashboard-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    .dashboard-table th,
+    .dashboard-table td {
+        padding: 14px 20px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+    }
+
+    .dashboard-table th {
+        background-color: #f0f4f8;
+        color: #155a7a;
+        font-weight: bold;
+    }
+
+    .dashboard-table tr:hover {
+        background-color: #f9f9f9;
+    }
+
+    .dashboard-table td a {
+        color: #2b9bc4;
+        font-weight: 500;
+        text-decoration: none;
+    }
+
+    .dashboard-table td a:hover {
+        text-decoration: underline;
+    }
+
+    .no-progress {
+        text-align: center;
+        font-size: 1.1rem;
+        color: #777;
+        margin-top: 20px;
+    }
+</style>
+
+<div class="dashboard-container">
+    <h2>Dein Lernfortschritt</h2>
+
+    {% if progress_entries %}
+        <table class="dashboard-table">
+            <thead>
+                <tr>
+                    <th>Tutorial</th>
+                    <th>Abgeschlossen am</th>
+                    <th>Score</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for progress in progress_entries %}
+                <tr>
+                    <td>
+                        <a href="{% url 'tutorial-detail' progress.tutorial.id %}">
+                            {{ progress.tutorial.title }}
+                        </a>
+                    </td>
+                    <td>{{ progress.completed_at|date:"d.m.Y H:i" }}</td>
+                    <td>{{ progress.score_percent }}%</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p class="no-progress">Du hast noch keine Tutorials abgeschlossen.</p>
+    {% endif %}
+</div>
+
+{% endblock %}

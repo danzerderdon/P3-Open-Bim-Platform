@@ -1,6 +1,8 @@
 {% extends 'base.html' %}
 {% load static %}
 
+{% load filename_filters %}
+
 
 
 
@@ -123,6 +125,12 @@
   z-index: 9999;
   transition: opacity 2s ease; /* 1s Fade */
 }
+.back-button.blue {
+  background-color: #3498db;
+}
+.back-button.blue:hover {
+  background-color: #2980b9;
+}
 
 
 </style>
@@ -168,9 +176,23 @@
       {% endfor %}
     </div>
   {% endif %}
+
+  {% if object.attachments %}
+<br><hr>
+
+<p><strong>Zum Bearbeiten benötigen sie folgenden Donwload:    </strong> </p>
+<p>
+  <a href="{{ object.attachments.url }}" download style="color: #156082; text-decoration: underline;">
+      {{ object.attachments.name|basename }}
+    </a>
+</p>
+<a href="{{ object.attachments.url }}" download class="back-button blue">
+  ⬇️ Anhang herunterladen
+</a>
+
+  <br>
+{% endif %}
 <br><hr><br>
-
-
 
 
 

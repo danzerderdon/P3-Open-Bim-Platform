@@ -10,6 +10,7 @@ media/tutorial_images/
 *.mkv
 *.webm
 
+
 # Bytecode-Dateien
 __pycache__/
 *.py[cod]

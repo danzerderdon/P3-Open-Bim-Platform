@@ -60,42 +60,64 @@
     }
 </style>
 
+
+{% if current_user_rank %}
 <div class="dashboard-container" style="box-shadow: none; border: 8px solid #97c7e6;">
-    <h2>Dein Lernfortschritt</h2>
-
-    {% if progress_entries %}
-        <table class="dashboard-table">
-            <thead>
-                <tr>
-                    <th>Tutorial</th>
-                    <th>Seire</th>
-                    <th>Abgeschlossen am</th>
-                    <th>Score</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for progress in progress_entries %}
-                <tr>
-                    <td>
-                        <a href="{% url 'tutorial-detail' progress.tutorial.id %}">
-                            {{ progress.tutorial.title }}
-                        </a>
-                    </td>
-                    <td>{{ progress.tutorial.series }}</td>
-
-                    <td>{{ progress.completed_at|date:"d.m.Y H:i" }}</td>
-                    <td>{{ progress.score_percent }}%</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+    <h2> Benutzer-Ranking</h2>
+  <div style="text-align: center; margin: 5px auto; font-size: 1.1rem;">
+    {% if current_user_rank == 1 %}
+      🥇  <strong style="color: #c7a800">Sie sind Platz {{ current_user_rank }}</strong> mit <strong>{{ current_user_completed }}</strong> bestandenen Tutorials, gute Arbeit!
+    {% elif current_user_rank == 2 %}
+      🥈  <strong style="color: #999999">Sie sind Platz {{ current_user_rank }}</strong> mit <strong>{{ current_user_completed }}</strong> bestandenen Tutorials, gute Arbeit!
+    {% elif current_user_rank == 3 %}
+      🥉  <strong style="color: #cd7f32">Sie sind Platz {{ current_user_rank }}</strong> mit <strong>{{ current_user_completed }}</strong> bestandenen Tutorials, gute Arbeit!
     {% else %}
-        <p class="no-progress">Du hast noch keine Tutorials abgeschlossen.</p>
-    {% endif %}
+      🎉  <strong>Sie sind Platz {{ current_user_rank }}</strong> mit <strong>{{ current_user_completed }}</strong> bestandenen Tutorials, gute Arbeit!
+  {% endif %}
+  </div>
+
+{% endif %}
+<br>
+ <!-- Toggle Button -->
+<div style="text-align:center; margin-bottom: 10px;">
+  <button onclick="toggleTopUsers()" style="padding: 6px 12px; border-radius: 4px; background-color: #155a7a; color: white; border: none; cursor: pointer;">
+    Top 5 Benutzer anzeigen
+  </button>
+</div>
+
+<!-- Versteckbare Tabelle -->
+<div id="top-users-section" style="display: none;">
+  <h2 style="text-align:center;">🏆 Top 5 Benutzer</h2>
+  <table class="dashboard-table">
+    <thead>
+      <tr>
+        <th>Platz</th>
+        <th>Benutzer</th>
+        <th>Abgeschlossene Tutorials</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for user in top_users %}
+        <tr>
+          <td>
+            {% if forloop.counter == 1 %} 🥇
+            {% elif forloop.counter == 2 %} 🥈
+            {% elif forloop.counter == 3 %} 🥉
+            {% else %} {{ forloop.counter }}
+            {% endif %}
+          </td>
+          <td>{% if user == request.user %}<strong>Du</strong>{% else %}{{ user.username }}{% endif %}</td>
+          <td>{{ user.tutorial_count }}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
 
 
-<br><hr><br>
-<h2>Tutorial-Serien</h2>
+
+    <br><hr><br>
+<h2>Statistics: Tutorial-Serien</h2>
 
 <!-- Serienauswahl -->
 <form method="get" style="text-align: center; margin-bottom: 20px;">
@@ -159,8 +181,53 @@
 {% endif %}
 
 
+
+<br><hr><br>
+
+
+    <h2>Lernfortschritt - abgeschlossene tutorials</h2>
+
+    {% if progress_entries %}
+        <table class="dashboard-table">
+            <thead>
+                <tr>
+                    <th>Tutorial</th>
+                    <th>Seire</th>
+                    <th>Abgeschlossen am</th>
+                    <th>Score</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for progress in progress_entries %}
+                <tr>
+                    <td>
+                        <a href="{% url 'tutorial-detail' progress.tutorial.id %}">
+                            {{ progress.tutorial.title }}
+                        </a>
+                    </td>
+                    <td>{{ progress.tutorial.series }}</td>
+
+                    <td>{{ progress.completed_at|date:"d.m.Y H:i" }}</td>
+                    <td>{{ progress.score_percent }}%</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p class="no-progress">Du hast noch keine Tutorials abgeschlossen.</p>
+    {% endif %}
+
+<br>
+
+
 </div>
 
+<script>
+  function toggleTopUsers() {
+    const section = document.getElementById("top-users-section");
+    section.style.display = section.style.display === "none" ? "block" : "none";
+  }
+</script>
 
 
 

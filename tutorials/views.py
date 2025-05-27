@@ -507,6 +507,8 @@ from .models import UserProgress
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from .models import Tutorial, UserProgress
+from django.contrib.auth.models import User
+from django.db.models import Count, Q
 
 @login_required
 def dashboard_view(request):
@@ -547,6 +549,32 @@ def dashboard_view(request):
 
     percent_completed = int(100 * completed_count / total) if total > 0 else 0
 
+    # Ranking: Anzahl abgeschlossener Tutorials je Benutzer
+    user_rankings = (
+        User.objects
+        .annotate(completed_count=Count('userprogress', filter=Q(userprogress__completed=True)))
+        .order_by('-completed_count', 'username')
+    )
+
+    # Den Platz des aktuellen Benutzers ermitteln (1-basiert)
+    current_user_rank = next(
+        (i + 1 for i, u in enumerate(user_rankings) if u.id == request.user.id),
+        None
+    )
+    current_user_completed = next(
+        (u.completed_count for u in user_rankings if u.id == request.user.id),
+        0
+    )
+
+    top_users = (
+        User.objects
+        .annotate(tutorial_count=Count('userprogress', filter=Q(userprogress__completed=True)))
+        .order_by('-tutorial_count', 'username')[:5]
+    )
+
+
+
+
     return render(request, 'tutorials/dashboard.html', {
         'progress_entries': progress_entries,
         'series_list': all_series,
@@ -557,5 +585,11 @@ def dashboard_view(request):
         'open_count': open_count,
         'average_score': average_score,
         'percent_completed': percent_completed,
+        'current_user_rank': current_user_rank,
+        'current_user_completed': current_user_completed,
+        'completed_count': completed_count,
+        'open_count': open_count,
+        'top_users': top_users,
+
     })
 

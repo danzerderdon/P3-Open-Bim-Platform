@@ -74,10 +74,10 @@
     background-color: #f0f4f8;
   }
 </style>
-
-
-{% if current_user_rank %}
 <div class="dashboard-container" style="box-shadow: none; border: 8px solid #97c7e6;">
+<h1 style="color: #156082; text-align: center;">Dashboard: – Alles auf einen Blick</h1><br><hr><br>
+{% if current_user_rank %}
+
     <h2> Benutzer-Ranking</h2>
   <div style="text-align: center; margin: 5px auto; font-size: 1.1rem;">
     {% if current_user_rank == 1 %}

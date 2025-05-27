@@ -504,14 +504,58 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from .models import UserProgress
 
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render
+from .models import Tutorial, UserProgress
+
 @login_required
 def dashboard_view(request):
+    # Alle abgeschlossenen Tutorials des Users
     progress_entries = UserProgress.objects.filter(
-        user=request.user,
-        completed=True
-    ).select_related('tutorial').order_by('-completed_at')  # <--- Hier geändert
+        user=request.user, completed=True
+    ).select_related('tutorial').order_by('-completed_at')
+
+    # Serien, in denen der User Tutorials hat
+    all_series = Tutorial.objects.filter(
+        userprogress__user=request.user
+    ).values_list('series', flat=True).distinct()
+
+    # Auswahl aus dem Dropdown
+    selected_series = request.GET.get('series')
+
+    if selected_series:
+        tutorials_in_series = Tutorial.objects.filter(series=selected_series).order_by('created_at')
+    else:
+        tutorials_in_series = []
+
+    # Alle Fortschritte für spätere Vergleiche
+    progress_map = {
+        p.tutorial.id: p for p in UserProgress.objects.filter(user=request.user)
+    }
+
+    # Berechnung der offenen und abgeschlossenen Tutorials
+    total = len(tutorials_in_series)
+    completed_count = sum(1 for t in tutorials_in_series if t.id in progress_map)
+    open_count = total - completed_count
+
+    # Score-Durchschnitt und Prozent
+    if completed_count > 0:
+        score_sum = sum(progress_map[t.id].score_percent for t in tutorials_in_series if t.id in progress_map)
+        average_score = score_sum / completed_count
+    else:
+        average_score = 0
+
+    percent_completed = int(100 * completed_count / total) if total > 0 else 0
 
     return render(request, 'tutorials/dashboard.html', {
-        'progress_entries': progress_entries
+        'progress_entries': progress_entries,
+        'series_list': all_series,
+        'selected_series': selected_series,
+        'tutorials_in_series': tutorials_in_series,
+        'progress_map': progress_map,
+        'completed_count': completed_count,
+        'open_count': open_count,
+        'average_score': average_score,
+        'percent_completed': percent_completed,
     })
 

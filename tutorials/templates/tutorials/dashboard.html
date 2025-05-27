@@ -1,5 +1,7 @@
 {% extends "base.html" %}
 {% block content %}
+{% load quiz_extras %}
+
 
 <style>
     .dashboard-container {
@@ -66,6 +68,7 @@
             <thead>
                 <tr>
                     <th>Tutorial</th>
+                    <th>Seire</th>
                     <th>Abgeschlossen am</th>
                     <th>Score</th>
                 </tr>
@@ -78,6 +81,8 @@
                             {{ progress.tutorial.title }}
                         </a>
                     </td>
+                    <td>{{ progress.tutorial.series }}</td>
+
                     <td>{{ progress.completed_at|date:"d.m.Y H:i" }}</td>
                     <td>{{ progress.score_percent }}%</td>
                 </tr>
@@ -87,6 +92,76 @@
     {% else %}
         <p class="no-progress">Du hast noch keine Tutorials abgeschlossen.</p>
     {% endif %}
+
+
+<br><hr><br>
+<h2>Tutorial-Serien</h2>
+
+<!-- Serienauswahl -->
+<form method="get" style="text-align: center; margin-bottom: 20px;">
+  <label for="series">Serie auswählen:</label>
+  <select name="series" id="series" onchange="this.form.submit()">
+    <option value="">-- wählen --</option>
+    {% for s in series_list %}
+      <option value="{{ s }}" {% if s == selected_series %}selected{% endif %}>{{ s }}</option>
+    {% endfor %}
+  </select>
+</form>
+
+{% if tutorials_in_series %}
+  <div style="text-align: center; margin-bottom: 20px;">
+    <p><strong>Durchschnittlicher Score:</strong> {{ average_score|floatformat:2 }}%</p>
+
+    <div style="width: 70%; margin: 0 auto 10px; background-color: #e0e0e0; border-radius: 25px; height: 24px; overflow: hidden;">
+      <div style="width: {{ percent_completed }}%; height: 100%; background-color: #155a7a; color: white; text-align: center; line-height: 24px;">
+        {{ percent_completed }}%
+      </div>
+    </div>
+
+    <p>
+      ✅ <strong>{{ completed_count }}</strong> Abgeschlossen /
+      🔴 <strong>{{ open_count }}</strong> Offen
+    </p>
+  </div>
+
+  <!-- Tutorials-Tabelle -->
+  <table class="dashboard-table">
+    <thead>
+      <tr>
+        <th>Tutorial</th>
+        <th>Serie</th>
+        <th>Abgeschlossen am</th>
+        <th>Score</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for tutorial in tutorials_in_series %}
+        {% if tutorial.id in progress_map %}
+          {% with progress=progress_map|dictkey:tutorial.id %}
+            <tr style="background-color: #e6f8ec;">
+              <td><a href="{% url 'tutorial-detail' tutorial.id %}">{{ tutorial.title }}</a></td>
+              <td>{{ tutorial.series }}</td>
+              <td>{{ progress.completed_at|date:"d.m.Y H:i" }}</td>
+              <td>{{ progress.score_percent }}%</td>
+            </tr>
+          {% endwith %}
+        {% else %}
+          <tr style="background-color: #ffe6e6;">
+            <td><a href="{% url 'tutorial-detail' tutorial.id %}">{{ tutorial.title }}</a></td>
+            <td>{{ tutorial.series }}</td>
+            <td>-</td>
+            <td>-</td>
+          </tr>
+        {% endif %}
+      {% endfor %}
+    </tbody>
+  </table>
+{% endif %}
+
+
 </div>
+
+
+
 
 {% endblock %}

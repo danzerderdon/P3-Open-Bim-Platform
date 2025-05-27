@@ -58,6 +58,21 @@
         color: #777;
         margin-top: 20px;
     }
+    .dashboard-table {
+    width: 100%;
+    border-collapse: collapse;
+    border: 2px solid #155a7a; /* Gesamter Tabellenrahmen */
+  }
+
+  .dashboard-table th,
+  .dashboard-table td {
+    border: 1px solid #ccc; /* Zellrahmen */
+    padding: 12px 16px;
+  }
+
+  .dashboard-table thead {
+    background-color: #f0f4f8;
+  }
 </style>
 
 
@@ -132,18 +147,45 @@
 
 {% if tutorials_in_series %}
   <div style="text-align: center; margin-bottom: 20px;">
-    <p><strong>Durchschnittlicher Score:</strong> {{ average_score|floatformat:2 }}%</p>
 
-    <div style="width: 70%; margin: 0 auto 10px; background-color: #e0e0e0; border-radius: 25px; height: 24px; overflow: hidden;">
-      <div style="width: {{ percent_completed }}%; height: 100%; background-color: #155a7a; color: white; text-align: center; line-height: 24px;">
-        {{ percent_completed }}%
+
+
+   <div style="display: flex; justify-content: center; gap: 60px; flex-wrap: wrap; align-items: flex-start;">
+  <div style="text-align: center;">
+    <canvas id="progressDonut" width="250" height="250"></canvas>
+    <p><strong>Fortschritt</strong></p>
+    <div style="display: flex; justify-content: center; gap: 10px; margin-top: 8px;">
+      <div style="display: flex; align-items: center; gap: 5px;">
+        <div style="width: 15px; height: 15px; background-color: #4CAF50;"></div>
+        <span>Abgeschlossen</span>
+      </div>
+      <div style="display: flex; align-items: center; gap: 5px;">
+        <div style="width: 15px; height: 15px; background-color: #F44336;"></div>
+        <span>Offen</span>
       </div>
     </div>
+  </div>
 
-    <p>
-      ✅ <strong>{{ completed_count }}</strong> Abgeschlossen /
-      🔴 <strong>{{ open_count }}</strong> Offen
-    </p>
+  <div style="text-align: center;">
+    <canvas id="scoreDonut" width="250" height="250"></canvas>
+    <p><strong>Durchschnittlicher Score</strong></p>
+    <div style="display: flex; justify-content: center; gap: 10px; margin-top: 8px;">
+      <div style="display: flex; align-items: center; gap: 5px;">
+        <div style="width: 15px; height: 15px; background-color: #0F5F7D;"></div>
+        <span>Score</span>
+      </div>
+      <div style="display: flex; align-items: center; gap: 5px;">
+        <div style="width: 15px; height: 15px; background-color: #E0E0E0;"></div>
+        <span>Rest</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+
   </div>
 
   <!-- Tutorials-Tabelle -->
@@ -185,7 +227,7 @@
 <br><hr><br>
 
 
-    <h2>Lernfortschritt - abgeschlossene tutorials</h2>
+    <h2>Lernfortschritt: abgeschlossene Tutorials</h2>
 
     {% if progress_entries %}
         <table class="dashboard-table">
@@ -227,6 +269,90 @@
     const section = document.getElementById("top-users-section");
     section.style.display = section.style.display === "none" ? "block" : "none";
   }
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
+
+
+<script>
+  const completed = {{ completed_count }};
+  const open = {{ open_count }};
+  const score = {{ average_score|floatformat:0 }};
+
+  Chart.register(ChartDataLabels);
+
+  // Fortschritt-Donut (grün / rot)
+  new Chart(document.getElementById('progressDonut'), {
+    type: 'doughnut',
+    data: {
+      labels: ['Abgeschlossen', 'Offen'],
+      datasets: [{
+        data: [completed, open],
+        backgroundColor: ['#4CAF50', '#F44336'],
+        borderWidth: 0,
+      }]
+    },
+    layout: {
+  padding: {
+    top: 10,
+    bottom: 10,
+    left: 10,
+    right: 10
+  }
+},
+    options: {
+    radius: '100%',
+      cutout: '70%',
+      plugins: {
+        legend: { display: false },
+        datalabels: {
+          color: '#fff',
+          font: { weight: 'bold', size: 14 },
+          formatter: (value, ctx) => {
+            const total = ctx.chart._metasets[0].total || ctx.dataset.data.reduce((a, b) => a + b, 0);
+            return Math.round(value / total * 100);
+          }
+        }
+      }
+    }
+  });
+
+  // Score-Donut (blau / grau)
+  new Chart(document.getElementById('scoreDonut'), {
+    type: 'doughnut',
+    data: {
+      labels: ['Score', 'Rest'],
+      datasets: [{
+        data: [score, 100 - score],
+        backgroundColor: ['#0F5F7D', '#E0E0E0'],
+        borderWidth: 0,
+      }]
+    },
+    layout: {
+  padding: {
+    top: 10,
+    bottom: 10,
+    left: 10,
+    right: 10
+  }
+},
+    options: {
+    radius: '100%',
+      cutout: '70%',
+      plugins: {
+        legend: { display: false },
+        datalabels: {
+          color: '#fff',
+          font: { weight: 'bold', size: 14 },
+          formatter: (value, ctx) => {
+            const total = ctx.chart._metasets[0].total || ctx.dataset.data.reduce((a, b) => a + b, 0);
+            return Math.round(value / total * 100);
+          }
+        }
+      }
+    }
+  });
 </script>
 
 

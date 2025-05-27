@@ -392,6 +392,77 @@ body.no-background-image {
 }
 
 
+    .styled-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 10px 0;
+  font-size: 1.1rem;
+  cursor: pointer;
+  user-select: none;
+}
+
+.styled-checkbox input[type="checkbox"] {
+  appearance: none;
+  -webkit-appearance: none;
+  background-color: #fff;
+  margin: 0;
+  font: inherit;
+  color: #155a7a;
+  width: 20px;
+  height: 20px;
+  border: 2px solid #155a7a;
+  border-radius: 4px;
+  display: grid;
+  place-content: center;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s;
+}
+
+.styled-checkbox input[type="checkbox"]::before {
+  content: "✔";
+  color: white;
+  font-size: 0.9rem;
+  transform: scale(0);
+  transition: transform 0.1s ease-in-out;
+}
+
+.styled-checkbox input[type="checkbox"]:checked {
+  background-color: #155a7a;
+  border-color: #155a7a;
+}
+
+.styled-checkbox input[type="checkbox"]:checked::before {
+  transform: scale(1);
+}
+
+/* Standardtext */
+.styled-checkbox span {
+  transition: color 0.2s ease;
+}
+
+/* Falsche Antwort (initial rot) */
+.styled-checkbox.incorrect span {
+  color: #c0392b;  /* rot */
+}
+
+/* Beim Aktivieren: grün */
+.styled-checkbox input[type="checkbox"]:checked + span {
+  color: #27ae60;  /* grün */
+}
+
+    /* Standardfarbe: rot */
+.styled-checkbox span {
+  color: #c0392b; /* rot */
+  transition: color 0.2s ease;
+}
+
+/* Beim Anklicken wird Text grün */
+.styled-checkbox input[type="checkbox"]:checked + span {
+  color: #27ae60; /* grün */
+  font-weight: bold;
+}
+
   </style>
 
   <style>
@@ -470,16 +541,17 @@ body.no-background-image {
     <!-- 2) Scrollbarer Bereich -->
     <div class="step-body">
   <div class="step-text">
-    <h2>Frage {{ quiz.order }}: {{ quiz.title }}</h2>
+    <h2>Frage {{ quiz.order }}: {{ quiz.title }}</h2><br>
     <p>{{ quiz.content|safe }}</p>
-
+<br><hr>
 <form method="post">
   {% csrf_token %}
   {% for a in answers %}
-    <label style="display: block; margin-top: 10px;">
-      <input type="checkbox" name="selected_answers" value="{{ a.value }}">
-      {{ a.text }}
-    </label>
+    <label class="styled-checkbox {% if a.is_correct == False %}incorrect{% endif %}">
+    <input type="checkbox" name="selected_answers" value="{{ a.value }}">
+    <span>{{ a.text }}</span>
+  </label>
+
   {% endfor %}
   <br>
   <button type="submit" class="button button--primary">Antwort bestätigen & Weiter</button>

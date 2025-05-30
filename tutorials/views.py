@@ -516,11 +516,16 @@ from django.shortcuts import render, redirect
 from django.db.models import Count, Q
 from .models import Tutorial, UserProgress, UserProfile
 from .forms import ProfileForm  # ⬅ deine Form importieren
+from .utils import check_and_award_achievements
+from .models import UserAchievement  # falls noch nicht importiert
 
 @login_required
 def dashboard_view(request):
     # UserProfile holen oder erstellen
     profile, _ = UserProfile.objects.get_or_create(user=request.user)
+
+    # Checke Achievements bei jedem Dashboard-Aufruf
+    check_and_award_achievements(request.user)
 
     # Profilformular verarbeiten
     if request.method == 'POST':
@@ -584,6 +589,10 @@ def dashboard_view(request):
         .order_by('-tutorial_count', 'username')[:5]
     )
 
+
+
+    user_achievements = UserAchievement.objects.filter(user=request.user).select_related('achievement')
+
     return render(request, 'tutorials/dashboard.html', {
         'form': form,  # ⬅ wichtig!
         'progress_entries': progress_entries,
@@ -598,4 +607,5 @@ def dashboard_view(request):
         'current_user_rank': current_user_rank,
         'current_user_completed': current_user_completed,
         'top_users': top_users,
+        'achievements': [ua.achievement for ua in user_achievements],
     })

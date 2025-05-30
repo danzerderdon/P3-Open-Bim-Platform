@@ -100,6 +100,14 @@
     margin-bottom: 10px;
 }
 
+  .achievement-box {
+  background-color: #ccc;
+  padding: 10px 16px;
+  border-radius: 8px;
+  margin-bottom: 12px;
+  font-size: 1rem;
+}
+
 </style>
 
 <h1 style="color: #156082; text-align: center;">Dashboard: – Alles auf einen Blick</h1><hr>
@@ -206,6 +214,25 @@
 
 
     <br><hr><br>
+
+
+
+
+
+<div class="achievements-section">
+  <h2>Achievements</h2>
+  {% if achievements %}
+    {% for ach in achievements %}
+      <div class="achievement-box">
+        👑 {{ ach.description }}
+      </div>
+    {% endfor %}
+  {% else %}
+    <p><em>Keine Achievements bisher.</em></p>
+  {% endif %}
+</div>
+
+
 
       </div>
 
@@ -460,6 +487,7 @@ function toggleProfileEdit() {
   form.style.display = form.style.display === "none" ? "block" : "none";
 }
 </script>
+
 
 
 {% endblock %}

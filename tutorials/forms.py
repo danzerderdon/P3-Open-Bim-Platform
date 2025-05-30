@@ -78,7 +78,29 @@ from django.forms import ModelForm, inlineformset_factory
 from .models import Tutorial
 from django.forms import ModelForm, inlineformset_factory
 from .models import Tutorial
+from django import forms
+from .models import UserProfile
 
+class ProfileForm(forms.ModelForm):
+    class Meta:
+        model = UserProfile
+        fields = ['profile_picture', 'bio']
+
+from django import forms
+from .models import UserProfile
+
+class ProfileForm(forms.ModelForm):
+    class Meta:
+        model = UserProfile
+        fields = ['profile_picture', 'bio']
+        widgets = {
+            'bio': forms.Textarea(attrs={
+                'rows': 4,
+                'placeholder': 'Schreibe etwas über dich...',
+                'style': 'width: 100%; resize: vertical;',
+            }),
+            'profile_picture': forms.ClearableFileInput(),
+        }
 
 
 

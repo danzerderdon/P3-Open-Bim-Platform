@@ -510,37 +510,49 @@ from .models import Tutorial, UserProgress
 from django.contrib.auth.models import User
 from django.db.models import Count, Q
 
+from .models import UserProfile       # 👈 Import hinzufügen
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render, redirect
+from django.db.models import Count, Q
+from .models import Tutorial, UserProgress, UserProfile
+from .forms import ProfileForm  # ⬅ deine Form importieren
+
 @login_required
 def dashboard_view(request):
-    # Alle abgeschlossenen Tutorials des Users
+    # UserProfile holen oder erstellen
+    profile, _ = UserProfile.objects.get_or_create(user=request.user)
+
+    # Profilformular verarbeiten
+    if request.method == 'POST':
+        form = ProfileForm(request.POST, request.FILES, instance=profile)
+        if form.is_valid():
+            form.save()
+            return redirect('dashboard')
+    else:
+        form = ProfileForm(instance=profile)
+
+    # Fortschrittseinträge
     progress_entries = UserProgress.objects.filter(
         user=request.user, completed=True
     ).select_related('tutorial').order_by('-completed_at')
 
-    # Serien, in denen der User Tutorials hat
+    # Serienübersicht
     all_series = Tutorial.objects.filter(
         userprogress__user=request.user
     ).values_list('series', flat=True).distinct()
 
-    # Auswahl aus dem Dropdown
     selected_series = request.GET.get('series')
+    tutorials_in_series = Tutorial.objects.filter(series=selected_series).order_by('created_at') if selected_series else []
 
-    if selected_series:
-        tutorials_in_series = Tutorial.objects.filter(series=selected_series).order_by('created_at')
-    else:
-        tutorials_in_series = []
-
-    # Alle Fortschritte für spätere Vergleiche
+    # Fortschritts-Map
     progress_map = {
         p.tutorial.id: p for p in UserProgress.objects.filter(user=request.user)
     }
 
-    # Berechnung der offenen und abgeschlossenen Tutorials
     total = len(tutorials_in_series)
     completed_count = sum(1 for t in tutorials_in_series if t.id in progress_map)
     open_count = total - completed_count
 
-    # Score-Durchschnitt und Prozent
     if completed_count > 0:
         score_sum = sum(progress_map[t.id].score_percent for t in tutorials_in_series if t.id in progress_map)
         average_score = score_sum / completed_count
@@ -549,14 +561,13 @@ def dashboard_view(request):
 
     percent_completed = int(100 * completed_count / total) if total > 0 else 0
 
-    # Ranking: Anzahl abgeschlossener Tutorials je Benutzer
+    # Ranking
     user_rankings = (
         User.objects
         .annotate(completed_count=Count('userprogress', filter=Q(userprogress__completed=True)))
         .order_by('-completed_count', 'username')
     )
 
-    # Den Platz des aktuellen Benutzers ermitteln (1-basiert)
     current_user_rank = next(
         (i + 1 for i, u in enumerate(user_rankings) if u.id == request.user.id),
         None
@@ -566,16 +577,15 @@ def dashboard_view(request):
         0
     )
 
+    # Top 5
     top_users = (
         User.objects
         .annotate(tutorial_count=Count('userprogress', filter=Q(userprogress__completed=True)))
         .order_by('-tutorial_count', 'username')[:5]
     )
 
-
-
-
     return render(request, 'tutorials/dashboard.html', {
+        'form': form,  # ⬅ wichtig!
         'progress_entries': progress_entries,
         'series_list': all_series,
         'selected_series': selected_series,
@@ -587,9 +597,5 @@ def dashboard_view(request):
         'percent_completed': percent_completed,
         'current_user_rank': current_user_rank,
         'current_user_completed': current_user_completed,
-        'completed_count': completed_count,
-        'open_count': open_count,
         'top_users': top_users,
-
     })
-

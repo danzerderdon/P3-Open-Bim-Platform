@@ -146,3 +146,35 @@ class QuizResult(models.Model):
 
     def __str__(self):
         return f"{self.user.username} – {self.tutorial.title} ({self.score_percent:.1f}%)"
+
+class UserProfile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    profile_picture = models.ImageField(upload_to='profile_pictures/', null=True, blank=True)
+    bio = models.TextField(max_length=500, blank=True)  # 🔥 NEU: Bio-Feld
+    dummy = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f"Profil von {self.user.username}"
+
+# models.py
+from django.db import models
+from django.contrib.auth.models import User
+
+class Achievement(models.Model):
+    title = models.CharField(max_length=100)
+    description = models.TextField(blank=True)
+    icon = models.ImageField(upload_to='achievement_icons/', blank=True, null=True)
+
+    def __str__(self):
+        return self.title
+
+class UserAchievement(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    achievement = models.ForeignKey(Achievement, on_delete=models.CASCADE)
+    earned_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('user', 'achievement')
+
+    def __str__(self):
+        return f"{self.user.username} – {self.achievement.title}"

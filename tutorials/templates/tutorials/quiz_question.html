@@ -491,9 +491,7 @@ body.no-background-image {
         <button type="submit" class="{% if active_page == 'create' %}active{% endif %}">Create</button>
       </form>
       {% endif %}
-      <form action="{% url 'community' %}" method="get">
-        <button type="submit" class="{% if active_page ==  'community' %}active{% endif %}">Community</button>
-      </form>
+
       {% if user.is_authenticated %}
       <form action="{% url 'dashboard' %}" method="get">
         <button type="submit" class="{% if active_page == 'dashboard' %}active{% endif %}">Dashboard</button>

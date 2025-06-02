@@ -126,9 +126,6 @@
         </form>
         {% endif %}
 
-        <form action="{% url 'community' %}" method="get">
-            <button type="submit" class="{% if active_page == 'community' %}active{% endif %}">Community</button>
-        </form>
 
         {% if user.is_authenticated %}
         <form action="{% url 'dashboard' %}" method="get">

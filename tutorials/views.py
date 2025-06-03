@@ -320,7 +320,9 @@ class TutorialListView(ListView):
     paginate_by = 10  # Optional: Pagination
 
 from django.views.generic.detail import DetailView
-from .models import Tutorial
+from .models import Tutorial, UserProgress
+from .utils import generate_score_distribution
+
 
 class TutorialDetailView(DetailView):
     model = Tutorial
@@ -330,10 +332,28 @@ class TutorialDetailView(DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         tutorial = self.get_object()
-        # Aufteilen und trimmen der Keywords
+        user = self.request.user
+
+        # Schlüsselwörter vorbereiten
         context["keywords"] = [kw.strip() for kw in tutorial.keywords.split(",")] if tutorial.keywords else []
+
+        # Anzahl Schritte & Quizfragen
         context["step_count"] = tutorial.sections.count()
         context["quiz_question_count"] = tutorial.quiz.count()
+
+        # Diagramm nur für eingeloggte Nutzer, die das Tutorial abgeschlossen haben
+        if user.is_authenticated:
+            try:
+                progress = UserProgress.objects.get(user=user, tutorial=tutorial)
+                if progress.completed:
+                    context["score_chart"] = generate_score_distribution(tutorial, user)
+                else:
+                    context["score_chart"] = None
+            except UserProgress.DoesNotExist:
+                context["score_chart"] = None
+        else:
+            context["score_chart"] = None
+
         return context
 
 from django.shortcuts import get_object_or_404, redirect, render
@@ -609,3 +629,4 @@ def dashboard_view(request):
         'top_users': top_users,
         'achievements': [ua.achievement for ua in user_achievements],
     })
+

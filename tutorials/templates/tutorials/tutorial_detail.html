@@ -139,6 +139,17 @@
 
 
 <div class="tutorial-detail-container" style="box-shadow: none; border: 8px solid #97c7e6;">
+
+  {% if score_chart %}
+<h1>Dein Ergebnis für dieses Tutorial:</h1>
+<p><strong>Notenverteilung im Vergleich zu anderen Nutzern:</strong></p>
+<img src="data:image/png;base64,{{ score_chart }}" alt="Notenverteilung" style="width: 100%;">
+<br><hr><br>
+
+
+{% endif %}
+
+
   <h1>{{ object.title }}</h1><br>
   {% if object.thumbnail %}
 

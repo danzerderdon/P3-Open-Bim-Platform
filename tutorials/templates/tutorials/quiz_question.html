@@ -470,6 +470,28 @@ body.no-background-image {
     background: #f5f7fa !important;
     background-image: none !important;
   }
+
+
+.step-media {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 40%;             /* feste Breite */
+  flex-shrink: 0;
+  align-items: center;
+  margin-left: 20px;
+  box-shadow: none !important;  /* sicherstellen, dass kein Schatten verwendet wird */
+}
+.step-image img,
+.step-image video {
+  width: 100%;           /* streckt auf volle Breite */
+  height: auto;
+  object-fit: cover;     /* alternativ: contain, je nach gewünschter Wirkung */
+  border-radius: 6px;
+  box-shadow: none !important; /* Box-Shadow auch hier entfernen */
+}
+
+
 </style>
 
 </head>

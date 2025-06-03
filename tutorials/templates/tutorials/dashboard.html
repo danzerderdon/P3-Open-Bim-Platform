@@ -107,6 +107,9 @@
   margin-bottom: 12px;
   font-size: 1rem;
 }
+   .user-panel {
+  display: none !important;
+}
 
 </style>
 
@@ -157,6 +160,13 @@
 
 <br><hr>
 
+    <h2 style="text-align: left"> Benutzer-Aktionen</h2><br>
+
+    <a style="display: inline-block; padding: 8px 16px; background-color: #1d677f; color: white; text-decoration: none; border-radius: 4px; cursor: pointer;" href="{% url 'passchange' %}">🔒 Passwort ändern</a><br>
+    <br><a style="display: inline-block; padding: 8px 16px; background-color: #1d677f; color: white; text-decoration: none; border-radius: 4px; cursor: pointer;" href="{% url 'change_role' %}">🧑‍🎓 Rolle ändern</a><br>
+    <br><a style="display: inline-block; padding: 8px 16px; background-color: #1d677f; color: white; text-decoration: none; border-radius: 4px; cursor: pointer;" href="{% url 'logout' %}">🚪 Logout</a><br>
+
+<br><hr>
 
 {% if current_user_rank %}
 

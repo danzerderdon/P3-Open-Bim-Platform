@@ -60,6 +60,8 @@ import matplotlib.pyplot as plt
 import numpy as np
 import io
 import base64
+from matplotlib.ticker import MaxNLocator
+
 
 from .models import UserProgress
 
@@ -82,6 +84,17 @@ def generate_score_distribution(tutorial, current_user):
     # Achsenbeschriftungen
     ax.set_xlabel("Score", fontsize=12,fontweight='bold', fontname='Arial')
     ax.set_ylabel("Anzahl Nutzer",fontweight='bold', fontsize=12, fontname='Arial')
+    # Y-Achse: nur ganze Zahlen, maximal 10 Ticks
+    from math import ceil
+
+    max_count = max(np.histogram(scores, bins=bins)[0])
+    ymax = int(ceil(max_count / 2) * 2)
+
+    ax.set_ylim(top=ymax)
+    ax.yaxis.set_major_locator(MaxNLocator(integer=True, nbins=10))
+
+
+
     #ax.set_title("Notenverteilung", fontsize=14, fontweight='bold', fontname='Arial')
 
     ax.set_xticks(bins)

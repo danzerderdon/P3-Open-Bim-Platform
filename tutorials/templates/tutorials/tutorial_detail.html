@@ -141,12 +141,14 @@
 <div class="tutorial-detail-container" style="box-shadow: none; border: 8px solid #97c7e6;">
 
   {% if score_chart %}
-<h1>Dein Ergebnis: <i>{{ object.title }}</i></h1>
+<div style="align: center; box-shadow: none; width: 93% !important; border: 8px solid #4CAF50; padding: 20px; border-radius: 15px;">
+
+<h1 style="color: #4CAF50">Dein Ergebnis: <i style="color: #1E6B84">{{ object.title }}</i></h1>
 
 <p><strong>Notenverteilung im Vergleich zu anderen Nutzern:</strong></p>
 <img src="data:image/png;base64,{{ score_chart }}" alt="Notenverteilung" style="width: 100%;">
 <br><hr><br>
-
+</div>
 
 {% endif %}
 

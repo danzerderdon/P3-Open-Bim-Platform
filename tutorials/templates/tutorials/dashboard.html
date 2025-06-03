@@ -303,8 +303,23 @@
 
   </div>
 
+      <!-- Suchleiste + Sortier-Buttons für Serien-Tutorials -->
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; gap: 12px; flex-wrap: wrap;">
+  <input type="text" id="seriesSearch" placeholder="🔍 Nach Titel suchen..." style="padding: 8px; width: 60%; border: 1px solid #ccc; border-radius: 4px;">
+
+  <div style="display: flex; gap: 10px;">
+    <button onclick="sortSeriesTable('alpha')" style="padding: 8px 16px; background-color: #1d677f; color: white; text-decoration: none; border-radius: 4px; cursor: pointer; border: none;">
+      🔤 Alphabetisch
+    </button>
+    <button onclick="sortSeriesTable('date')" style="padding: 8px 16px; background-color: #1d677f; color: white; text-decoration: none; border-radius: 4px; cursor: pointer; border: none;">
+      📅 Nach Datum
+    </button>
+  </div>
+</div>
+
+
   <!-- Tutorials-Tabelle -->
-  <table class="dashboard-table">
+  <table id="series-tutorials-table" class="dashboard-table">
     <thead>
       <tr>
         <th>Tutorial</th>
@@ -343,6 +358,18 @@
 
 
     <h2>Lernfortschritt: abgeschlossene Tutorials</h2>
+
+      <!-- 🔍 Suchleiste + Sortier-Schalter -->
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+  <!-- Suchleiste -->
+  <input type="text" id="searchInput" placeholder="🔍 Nach Titel suchen..." style="padding: 8px; width: 60%; border: 1px solid #ccc; border-radius: 4px;">
+
+  <!-- Sortier-Schalter -->
+  <div>
+    <button onclick="sortTable('alpha')" style="padding: 8px 16px; background-color: #1d677f; color: white; text-decoration: none; border-radius: 4px; cursor: pointer; border: none;">🔤 Alphabetisch</button>
+    <button onclick="sortTable('date')" style="padding: 8px 16px; background-color: #1d677f; color: white; text-decoration: none; border-radius: 4px; cursor: pointer; border: none;">📅 Nach Datum</button>
+  </div>
+</div>
 
     {% if progress_entries %}
         <table class="dashboard-table">
@@ -497,7 +524,71 @@ function toggleProfileEdit() {
   form.style.display = form.style.display === "none" ? "block" : "none";
 }
 </script>
+<script>
+function sortTable(mode) {
+  const table = document.querySelectorAll(".dashboard-table")[1]; // Die 2. Tabelle (abgeschlossene Tutorials)
+  const tbody = table.querySelector("tbody");
+  const rows = Array.from(tbody.querySelectorAll("tr"));
 
+  rows.sort((a, b) => {
+    const titleA = a.children[0].innerText.trim().toLowerCase();
+    const titleB = b.children[0].innerText.trim().toLowerCase();
+    const dateA = new Date(a.children[2].innerText.split(".").reverse().join("-"));
+    const dateB = new Date(b.children[2].innerText.split(".").reverse().join("-"));
+
+    if (mode === 'alpha') {
+      return titleA.localeCompare(titleB);
+    } else if (mode === 'date') {
+      return dateB - dateA; // Neueste zuerst
+    }
+  });
+
+  rows.forEach(row => tbody.appendChild(row));
+}
+
+document.getElementById("searchInput").addEventListener("input", function () {
+  const query = this.value.toLowerCase();
+  const rows = document.querySelectorAll(".dashboard-table")[1].querySelectorAll("tbody tr");
+
+  rows.forEach(row => {
+    const title = row.children[0].innerText.toLowerCase();
+    row.style.display = title.includes(query) ? "" : "none";
+  });
+});
+</script>
+
+<script>
+function sortSeriesTable(mode) {
+  const table = document.getElementById("series-tutorials-table");
+  const tbody = table.querySelector("tbody");
+  const rows = Array.from(tbody.querySelectorAll("tr"));
+
+  rows.sort((a, b) => {
+    const titleA = a.children[0].innerText.trim().toLowerCase();
+    const titleB = b.children[0].innerText.trim().toLowerCase();
+    const dateA = new Date(a.children[2].innerText.split(".").reverse().join("-"));
+    const dateB = new Date(b.children[2].innerText.split(".").reverse().join("-"));
+
+    if (mode === 'alpha') {
+      return titleA.localeCompare(titleB);
+    } else if (mode === 'date') {
+      return dateB - dateA;
+    }
+  });
+
+  rows.forEach(row => tbody.appendChild(row));
+}
+
+document.getElementById("seriesSearch").addEventListener("input", function () {
+  const query = this.value.toLowerCase();
+  const rows = document.getElementById("series-tutorials-table").querySelectorAll("tbody tr");
+
+  rows.forEach(row => {
+    const title = row.children[0].innerText.toLowerCase();
+    row.style.display = title.includes(query) ? "" : "none";
+  });
+});
+</script>
 
 
 {% endblock %}

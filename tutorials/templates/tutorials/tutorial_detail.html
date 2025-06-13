@@ -247,7 +247,7 @@ a.btn-print {
   <h1>{{ object.title }}</h1><br>
   {% if object.thumbnail %}
 
-      <img src="{{ object.thumbnail.url }}" alt="Thumbnail" style="width: 80%; display: block; margin: 0 auto;"><br>
+      <img src="{{ object.thumbnail.url }}" alt="Thumbnail" style="max-width: 80%; height: 50vh; display: block; margin: 0 auto;"><br>
     {% endif %}
   <p><strong>Erstellt von:</strong> {{ object.created_by.username }} am {{ object.created_at|date:"d.m.Y H:i" }}</p>
   <hr>

@@ -428,45 +428,47 @@ a.btn-print {
 
 
 {% endif %}
-<div class="all-ratings">
-<h3>Alle Bewertungen</h3>
+<button id="toggle-ratings" style="margin-bottom: 1rem;" class="button blue">⭐ Alle Bewertungen ein-/ausblenden</button>
 
-{% if ratings %}
-  <div style="display: grid; gap: 1rem; margin-top: 1rem;">
-    {% for rating in ratings %}
-      <div class="rating-card" style="
-        background: #f9f9f9;
-        border: 1px solid #ddd;
-        border-radius: 8px;
-        padding: 1rem;
-        box-shadow: 0 2px 6px rgba(0,0,0,0.05);">
+<div id="ratings-section" style="display: none;">
+  <h3>Alle Bewertungen</h3>
 
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
-          <strong>{{ rating.user.get_full_name|default:rating.user.username }}</strong>
-          <small style="color: #666;">{{ rating.created_at|date:"d.m.Y H:i" }}</small>
+  {% if ratings %}
+    <div style="display: grid; gap: 1rem; margin-top: 1rem;">
+      {% for rating in ratings %}
+        <div class="rating-card" style="
+          background: #f9f9f9;
+          border: 1px solid #ddd;
+          border-radius: 8px;
+          padding: 1rem;
+          box-shadow: 0 2px 6px rgba(0,0,0,0.05);">
+
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+            <strong>{{ rating.user.get_full_name|default:rating.user.username }}</strong>
+            <small style="color: #666;">{{ rating.created_at|date:"d.m.Y H:i" }}</small>
+          </div>
+
+          <div style="font-size: 1.4rem; color: #f5b301; margin-bottom: 0.5rem;">
+            {% for i in "12345"|make_list %}
+              {% if forloop.counter <= rating.rating %}
+                ★
+              {% else %}
+                ☆
+              {% endif %}
+            {% endfor %}
+          </div>
+
+          {% if rating.comment %}
+            <div style="font-size: 0.95rem; color: #333;">{{ rating.comment|safe }}</div>
+          {% endif %}
         </div>
-
-        <div style="font-size: 1.4rem; color: #f5b301; margin-bottom: 0.5rem;">
-          {% for i in "12345"|make_list %}
-            {% if forloop.counter <= rating.rating %}
-              ★
-            {% else %}
-              ☆
-            {% endif %}
-          {% endfor %}
-        </div>
-
-        {% if rating.comment %}
-          <div style="font-size: 0.95rem; color: #333;">{{ rating.comment|safe }}</div>
-        {% endif %}
-      </div>
-    {% endfor %}
-  </div>
-{% else %}
-  <p>Keine Bewertungen vorhanden.</p>
-{% endif %}
-
+      {% endfor %}
+    </div>
+  {% else %}
+    <p>Keine Bewertungen vorhanden.</p>
+  {% endif %}
 </div>
+
 </div>
 
 
@@ -496,6 +498,16 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 });
+
+
+    // Toggle Bewertungen
+  const toggleBtn = document.getElementById('toggle-ratings');
+  const ratingsSection = document.getElementById('ratings-section');
+
+  toggleBtn?.addEventListener('click', () => {
+    ratingsSection.style.display = (ratingsSection.style.display === 'none') ? 'block' : 'none';
+  });
+
 </script>
 
 

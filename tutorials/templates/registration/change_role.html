@@ -4,16 +4,11 @@
 {% block title %}Rolle ändern{% endblock %}
 
 {% block content %}
+<div class="tutorial-detail-container" style="box-shadow: none; border: 8px solid #97c7e6; width: 40%; align: center; margin: 2rem auto;">
   <div style="display: flex; justify-content: center; align-items: center; flex-direction: column; padding: 40px 20px;">
     <h2 style="text-align: center;">Rolle ändern</h2>
 
-    {% if messages %}
-      <ul style="list-style: none; padding: 0; color: green; margin-bottom: 20px;">
-        {% for message in messages %}
-          <li>{{ message }}</li>
-        {% endfor %}
-      </ul>
-    {% endif %}
+
 
     <form method="post" style="width: 100%; max-width: 400px;">
       {% csrf_token %}
@@ -25,6 +20,7 @@
       </div>
     </form>
   </div>
+</div>
 <script>
     // Fade beim Laden
     document.body.style.opacity = 0;

@@ -713,3 +713,24 @@ def print_certificate(request, tutorial_id):
         'user': user,
         'progress': progress
     })
+
+from django.http import JsonResponse
+from .models import TutorialNote
+
+@login_required
+def save_note_ajax(request, tutorial_id):
+    if request.method == 'POST':
+        content = request.POST.get('content', '')
+        note, _ = TutorialNote.objects.get_or_create(user=request.user, tutorial_id=tutorial_id)
+        note.content = content
+        note.save()
+        return JsonResponse({'status': 'saved'})
+    return JsonResponse({'status': 'error'}, status=400)
+
+from django.http import JsonResponse
+from .models import TutorialNote
+
+@login_required
+def get_note_ajax(request, tutorial_id):
+    note = TutorialNote.objects.filter(user=request.user, tutorial_id=tutorial_id).first()
+    return JsonResponse({'content': note.content if note else ''})

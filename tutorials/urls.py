@@ -35,6 +35,10 @@ urlpatterns = [
     path('tutorial/<int:tutorial_id>/quiz/result/', views.quiz_result, name='quiz_result'),
     path('tutorials/<int:tutorial_id>/completed_users/', views.completed_users_view, name='completed_users'),
     path('tutorial/<int:tutorial_id>/certificate/print/', views.print_certificate, name='print-certificate'),
+    path('tutorials/<int:tutorial_id>/save-note/', views.save_note_ajax, name='save-note'),
+    path('api/notes/<int:tutorial_id>/', views.get_note_ajax, name='get-note'),
+
+
 
 
 

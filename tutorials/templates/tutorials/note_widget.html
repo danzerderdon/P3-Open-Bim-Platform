@@ -1,0 +1,99 @@
+<link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet" />
+<style>
+  #note-container {
+    position: fixed;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 40vw;
+
+    max-width: 1000px;
+    z-index: 9999;
+    transition: transform 0.4s ease;
+    display: flex;
+    flex-direction: column;
+  }
+
+  #note-toggle {
+    background: #156082;
+    color: white;
+    padding: 8px 14px;
+    font-weight: bold;
+    text-align: center;
+    cursor: pointer;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+  }
+
+  #note-panel {
+    background: white;
+    height: 45vh;
+    border: 1px solid #ccc;
+    box-shadow: 0 -2px 8px rgba(0,0,0,0.2);
+    display: none;
+    flex-direction: column;
+  }
+
+  #note-panel.show {
+    display: flex;
+  }
+
+  #note-editor {
+    flex: 1;
+    padding: 10px;
+  }
+
+  #note-container.slide-up {
+    transform: translate(-50%, -300px);
+  }
+</style>
+
+<div id="note-container">
+  <div id="note-toggle">📝 Notizen</div>
+  <div id="note-panel">
+    <div id="note-editor"></div>
+  </div>
+</div>
+
+<script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const toggle = document.getElementById('note-toggle');
+  const panel = document.getElementById('note-panel');
+  const container = document.getElementById('note-container');
+  const tutorialId = "{{ tutorial_id }}";
+
+  toggle.addEventListener('click', () => {
+    const isOpen = panel.classList.toggle('show');
+    container.classList.toggle('slide-up', isOpen);
+  });
+
+  const quill = new Quill('#note-editor', {
+    theme: 'snow'
+  });
+
+  fetch(`/api/notes/${tutorialId}/`)
+    .then(res => res.json())
+    .then(data => {
+      quill.root.innerHTML = data.content || "";
+    });
+
+  let timeout;
+  quill.on('text-change', () => {
+    clearTimeout(timeout);
+    timeout = setTimeout(() => {
+      const content = quill.root.innerHTML;
+      const formData = new FormData();
+      formData.append('content', content);
+
+      fetch(`/tutorials/${tutorialId}/save-note/`, {
+        method: 'POST',
+        headers: {
+          'X-CSRFToken': '{{ csrf_token }}'
+        },
+        body: formData
+      });
+    }, 1000);
+  });
+});
+</script>

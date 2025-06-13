@@ -114,6 +114,12 @@
     </button>
   </form>
 </div>
+{% if request.user == tutorial.created_by %}
+  <a href="{% url 'completed_users' tutorial.id %}" class="action-button grey" style="text-align: center">
+    Abgeschlossene User
+  </a>
+{% endif %}
+
 
 
 
@@ -483,6 +489,30 @@ form.delete-form button img {
 
 }
 
+.action-button.grey {
+    background-color: #bdc3c7; /* helleres Grau */
+    color: black;              /* schwarzer Text */
+    text-decoration: none;     /* kein Unterstrich */
+    font-weight: bold;
+    padding: 10px 18px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+
+    display: inline-flex;
+    align-items: center;       /* vertikal mittig */
+    justify-content: center;   /* horizontal mittig */
+    gap: 8px;                  /* Abstand zwischen Icon und Text */
+    text-align: center;
+    gap: 8px;                  /* Abstand zwischen Icon und Text */
+}
+
+.action-button.grey:hover {
+    background-color: #d0d5d8; /* noch heller beim Hover */
+}
 
 
 </style>

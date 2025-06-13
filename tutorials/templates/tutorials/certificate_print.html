@@ -1,0 +1,162 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>Zertifikat – {{ tutorial.title }}</title>
+  <style>
+    body {
+      font-family: "Segoe UI", Tahoma, sans-serif;
+      background: white;
+      color: #222;
+      padding: 0;
+      margin: 0;
+    }
+
+    .certificate {
+      width: 210mm;
+      height: 297mm;
+      padding: 30mm 20mm;
+      margin: auto;
+      border: 5px solid #156082;
+      box-sizing: border-box;
+      text-align: center;
+      position: relative;
+    }
+
+    .certificate h1 {
+      font-size: 36px;
+      color: #156082;
+      margin-bottom: 20px;
+    }
+
+    .certificate p {
+      font-size: 18px;
+      margin: 12px 0;
+    }
+
+    .logo {
+      max-height: 120px;
+      margin-bottom: 20px;
+    }
+
+    .thumbnail {
+      max-width: 50%;
+      max-height: 200px;
+      margin: 20px auto;
+      display: block;
+      border: 2px solid #ddd;
+      border-radius: 6px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .description {
+      margin: 30px auto;
+      max-width: 80%;
+      font-size: 16px;
+      color: #444;
+      text-align: justify;
+    }
+
+    .signature {
+      margin-top: 60px;
+      text-align: right;
+      padding-right: 60px;
+    }
+
+    .signature-line {
+      width: 200px;
+      border-bottom: 1px solid #000;
+      margin-left: auto;
+      margin-bottom: 4px;
+    }
+
+    @media print {
+      .bottom-bar {
+        display: none !important;
+      }
+    }
+
+    .bottom-bar {
+      text-align: center;
+      margin: 20px 0;
+    }
+
+    .bottom-bar .button {
+      background-color: #156082;
+      color: white;
+      padding: 10px 18px;
+      text-decoration: none;
+      margin: 0 5px;
+      border-radius: 4px;
+      border: none;
+      cursor: pointer;
+    }
+
+    .bottom-bar .button:hover {
+      background-color: #124e6a;
+    }
+
+    .logo-container {
+  position: absolute;
+  top: 25mm;
+  left: 25mm;
+}
+
+.logo-left {
+  height: 40px;
+  object-fit: contain;
+}
+
+  </style>
+</head>
+<body>
+
+<div class="certificate">
+    <div class="logo-container">
+    <img src="{% static 'images/Logo.png' %}" alt="Logo" class="logo-left">
+  </div>
+
+
+  <h1>Zertifikat</h1>
+
+  <p>Dies bestätigt, dass</p>
+  <p><strong>{{ user.get_full_name|default:user.username }}</strong></p>
+  <p>erfolgreich das Tutorial <strong>„{{ tutorial.title }}“</strong> abgeschlossen hat.</p>
+
+  {% if tutorial.thumbnail %}
+    <img src="{{ tutorial.thumbnail.url }}" class="thumbnail" alt="Tutorial Bild">
+  {% endif %}
+
+  {% if tutorial.description %}
+    <div class="description">
+      {{ tutorial.description|safe }}
+    </div>
+  {% endif %}
+
+  {% if progress.completed_at %}
+    <p>Abgeschlossen am {{ progress.completed_at|date:"d.m.Y" }}</p>
+  {% endif %}
+
+  <div class="signature">
+    <div class="signature-line"></div>
+    <div>Unterschrift</div>
+  </div>
+</div>
+
+
+<script>
+  window.addEventListener('load', function () {
+    window.print();
+
+    // Warte auf Beenden des Druckdialogs
+    window.onafterprint = function () {
+      window.close();
+    };
+  });
+</script>
+
+
+</body>
+</html>

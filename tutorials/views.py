@@ -630,3 +630,28 @@ def dashboard_view(request):
         'achievements': [ua.achievement for ua in user_achievements],
     })
 
+from django.shortcuts import render, get_object_or_404
+from .models import Tutorial, UserProgress
+
+def completed_users_view(request, tutorial_id):
+    tutorial = get_object_or_404(Tutorial, id=tutorial_id)
+    completed_users = UserProgress.objects.filter(tutorial=tutorial, completed=True).select_related('user')
+
+    return render(request, 'tutorials/completed_users.html', {
+        'tutorial': tutorial,
+        'completed_users': completed_users
+    })
+
+from django.shortcuts import render, get_object_or_404
+from .models import Tutorial, UserProgress
+
+def print_certificate(request, tutorial_id):
+    tutorial = get_object_or_404(Tutorial, id=tutorial_id)
+    user = request.user
+    progress = UserProgress.objects.filter(user=user, tutorial=tutorial).first()
+
+    return render(request, 'tutorials/certificate_print.html', {
+        'tutorial': tutorial,
+        'user': user,
+        'progress': progress
+    })

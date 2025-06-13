@@ -33,6 +33,9 @@ urlpatterns = [
     path('tutorial/<int:tutorial_id>/quiz/start/', views.start_quiz, name='start_quiz'),
     path('tutorial/<int:tutorial_id>/quiz/<int:question_order>/', views.quiz_question, name='quiz_question'),
     path('tutorial/<int:tutorial_id>/quiz/result/', views.quiz_result, name='quiz_result'),
+    path('tutorials/<int:tutorial_id>/completed_users/', views.completed_users_view, name='completed_users'),
+    path('tutorial/<int:tutorial_id>/certificate/print/', views.print_certificate, name='print-certificate'),
+
 
 
 

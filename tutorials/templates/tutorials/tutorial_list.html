@@ -366,6 +366,7 @@ input[type="range"].difficulty-slider:disabled {
      data-screenshot="{% if tutorial.screenshot %}{{ tutorial.screenshot.url }}{% endif %}"
 >
   <h2>{{ tutorial.title }}</h2>
+
   <br>
   {% if tutorial.thumbnail %}
     <img src="{{ tutorial.thumbnail.url }}" alt="{{ tutorial.title }} Thumbnail" style="width: 80%; display: block; margin: 0 auto;">
@@ -375,6 +376,16 @@ input[type="range"].difficulty-slider:disabled {
 
   <p><strong>Programm:</strong> {{ tutorial.program }}</p>
   <p><strong>Serie:</strong> {{ tutorial.series }}</p>
+  <div style="color: #f5b301; font-size: 2rem;">
+  {% for i in "12345"|make_list %}
+    {% if forloop.counter <= tutorial.avg_rating %}
+      ★
+    {% else %}
+      ☆
+    {% endif %}
+  {% endfor %}
+</div>
+
 
 
 </div>

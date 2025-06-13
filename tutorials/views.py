@@ -310,6 +310,8 @@ def edit_tutorial_quiz(request, tutorial_id):
 
 from django.views.generic import ListView
 from .models import Tutorial
+from django.db.models import Avg
+from .models import TutorialRating
 
 
 class TutorialListView(ListView):
@@ -319,10 +321,35 @@ class TutorialListView(ListView):
     ordering = ['-created_at']  # Neueste zuerst
     paginate_by = 10  # Optional: Pagination
 
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        tutorials_with_avg = []
+        for tutorial in context['tutorials']:
+            avg_rating = TutorialRating.objects.filter(tutorial=tutorial).aggregate(avg=Avg('rating'))['avg']
+            tutorial.avg_rating = round(avg_rating or 0)  # Gerundeter Wert 0–5
+            tutorials_with_avg.append(tutorial)
+
+        context['tutorials'] = tutorials_with_avg
+        return context
+
 from django.views.generic.detail import DetailView
 from .models import Tutorial, UserProgress
 from .utils import generate_score_distribution
 
+
+
+
+
+
+
+
+from django.views.generic.detail import DetailView
+from django.shortcuts import redirect
+from .models import Tutorial, UserProgress, TutorialRating
+from .forms import RatingForm
+from .utils import generate_score_distribution
 
 class TutorialDetailView(DetailView):
     model = Tutorial
@@ -341,7 +368,7 @@ class TutorialDetailView(DetailView):
         context["step_count"] = tutorial.sections.count()
         context["quiz_question_count"] = tutorial.quiz.count()
 
-        # Diagramm nur für eingeloggte Nutzer, die das Tutorial abgeschlossen haben
+        # Score-Chart nur für eingeloggte User mit abgeschlossenem Fortschritt
         if user.is_authenticated:
             try:
                 progress = UserProgress.objects.get(user=user, tutorial=tutorial)
@@ -351,10 +378,41 @@ class TutorialDetailView(DetailView):
                     context["score_chart"] = None
             except UserProgress.DoesNotExist:
                 context["score_chart"] = None
+
+            # Bewertungsformular vorbereiten (nur einmal bewertbar)
+            existing_rating = TutorialRating.objects.filter(user=user, tutorial=tutorial).first()
+            context["rating_form"] = RatingForm(instance=existing_rating)
         else:
             context["score_chart"] = None
+            context["rating_form"] = None
+
+        # Alle Bewertungen für Anzeige
+        context["ratings"] = tutorial.ratings.select_related("user").order_by("-created_at")
 
         return context
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+
+        if not request.user.is_authenticated:
+            return redirect("login")
+
+        form = RatingForm(request.POST)
+        if form.is_valid():
+            # Update oder erstelle Bewertung für aktuellen User
+            TutorialRating.objects.update_or_create(
+                user=request.user,
+                tutorial=self.object,
+                defaults=form.cleaned_data
+            )
+
+        return redirect("tutorial-detail", pk=self.object.pk)
+
+
+
+
+
+
 
 from django.shortcuts import get_object_or_404, redirect, render
 from .models import Tutorial, TutorialSection

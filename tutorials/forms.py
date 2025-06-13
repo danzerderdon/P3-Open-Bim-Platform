@@ -103,4 +103,15 @@ class ProfileForm(forms.ModelForm):
         }
 
 
+from django import forms
+from .models import TutorialRating
+
+class RatingForm(forms.ModelForm):
+    class Meta:
+        model = TutorialRating
+        fields = ['rating', 'comment']
+        widgets = {
+            'comment': forms.Textarea(attrs={'rows': 3}),
+        }
+
 

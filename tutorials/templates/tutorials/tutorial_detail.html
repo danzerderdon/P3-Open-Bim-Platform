@@ -2,6 +2,8 @@
 {% load static %}
 
 {% load filename_filters %}
+<link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+<script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
 
 
 
@@ -149,6 +151,67 @@ a.btn-print {
   text-decoration: none;
 }
 
+
+
+
+
+
+  .star-rating {
+  direction: rtl;
+  display: inline-flex;
+  font-size: 2rem;
+  gap: 0.3rem;
+  user-select: none;
+}
+
+.star-rating input[type="radio"] {
+  display: none;
+}
+
+.star-rating label {
+  color: #ccc;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.star-rating input[type="radio"]:checked ~ label,
+.star-rating label:hover,
+.star-rating label:hover ~ label {
+  color: #FFD700;
+}
+
+
+  .star-rating {
+  direction: rtl;
+  display: inline-flex;
+  font-size: 2rem;
+  gap: 0.3rem;
+  user-select: none;
+}
+
+.star-rating input[type="radio"] {
+  display: none;
+}
+
+.star-rating label {
+  color: #ccc;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.star-rating input[type="radio"]:checked ~ label,
+.star-rating label:hover,
+.star-rating label:hover ~ label {
+  color: #FFD700;
+}
+
+.rating-card {
+  transition: box-shadow 0.2s ease;
+}
+.rating-card:hover {
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
 </style>
 
 
@@ -258,7 +321,154 @@ a.btn-print {
   {% endif %}
 </div>
 
+
 </div>
+
+
+<div class="tutorial-detail-container" style="box-shadow: none; border: 8px solid #97c7e6;">
+
+ <style>
+  .star-rating {
+    display: inline-flex;
+    flex-direction: row; /* von links nach rechts */
+    gap: 0.3rem;
+    font-size: 2rem;
+    user-select: none;
+  }
+
+  .star-rating input[type="radio"] {
+    display: none;
+  }
+
+  .star-rating label {
+    color: #ccc;
+    cursor: pointer;
+    transition: color 0.2s ease;
+  }
+
+  .star-rating label.filled {
+    color: #FFD700;
+  }
+</style>
+{% if user.is_authenticated %}
+<h3>Bewerte dieses Tutorial</h3>
+<form method="post" id="rating-form">
+  {% csrf_token %}
+  <div class="star-rating" id="rating-stars">
+    {% for i in "54321" %}
+      <input type="radio" name="rating" value="{{ i }}" id="star{{ i }}"
+             {% if rating_form.initial.rating == i|stringformat:"i" %}checked{% endif %}>
+      <label for="star{{ i }}" data-value="{{ i }}">★</label>
+    {% endfor %}
+  </div>
+
+  <div id="quill-editor" style="height: 150px;"></div>
+<input type="hidden" name="comment" id="comment-field">
+
+
+  <button type="submit" class="button" style="margin-top: 1rem;">Absenden</button>
+</form>
+
+
+<!-- Quill laden -->
+<link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+<script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    // ⭐ Sterne-Logik
+    const stars = document.querySelectorAll('#rating-stars label');
+    const inputs = document.querySelectorAll('#rating-stars input');
+
+    function updateVisuals(value) {
+      stars.forEach(label => {
+        const val = parseInt(label.dataset.value);
+        label.classList.toggle('filled', val <= value);
+      });
+    }
+
+    stars.forEach(label => {
+      label.addEventListener('mouseenter', () => {
+        updateVisuals(parseInt(label.dataset.value));
+      });
+
+      label.addEventListener('mouseleave', () => {
+        const checked = document.querySelector('#rating-stars input:checked');
+        updateVisuals(checked ? parseInt(checked.value) : 0);
+      });
+
+      label.addEventListener('click', () => {
+        const val = label.dataset.value;
+        document.querySelector(`#star${val}`).checked = true;
+        updateVisuals(parseInt(val));
+      });
+    });
+
+    const checked = document.querySelector('#rating-stars input:checked');
+    updateVisuals(checked ? parseInt(checked.value) : 0);
+
+    // 🖊️ Quill-Editor
+    const quill = new Quill('#quill-editor', {
+      theme: 'snow',
+      placeholder: 'Dein Feedback...',
+    });
+
+    // Inhalt beim Absenden übertragen
+    const form = document.getElementById('rating-form');
+    form.addEventListener('submit', () => {
+      document.getElementById('comment-field').value = quill.root.innerHTML;
+    });
+
+    // Vorbefüllen falls vorhanden
+    const initial = `{{ rating_form.initial.comment|safe }}`;
+    if (initial) {
+      quill.root.innerHTML = initial;
+    }
+  });
+</script>
+
+
+{% endif %}
+<div class="all-ratings">
+<h3>Alle Bewertungen</h3>
+
+{% if ratings %}
+  <div style="display: grid; gap: 1rem; margin-top: 1rem;">
+    {% for rating in ratings %}
+      <div class="rating-card" style="
+        background: #f9f9f9;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        padding: 1rem;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.05);">
+
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+          <strong>{{ rating.user.get_full_name|default:rating.user.username }}</strong>
+          <small style="color: #666;">{{ rating.created_at|date:"d.m.Y H:i" }}</small>
+        </div>
+
+        <div style="font-size: 1.4rem; color: #f5b301; margin-bottom: 0.5rem;">
+          {% for i in "12345"|make_list %}
+            {% if forloop.counter <= rating.rating %}
+              ★
+            {% else %}
+              ☆
+            {% endif %}
+          {% endfor %}
+        </div>
+
+        {% if rating.comment %}
+          <div style="font-size: 0.95rem; color: #333;">{{ rating.comment|safe }}</div>
+        {% endif %}
+      </div>
+    {% endfor %}
+  </div>
+{% else %}
+  <p>Keine Bewertungen vorhanden.</p>
+{% endif %}
+
+</div>
+</div>
+
 
 
 <script>
@@ -291,3 +501,4 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 {% endblock %}
+

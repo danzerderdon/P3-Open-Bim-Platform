@@ -76,7 +76,7 @@
                     <th>Nutzername</th>
                     <th>Score (%)</th>
                     <th>Abgeschlossen am</th>
-                    <th>Versuche</th>
+
                 </tr>
             </thead>
             <tbody>
@@ -93,7 +93,7 @@
                         <td>{{ progress.user.username }}</td>
                         <td>{{ progress.score_percent }}</td>
                         <td>{{ progress.completed_at|date:"d.m.Y H:i" }}</td>
-                        <td>{{ progress.attempts }}</td>
+
                     </tr>
                 {% endfor %}
             </tbody>

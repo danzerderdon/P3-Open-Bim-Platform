@@ -15,8 +15,6 @@ media/tutorial_images/
 __pycache__/
 *.py[cod]
 
-# Datenbanken
-*.sqlite3
 
 # IDE-Dateien
 .idea/
@@ -25,3 +23,13 @@ __pycache__/
 # Systemdateien
 .DS_Store
 Thumbs.db
+
+# SQLite-Datenbank
+*.sqlite3
+
+# PostgreSQL/andere Dumps
+*.sql
+*.dump
+
+# Django migrations cache (optional)
+**/__pycache__/

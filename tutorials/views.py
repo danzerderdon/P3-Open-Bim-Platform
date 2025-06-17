@@ -368,6 +368,15 @@ class TutorialDetailView(DetailView):
         context["step_count"] = tutorial.sections.count()
         context["quiz_question_count"] = tutorial.quiz.count()
 
+        # ⬇ Durchschnittlicher Score aller abgeschlossenen User
+        avg_score = (
+            tutorial.userprogress_set
+            .filter(completed=True)
+            .aggregate(Avg('score_percent'))['score_percent__avg']
+        )
+
+        context["avg_score_percent"] = round(avg_score, 1) if avg_score else None
+
         # Score-Chart nur für eingeloggte User mit abgeschlossenem Fortschritt
         if user.is_authenticated:
             try:

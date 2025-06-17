@@ -72,7 +72,7 @@
   <h2>Auswertung abgeschlossen</h2>
   <h3>{{ tutorial.title }}</h3>
 
-  {% if score > 50 %}
+  {% if score >= 50 %}
   <img src="{% static 'images/bestanden.png' %}" alt="Bestanden" style="width: 50%; margin: -20px auto;">
 {% else %}
   <img src="{% static 'images/nicht bestanden.png' %}" alt="Nicht bestanden" style="width: 50%; margin: -60px auto;">

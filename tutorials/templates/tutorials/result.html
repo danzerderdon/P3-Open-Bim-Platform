@@ -86,7 +86,7 @@
     <div class="progress-bar-fill" style="width: {{ score }}%;">{{ score }}%</div>
   </div>
 
-  {% if score > 50 %}
+  {% if score >= 50 %}
     <p class="result-message">🎉 <strong>Super gemacht! Du hast bestanden und dein Ergebnis wurde gespeichert.</strong></p>
   {% else %}
     <p class="result-message">😕 <strong>Leider unter 50%. Das Ergebnis wurde nicht gespeichert.</strong></p>

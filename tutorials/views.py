@@ -547,7 +547,7 @@ def quiz_result(request, tutorial_id):
 
     score = round((correct / total) * 100, 2) if total > 0 else 0.0
 
-    if score > 50:
+    if score >= 50:
         # Ergebnis speichern
         QuizResult.objects.update_or_create(
             user=request.user,

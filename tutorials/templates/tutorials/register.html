@@ -3,12 +3,15 @@
 {% block title %}Registrierung{% endblock %}
 
 {% block content %}
+<div class="card-container">
     <h2>Registrierung</h2>
     <form method="post">
         {% csrf_token %}
         {{ form.as_p }}
         <button type="submit">Registrieren</button>
     </form>
+</div>
+
 <script>
     // Fade beim Laden
     document.body.style.opacity = 0;

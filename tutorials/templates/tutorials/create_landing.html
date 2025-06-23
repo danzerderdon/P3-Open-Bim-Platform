@@ -60,7 +60,14 @@
       <div class="icon-button orange"><i class="fas fa-clock" style="color: white; font-size: 24px;"></i></div>
       <p><strong>Archivieren:</strong> Verschiebt das Tutorial ins Archiv. Archivierte Tutorials sind standardmäßig ausgeblendet, bleiben aber erhalten.</p>
     </div>
-    <br> <hr> <br>
+<br>
+
+<div class="info-row">
+  <div class="icon-button completed"><i class="fas fa-user-check" style="color: white; font-size: 24px;"></i></div>
+  <p><strong>Abgeschlossene User:</strong> Zeigt dir eine Liste aller Nutzer an, die dieses Tutorial erfolgreich abgeschlossen haben.</p>
+</div>
+
+<br>
 </div>
 
 </div>
@@ -162,15 +169,19 @@
   <a href="{% url 'archive_tutorial' tutorial.id %}" class="icon-button orange" title="Archivieren">
     <i class="fas fa-clock" style="color: white; font-size: 20px;"></i>
   </a>
+
+  {% if request.user == tutorial.created_by %}
+  <a href="{% url 'completed_users' tutorial.id %}" class="icon-button completed" title="Abgeschlossene Nutzer anzeigen">
+    <i class="fas fa-user-check" style="color: white; font-size: 20px;"></i>
+  </a>
+{% endif %}
+
+
 </div>
 
 
 
-{% if request.user == tutorial.created_by %}
-  <a href="{% url 'completed_users' tutorial.id %}" class="action-button grey" style="text-align: center">
-    Abgeschlossene User
-  </a>
-{% endif %}
+
 
 
 
@@ -188,6 +199,15 @@
 
 <!-- Stile für Buttons -->
 <style>
+
+.icon-button.completed {
+  background-color: #58d68d; /* Exakter Grünton vom Rahmen */
+}
+
+.icon-button.completed:hover {
+  background-color: #45c27d; /* Etwas dunkler beim Hover */
+}
+
 
 .tutorial-card.archived {
     border: 8px solid #bdc3c7 !important; /* gleiche Rahmen-Dicke in Grau */

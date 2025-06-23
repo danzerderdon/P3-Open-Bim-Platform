@@ -785,13 +785,17 @@ def archive_tutorial(request, tutorial_id):
 def revision_tutorial(request, tutorial_id):
     original = get_object_or_404(Tutorial, id=tutorial_id, created_by=request.user)
 
+    import re
+
     # Bestimme neue Version
     base_title = original.title
-    if 'v' in base_title and base_title.split('v')[-1].isdigit():
-        version = int(base_title.split('v')[-1]) + 1
-        new_title = 'v'.join(base_title.split('v')[:-1]) + f'v{version}'
+    version_match = re.search(r'\(Version (\d+)\)', base_title)
+
+    if version_match:
+        version = int(version_match.group(1)) + 1
+        new_title = re.sub(r'\(Version \d+\)', f'(Version {version})', base_title)
     else:
-        new_title = base_title + ' v2'
+        new_title = base_title.strip() + ' (Version 2)'
 
     # Kopiere das Tutorial
     new_tutorial = Tutorial.objects.create(

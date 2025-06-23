@@ -3,7 +3,9 @@
 
 {% block title %}Tutorials erstellen{% endblock %}
 
+
 {% block content %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
 <!-- Hauptinhalt mit Überlappung -->
 <div class="home-container"  style="box-shadow: none; border: 8px solid #97c7e6;">
@@ -33,20 +35,52 @@
       <div class="icon-button blue"><img src="/media/edit_steps.png" alt="Schritte"></div>
       <p><strong>Schritte:</strong> Öffnet die Schritt-für-Schritt-Anleitung dieses Tutorials.</p>
     </div>
+    <br>
     <div class="info-row">
       <div class="icon-button blue"><img src="/media/edit_quiz.png" alt="Fragen"></div>
       <p><strong>Fragen:</strong> Bearbeite Quizfragen zum Tutorial.</p>
     </div>
+    <br>
     <div class="info-row">
       <div class="icon-button orange"><img src="/media/edit_atrib.png" alt="Attribute"></div>
       <p><strong>Attribute:</strong> Ändere Titel, Beschreibung, Schwierigkeit oder Tags.</p>
     </div>
+    <br>
     <div class="info-row">
       <div class="icon-button red"><img src="/media/delete.png" alt="Löschen"></div>
       <p><strong>Löschen:</strong> Entfernt das gesamte Tutorial unwiderruflich.</p>
     </div>
-  </div>
+<br>
+    <div class="info-row">
+      <div class="icon-button blue"><i class="fas fa-recycle" style="color: white; font-size: 24px;"></i></div>
+      <p><strong>Revisionieren:</strong> Erzeugt eine neue Version des Tutorials zum Überarbeiten oder Aktualisieren.</p>
+    </div>
+<br>
+    <div class="info-row">
+      <div class="icon-button orange"><i class="fas fa-clock" style="color: white; font-size: 24px;"></i></div>
+      <p><strong>Archivieren:</strong> Verschiebt das Tutorial ins Archiv. Archivierte Tutorials sind standardmäßig ausgeblendet, bleiben aber erhalten.</p>
+    </div>
+    <br> <hr> <br>
 </div>
+
+</div>
+  <hr><br>
+<div style="display: flex; justify-content: center; gap: 12px; margin-bottom: 20px;">
+
+  <!-- Archivierte anzeigen -->
+  <a href="?show_archived=1" class="action-button blue" style="font-size: 16px; display: flex; align-items: center; gap: 8px;">
+    <i class="fas fa-eye" style="font-size: 18px;"></i> Archivierte anzeigen
+  </a>
+
+  <!-- Archivierte ausblenden -->
+  <a href="?" class="action-button red" style="font-size: 16px; display: flex; align-items: center; gap: 8px;">
+    <i class="fas fa-eye-slash" style="font-size: 18px;"></i> Archivierte ausblenden
+  </a>
+
+</div>
+
+
+
  </div>
 
 
@@ -58,7 +92,8 @@
 <div class="tutorial-wrapper">
   <div class="tutorial-grid">
     {% for tutorial in tutorials %}
-      <div class="tutorial-card {{ tutorial.difficulty|default:'mittel' }}"
+      <div class="tutorial-card {% if tutorial.series == 'Archiviert' %}archived{% else %}{{ tutorial.difficulty|default:'mittel' }}{% endif %}"
+
      data-title="{{ tutorial.title }}"
      data-description="{{ tutorial.description }}"
      data-program="{{ tutorial.program }}"
@@ -114,6 +149,23 @@
     </button>
   </form>
 </div>
+
+<div class="icon-button-container">
+  <!-- Bestehende Buttons ... -->
+
+  <!-- Revisionieren Button -->
+  <a href="{% url 'revision_tutorial' tutorial.id %}" class="icon-button blue" title="Revisionieren">
+    <i class="fas fa-recycle" style="color: white; font-size: 20px;"></i>
+  </a>
+
+  <!-- Archivieren Button -->
+  <a href="{% url 'archive_tutorial' tutorial.id %}" class="icon-button orange" title="Archivieren">
+    <i class="fas fa-clock" style="color: white; font-size: 20px;"></i>
+  </a>
+</div>
+
+
+
 {% if request.user == tutorial.created_by %}
   <a href="{% url 'completed_users' tutorial.id %}" class="action-button grey" style="text-align: center">
     Abgeschlossene User
@@ -136,6 +188,26 @@
 
 <!-- Stile für Buttons -->
 <style>
+
+.tutorial-card.archived {
+    border: 8px solid #bdc3c7 !important; /* gleiche Rahmen-Dicke in Grau */
+    padding: 30px;
+    border-radius: 15px;
+    margin: 10px auto;
+    max-width: 500px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    background-color: #f5f5f5; /* HELLGRAUER Hintergrund */
+    transition: transform 0.3s ease-out, box-shadow 0.3s ease-out;
+}
+
+.tutorial-card.archived:hover {
+    transform: translateY(-12px) scale(1.02);
+    box-shadow: 0 0 25px rgba(0, 0, 0, 0.4);
+}
+
+
+
 .action-button {
     color: white;
     padding: 10px 15px;

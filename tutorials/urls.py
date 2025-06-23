@@ -37,6 +37,8 @@ urlpatterns = [
     path('tutorial/<int:tutorial_id>/certificate/print/', views.print_certificate, name='print-certificate'),
     path('tutorials/<int:tutorial_id>/save-note/', views.save_note_ajax, name='save-note'),
     path('api/notes/<int:tutorial_id>/', views.get_note_ajax, name='get-note'),
+    path('tutorial/<int:tutorial_id>/archive/', views.archive_tutorial, name='archive_tutorial'),
+    path('tutorial/<int:tutorial_id>/revision/', views.revision_tutorial, name='revision_tutorial'),
 
 
 

@@ -92,6 +92,7 @@ def change_role_view(request):
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from .forms import TutorialForm
+from .models import Tutorial
 
 @login_required
 def create_tutorial(request):
@@ -118,14 +119,19 @@ def create_tutorial(request):
     return render(request, 'tutorials/create_tutorial.html', {'form': form})
 
 
-
-
 @login_required
 def tutorial_create_landing(request):
-    tutorials = Tutorial.objects.filter(created_by=request.user).order_by('-created_at')
-    return render(request, 'tutorials/create_landing.html', {'tutorials': tutorials})
+    show_archived = request.GET.get('show_archived') == '1'
 
+    if show_archived:
+        tutorials = Tutorial.objects.filter(created_by=request.user).order_by('-created_at')
+    else:
+        tutorials = Tutorial.objects.filter(created_by=request.user).exclude(series='Archiviert').order_by('-created_at')
 
+    return render(request, 'tutorials/create_landing.html', {
+        'tutorials': tutorials,
+        'show_archived': show_archived
+    })
 
 
 #hate this part )=
@@ -316,11 +322,14 @@ from .models import TutorialRating
 
 class TutorialListView(ListView):
     model = Tutorial
-    template_name = 'tutorial_list.html'  # Template-Datei
+    template_name = 'tutorial_list.html'
     context_object_name = 'tutorials'
-    ordering = ['-created_at']  # Neueste zuerst
-    paginate_by = 10  # Optional: Pagination
+    ordering = ['-created_at']
+    paginate_by = 10
 
+    def get_queryset(self):
+        # Zeigt nur Tutorials, die NICHT archiviert sind
+        return Tutorial.objects.exclude(series='Archiviert').order_by('-created_at')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -328,11 +337,12 @@ class TutorialListView(ListView):
         tutorials_with_avg = []
         for tutorial in context['tutorials']:
             avg_rating = TutorialRating.objects.filter(tutorial=tutorial).aggregate(avg=Avg('rating'))['avg']
-            tutorial.avg_rating = round(avg_rating or 0)  # Gerundeter Wert 0–5
+            tutorial.avg_rating = round(avg_rating or 0)
             tutorials_with_avg.append(tutorial)
 
         context['tutorials'] = tutorials_with_avg
         return context
+
 
 from django.views.generic.detail import DetailView
 from .models import Tutorial, UserProgress
@@ -759,3 +769,74 @@ def get_note_ajax(request, tutorial_id):
         note.save()
 
     return JsonResponse({'content': note.content})
+
+from django.db.models import Max
+from django.utils.text import slugify
+
+@login_required
+def archive_tutorial(request, tutorial_id):
+    tutorial = get_object_or_404(Tutorial, id=tutorial_id, created_by=request.user)
+    tutorial.series = "Archiviert"
+    tutorial.save()
+    return redirect('create')  # Zur Landingpage zurück
+
+
+@login_required
+def revision_tutorial(request, tutorial_id):
+    original = get_object_or_404(Tutorial, id=tutorial_id, created_by=request.user)
+
+    # Bestimme neue Version
+    base_title = original.title
+    if 'v' in base_title and base_title.split('v')[-1].isdigit():
+        version = int(base_title.split('v')[-1]) + 1
+        new_title = 'v'.join(base_title.split('v')[:-1]) + f'v{version}'
+    else:
+        new_title = base_title + ' v2'
+
+    # Kopiere das Tutorial
+    new_tutorial = Tutorial.objects.create(
+        title=new_title,
+        description=original.description,
+        keywords=original.keywords,
+        program=original.program,
+        program_versions=original.program_versions,
+        difficulty=original.difficulty,
+        thumbnail=original.thumbnail,
+        screenshot=original.screenshot,
+        attachments=original.attachments,
+        series=original.series,
+        created_by=request.user
+    )
+
+    # Kopiere die Schritte
+    for section in original.sections.all():
+        TutorialSection.objects.create(
+            tutorial=new_tutorial,
+            title=section.title,
+            content=section.content,
+            image=section.image,
+            video=section.video,
+            order=section.order
+        )
+
+    # Kopiere Quizfragen
+    for quiz in original.quiz.all():
+        Quiz.objects.create(
+            tutorial=new_tutorial,
+            title=quiz.title,
+            content=quiz.content,
+            image=quiz.image,
+            order=quiz.order,
+            answer_1=quiz.answer_1,
+            is_correct_1=quiz.is_correct_1,
+            answer_2=quiz.answer_2,
+            is_correct_2=quiz.is_correct_2,
+            answer_3=quiz.answer_3,
+            is_correct_3=quiz.is_correct_3,
+            answer_4=quiz.answer_4,
+            is_correct_4=quiz.is_correct_4,
+            answer_5=quiz.answer_5,
+            is_correct_5=quiz.is_correct_5
+        )
+
+    return redirect('edit_tutorial_sections', tutorial_id=new_tutorial.id)

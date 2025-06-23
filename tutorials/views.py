@@ -736,10 +736,26 @@ def save_note_ajax(request, tutorial_id):
         return JsonResponse({'status': 'saved'})
     return JsonResponse({'status': 'error'}, status=400)
 
+
 from django.http import JsonResponse
-from .models import TutorialNote
+from .models import TutorialNote, TutorialSection
+from django.contrib.auth.decorators import login_required
 
 @login_required
 def get_note_ajax(request, tutorial_id):
-    note = TutorialNote.objects.filter(user=request.user, tutorial_id=tutorial_id).first()
-    return JsonResponse({'content': note.content if note else ''})
+    note, _ = TutorialNote.objects.get_or_create(user=request.user, tutorial_id=tutorial_id)
+
+    if "<u>Schritt" not in note.content:
+        sections = TutorialSection.objects.filter(tutorial_id=tutorial_id).order_by('order')
+        template_content = ""
+
+        for section in sections:
+            template_content += (
+                f"<p><strong><u>Schritt {section.order}: {section.title}</u></strong></p>"
+                f"<p>&nbsp;&nbsp;&nbsp;• </p><br><br>"
+            )
+
+        note.content = template_content + note.content
+        note.save()
+
+    return JsonResponse({'content': note.content})

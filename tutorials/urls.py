@@ -39,6 +39,8 @@ urlpatterns = [
     path('api/notes/<int:tutorial_id>/', views.get_note_ajax, name='get-note'),
     path('tutorial/<int:tutorial_id>/archive/', views.archive_tutorial, name='archive_tutorial'),
     path('tutorial/<int:tutorial_id>/revision/', views.revision_tutorial, name='revision_tutorial'),
+    path('dismiss-archived/', views.dismiss_archived_notifications, name='dismiss_archived'),
+
 
 
 

@@ -181,6 +181,7 @@
 
     <h2 style="text-align: left"> Benutzer-Aktionen</h2>
 
+
     <a style="display: inline-block; padding: 8px 16px; background-color: #1d677f; color: white; text-decoration: none; border-radius: 4px; cursor: pointer;" href="{% url 'passchange' %}">🔒 Passwort ändern</a><br>
     <br><a style="display: inline-block; padding: 8px 16px; background-color: #1d677f; color: white; text-decoration: none; border-radius: 4px; cursor: pointer;" href="{% url 'change_role' %}">🧑‍🎓 Rolle ändern</a><br>
     <br><a style="display: inline-block; padding: 8px 16px; background-color: #1d677f; color: white; text-decoration: none; border-radius: 4px; cursor: pointer;" href="{% url 'logout' %}">🚪 Logout</a><br>
@@ -269,6 +270,16 @@
 
   <div class="right-container" style="text-align: center; background: #fff; width: 65%; margin-left: auto; margin-right: 40px; border: 20px solid #fff; box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);">
 
+{% if active_archived_count > 0 %}
+<div style="background-color: #ffe6e6; border: 2px solid red; border-radius: 8px; padding: 15px; margin-bottom: 20px; text-align: center;">
+    <h3>⚠️ Veraltete Tutorials abgeschlossen</h3>
+    <p>Du hast <strong>{{ active_archived_count }}</strong> archivierte Tutorials abgeschlossen. Bitte erledige die aktuellen Versionen.</p>
+    <form method="post" action="{% url 'dismiss_archived' %}">
+        {% csrf_token %}
+        <button type="submit" class="action-button red">OK</button>
+    </form>
+</div>
+{% endif %}
 
 
 

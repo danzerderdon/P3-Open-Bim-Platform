@@ -686,12 +686,18 @@ def dashboard_view(request):
         .order_by('-tutorial_count', 'username')[:5]
     )
 
-
-
     user_achievements = UserAchievement.objects.filter(user=request.user).select_related('achievement')
 
+    # 🔔 Archivierte Tutorials zählen
+    archived_progress_count = UserProgress.objects.filter(
+        user=request.user, completed=True, tutorial__series="Archiviert"
+    ).count()
+
+    dismissed_archived_count = request.session.get('dismissed_archived_count', 0)
+    active_archived_count = max(archived_progress_count - dismissed_archived_count, 0)
+
     return render(request, 'tutorials/dashboard.html', {
-        'form': form,  # ⬅ wichtig!
+        'form': form,
         'progress_entries': progress_entries,
         'series_list': all_series,
         'selected_series': selected_series,
@@ -705,7 +711,9 @@ def dashboard_view(request):
         'current_user_completed': current_user_completed,
         'top_users': top_users,
         'achievements': [ua.achievement for ua in user_achievements],
+        'active_archived_count': active_archived_count,  # 🔔 WICHTIG
     })
+
 
 from django.shortcuts import render, get_object_or_404
 from .models import Tutorial, UserProgress
@@ -844,3 +852,13 @@ def revision_tutorial(request, tutorial_id):
         )
 
     return redirect('edit_tutorial_sections', tutorial_id=new_tutorial.id)
+
+@login_required
+def dismiss_archived_notifications(request):
+    if request.method == 'POST':
+        request.session['dismissed_archived_count'] = UserProgress.objects.filter(
+            user=request.user,
+            completed=True,
+            tutorial__series="Archiviert"
+        ).count()
+    return redirect('dashboard')
